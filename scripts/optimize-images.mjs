@@ -1,0 +1,84 @@
+import { readdir } from 'node:fs/promises'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import sharp from 'sharp'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const publicDir = resolve(__dirname, '../public')
+
+const MOBILE_WIDTHS = [360, 720, 1080]
+const POSTER_WIDTHS = [360, 720]
+const GALLERY_WIDTHS = [360, 720, 1080, 1440]
+
+async function generateVariants(inputPath, outputPrefix, widths, quality = 82) {
+  for (const width of widths) {
+    const output = `${outputPrefix}-${width}.webp`
+    await sharp(inputPath).resize(width).webp({ quality }).toFile(output)
+    globalThis.console.log(`Generated: ${output}`)
+  }
+}
+
+await generateVariants(
+  join(publicDir, 'images/hero.webp'),
+  join(publicDir, 'images/hero'),
+  MOBILE_WIDTHS,
+)
+
+await generateVariants(
+  join(publicDir, 'images/proces/o-mnie.webp'),
+  join(publicDir, 'images/proces/o-mnie'),
+  MOBILE_WIDTHS,
+)
+
+const posterFiles = (await readdir(join(publicDir, 'movies'))).filter(
+  (name) =>
+    name.endsWith('-poster.webp') &&
+    !name.includes('-360.') &&
+    !name.includes('-720.'),
+)
+
+for (const poster of posterFiles) {
+  const base = poster.replace(/\.webp$/, '')
+  await generateVariants(
+    join(publicDir, 'movies', poster),
+    join(publicDir, 'movies', base),
+    POSTER_WIDTHS,
+  )
+}
+
+const galleryFiles = (await readdir(join(publicDir, 'images/gallery'))).filter(
+  (name) =>
+    name.endsWith('.webp') &&
+    !name.includes('-360.') &&
+    !name.includes('-720.'),
+)
+
+for (const image of galleryFiles) {
+  const base = image.replace(/\.webp$/, '')
+  await generateVariants(
+    join(publicDir, 'images/gallery', image),
+    join(publicDir, 'images/gallery', base),
+    GALLERY_WIDTHS,
+  )
+}
+
+const effectFiles = (
+  await readdir(join(publicDir, 'images/gallery/effects'))
+).filter(
+  (name) =>
+    name.endsWith('.webp') &&
+    !name.includes('-360.') &&
+    !name.includes('-720.'),
+)
+
+for (const image of effectFiles) {
+  const base = image.replace(/\.webp$/, '')
+  await generateVariants(
+    join(publicDir, 'images/gallery/effects', image),
+    join(publicDir, 'images/gallery/effects', base),
+    MOBILE_WIDTHS,
+  )
+}
+
+const { optimizeVitruvianMan } = await import('./optimize-vitruvian.mjs')
+await optimizeVitruvianMan()

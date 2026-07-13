@@ -1,0 +1,107 @@
+import '@testing-library/jest-dom/vitest'
+import { contact } from '@data/contact'
+import { cleanup, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+vi.mock('@libs/analytics', () => ({
+  trackPlausibleEvent: vi.fn(),
+}))
+
+import { trackPlausibleEvent } from '@libs/analytics'
+import Footer from './Footer'
+
+describe('Footer', () => {
+  afterEach(() => {
+    cleanup()
+  })
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('renders phone link with tracking', async () => {
+    const user = userEvent.setup()
+    render(<Footer />)
+
+    const phoneLink = screen.getByRole('link', { name: 'Telefon' })
+    expect(phoneLink).toHaveAttribute(
+      'href',
+      `tel:${contact.phone.replace(/\s+/g, '')}`,
+    )
+
+    await user.click(phoneLink)
+    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+      channel: 'phone',
+      placement: 'footer',
+    })
+  })
+
+  it('renders email link with tracking', async () => {
+    const user = userEvent.setup()
+    render(<Footer />)
+
+    const emailLink = screen.getByRole('link', { name: 'Email' })
+    expect(emailLink).toHaveAttribute('href', `mailto:${contact.email}`)
+
+    await user.click(emailLink)
+    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+      channel: 'email',
+      placement: 'footer',
+    })
+  })
+
+  it('renders Instagram link with tracking', async () => {
+    const user = userEvent.setup()
+    render(<Footer />)
+
+    const instagramLink = screen.getByRole('link', { name: 'Instagram' })
+    expect(instagramLink).toHaveAttribute('href', contact.socialMedia.instagram)
+    expect(instagramLink).toHaveAttribute('target', '_blank')
+
+    await user.click(instagramLink)
+    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+      channel: 'instagram',
+      placement: 'footer',
+    })
+  })
+
+  it('renders Facebook link with tracking', async () => {
+    if (!contact.socialMedia.facebook) {
+      throw new Error('Expected facebook link in contact data for this test')
+    }
+
+    const user = userEvent.setup()
+    render(<Footer />)
+
+    const facebookLink = screen.getByRole('link', { name: 'Facebook' })
+    expect(facebookLink).toHaveAttribute('href', contact.socialMedia.facebook)
+    expect(facebookLink).toHaveAttribute('target', '_blank')
+
+    await user.click(facebookLink)
+    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+      channel: 'facebook',
+      placement: 'footer',
+    })
+  })
+
+  it('displays contact information', () => {
+    render(<Footer />)
+
+    expect(screen.getByText(contact.phone)).toBeInTheDocument()
+    expect(screen.getByText(contact.email)).toBeInTheDocument()
+    expect(screen.getByText(/ul\. Paderewskiego 11a/)).toBeInTheDocument()
+    expect(screen.getByText(/Starogard Gdański/)).toBeInTheDocument()
+  })
+
+  it('displays copyright information', () => {
+    render(<Footer />)
+
+    const year = new Date().getFullYear()
+    expect(
+      screen.getByText(
+        new RegExp(`© ${year} Ka.Cosmetology. Wszystkie prawa zastrzeżone.`),
+      ),
+    ).toBeInTheDocument()
+  })
+})

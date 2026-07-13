@@ -1,0 +1,90 @@
+import { expect, test } from '@playwright/test'
+
+test.describe('TanStack Start integration', () => {
+  test('server-renders critical homepage content and SEO metadata', async ({
+    request,
+  }) => {
+    const response = await request.get('/')
+    expect(response.ok()).toBe(true)
+
+    const html = await response.text()
+    expect(html).toContain('Katarzyna Suwalska')
+    expect(html).toContain('O mnie')
+    expect(html).toContain('Jak wygląda współpraca')
+    expect(html).toContain('Holistycznie znaczy czule.')
+    expect(html).toContain('Zabiegi')
+    expect(html).toContain(
+      '<title>Katarzyna Suwalska | Kosmetolog | Trycholog | Starogard Gdański</title>',
+    )
+    expect(html).toContain('rel="canonical"')
+    expect(html).toContain('property="og:title"')
+
+    const jsonLdMatch = html.match(
+      /<script type="application\/ld\+json">([^<]+)<\/script>/,
+    )
+    expect(jsonLdMatch).not.toBeNull()
+    expect(JSON.parse(jsonLdMatch?.[1] ?? '{}')).toMatchObject({
+      '@type': 'BeautySalon',
+      name: 'Ka.Cosmetology',
+      url: 'https://kacosmetology.pl/',
+    })
+  })
+
+  test('hydrates without browser-global or recoverable errors', async ({
+    page,
+  }) => {
+    const errors: string[] = []
+    page.on('pageerror', (error) => errors.push(error.message))
+    page.on('console', (message) => {
+      if (message.type() === 'error') {
+        errors.push(message.text())
+      }
+    })
+
+    await page.goto('/')
+    await expect(
+      page.getByRole('heading', { name: 'Katarzyna Suwalska' }),
+    ).toBeVisible()
+    await expect
+      .poll(() => page.evaluate(() => history.state?.__TSR_key))
+      .not.toBeFalsy()
+    await page.getByRole('button', { name: 'Poznaj mnie' }).click()
+    await expect(page).toHaveURL(/#o-mnie$/)
+
+    expect(errors).toEqual([])
+  })
+
+  test('keeps Router history state during eager and deferred hash navigation', async ({
+    page,
+  }, testInfo) => {
+    await page.goto('/')
+    await expect
+      .poll(() => page.evaluate(() => history.state?.__TSR_key))
+      .not.toBeFalsy()
+
+    await page.getByRole('button', { name: 'Poznaj mnie' }).click()
+    await expect(page).toHaveURL(/#o-mnie$/)
+    await expect(page.locator('#o-mnie')).toBeInViewport()
+    await expect
+      .poll(() => page.evaluate(() => history.state?.__TSR_key))
+      .not.toBeFalsy()
+
+    if (testInfo.project.name.includes('Mobile')) {
+      await page
+        .getByRole('navigation', { name: 'Nawigacja dolna' })
+        .getByRole('button', { name: 'Kontakt' })
+        .click()
+    } else {
+      await page
+        .getByRole('navigation', { name: 'Główna nawigacja' })
+        .getByRole('link', { name: 'Kontakt' })
+        .click()
+    }
+
+    await expect(page).toHaveURL(/#kontakt$/)
+    await expect(page.locator('#kontakt')).toBeInViewport({ timeout: 10_000 })
+    await expect
+      .poll(() => page.evaluate(() => history.state?.__TSR_key))
+      .not.toBeFalsy()
+  })
+})

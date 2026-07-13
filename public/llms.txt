@@ -1,0 +1,25 @@
+# Ka.Cosmetology
+
+> Gabinet kosmetologiczny i trychologiczny w Starogardzie Gdańskim. Holistyczne terapie skóry i włosów — indywidualna diagnoza i rezerwacja online.
+
+Jednostronicowa witryna gabinetu Katarzyny Suwalskiej (magister kosmetologii). Poniższe linki prowadzą do sekcji na stronie głównej.
+
+## Strona
+
+- [Start](https://kacosmetology.pl/): Strona główna gabinetu
+- [O mnie](https://kacosmetology.pl/#o-mnie): Podejście holistyczne i doświadczenie
+- [Zabiegi](https://kacosmetology.pl/#zabiegi): Katalog zabiegów z cenami i opisami
+- [Efekty](https://kacosmetology.pl/#efekty): Galeria efektów przed i po
+- [Galeria](https://kacosmetology.pl/#galeria): Zdjęcia gabinetu
+- [Opinie](https://kacosmetology.pl/#opinie): Opinie klientek
+- [Kontakt](https://kacosmetology.pl/#kontakt): Telefon, e-mail, adres, godziny otwarcia
+
+## Rezerwacja
+
+- [Booksy — umów wizytę](https://kacosmetology.booksy.com): Rezerwacja wizyt online 24/7
+
+## Optional
+
+- [Instagram](https://www.instagram.com/ka.cosmetology): Profil gabinetu w social media
+- [Facebook](https://www.facebook.com/profile.php?id=61579179969990): Profil gabinetu w social media
+- [Mapa witryny](https://kacosmetology.pl/sitemap.xml): Plik sitemap.xml

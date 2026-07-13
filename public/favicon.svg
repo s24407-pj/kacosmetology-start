@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="2666.6665" height="2666.6665"><svg version="1.1" id="SvgjsSvg1099" width="2666.6665" height="2666.6665" viewBox="0 0 2666.6665 2666.6665" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+  <defs id="SvgjsDefs1098">
+    <clipPath clipPathUnits="userSpaceOnUse" id="SvgjsClipPath1097">
+      <path d="M 0,2000 H 2000 V 0 H 0 Z" transform="translate(-927.87475,-1168.6964)" id="SvgjsPath1096"></path>
+    </clipPath>
+    <clipPath clipPathUnits="userSpaceOnUse" id="SvgjsClipPath1095">
+      <path d="M 0,2000 H 2000 V 0 H 0 Z" transform="translate(-1000.5183,-1015.2081)" id="SvgjsPath1094"></path>
+    </clipPath>
+  </defs>
+  <g id="SvgjsG1093" transform="translate(0,-9.9999997e-5)">
+    <path id="SvgjsPath1092" d="M 0,0 H 2000 V 2000 H 0 Z" style="fill:#6a1414;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="matrix(1.3333333,0,0,-1.3333333,0,2666.6667)"></path>
+    <path id="SvgjsPath1091" d="m 0,0 c 36.431,55.287 58.505,71.836 81.993,90.626 l 0.941,2.979 -63.366,-0.638 -0.941,-2.978 C 30.344,71.553 29.625,55.96 -7.041,-0.071 l -184.68,-283.28 V -8.515 c 0,61.721 8.494,76.416 24.266,95.52 v 2.939 h -87.363 v -2.939 c 15.775,-19.104 24.269,-33.799 24.269,-95.52 v -332.113 c 0,-61.721 -8.494,-76.417 -24.269,-95.52 v -2.939 h 87.363 v 2.939 c -15.772,19.103 -24.266,33.799 -24.266,95.52 v 47.462 l 69.951,106.965 78.504,-117.518 c 0.746,15.733 3.281,31.497 7.251,47.269 l -66.547,99.62 z" style="fill:#f4f0ed;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="matrix(3.1096169,0,0,-3.1096169,1108.2174,801.56751)" clip-path="url(#clipPath3)"></path>
+    <path id="SvgjsPath1090" d="m 0,0 c -10.423,0 -20.692,-0.661 -30.787,-1.892 l 1.897,3.249 0.028,0.001 C 0.106,52.793 39.905,106.292 74.39,161.873 c 9.242,14.695 17.777,29.391 26.311,44.087 8.534,-13.962 16.357,-32.331 25.6,-60.987 l 45.5,-139.652 4.867,-14.649 h 0.124 l 34.279,-104.524 C 165.798,-45.319 88.105,0 0,0 M 273.317,-187.14 133.222,243.432 H 69.411 v -2.939 C 93.589,221.389 80.076,180.977 67.989,161.873 2.563,58.272 -91.307,-55.617 -91.307,-159.954 c 0,-52.168 21.334,-93.316 58.314,-125.645 h 86.758 v 2.939 c -69.69,29.39 -125.87,72.007 -125.87,157.239 0,36.709 14.349,74.127 35.656,113.627 l -0.009,0.007 c 0,0 0.945,1.75 1.331,2.459 l 1.153,1.976 c 11.114,1.535 22.445,2.381 33.974,2.381 94.128,0 176.124,-52.768 218.079,-130.251 l 17.027,-51.918 c 19.913,-60.986 15.646,-76.416 -2.845,-95.52 v -2.939 h 36.752 22.728 35.623 v 2.939 c -18.491,19.104 -34.134,33.799 -54.047,95.52" style="fill:#f4f0ed;fill-opacity:1;fill-rule:nonzero;stroke:none" transform="matrix(3.1096169,0,0,-3.1096169,1334.1109,1278.8574)" clip-path="url(#clipPath5)"></path>
+  </g>
+</svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
+@media (prefers-color-scheme: dark) { :root { filter: none; } }
+</style></svg>
