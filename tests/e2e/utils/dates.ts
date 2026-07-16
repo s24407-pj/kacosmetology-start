@@ -1,6 +1,7 @@
 /**
  * Shared fixed dates for e2e tests.
- * All dates are ISO 8601 strings compatible with `mockDate()`.
+ * Date-sensitive scenarios pass these through the reference-time navigation
+ * contract so SSR and hydration use the same instant.
  */
 
 /** Monday 2024-03-04 at 12:00 Warsaw time (CET, UTC+1) — salon is open (09:00–17:00). */

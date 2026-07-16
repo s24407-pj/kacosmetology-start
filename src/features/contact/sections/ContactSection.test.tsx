@@ -4,6 +4,14 @@ import { cleanup, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+const { referenceTime } = vi.hoisted(() => ({
+  referenceTime: new Date('2025-09-15T12:00:00.000Z'),
+}))
+
+vi.mock('@context/RenderTimeProvider', () => ({
+  useRenderTime: () => referenceTime,
+}))
+
 vi.mock('@libs/openingHours', () => ({
   getCurrentOpeningSnapshot: vi.fn(() => ({
     currentDayName: 'poniedziałek',
@@ -152,6 +160,12 @@ describe('ContactSection', () => {
       selector: 'span',
     })
     expect(activeDayHours).toHaveAttribute('aria-current', 'date')
+  })
+
+  it('derives opening hours from the canonical render time', () => {
+    render(<ContactSection />)
+
+    expect(mockedGetCurrentOpeningSnapshot).toHaveBeenCalledWith(referenceTime)
   })
 
   it('announces currently open state for assistive technologies', () => {

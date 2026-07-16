@@ -1,4 +1,9 @@
 import { expect, test } from '@playwright/test'
+import { SEPTEMBER_PROMOTION_DATE } from './utils/dates'
+import { homepageUrlAt } from './utils/referenceTime'
+
+const SEPTEMBER_PROMOTION_MESSAGE =
+  'Promocja! - wszystkie zabiegi przez cały wrzesień.'
 
 test.describe('TanStack Start integration', () => {
   test('server-renders critical homepage content and SEO metadata', async ({
@@ -50,6 +55,34 @@ test.describe('TanStack Start integration', () => {
       .not.toBeFalsy()
     await page.getByRole('button', { name: 'Poznaj mnie' }).click()
     await expect(page).toHaveURL(/#o-mnie$/)
+
+    expect(errors).toEqual([])
+  })
+
+  test('uses one fixed reference time for server rendering and hydration', async ({
+    page,
+    request,
+  }) => {
+    const referenceUrl = homepageUrlAt(SEPTEMBER_PROMOTION_DATE)
+    const response = await request.get(referenceUrl)
+    expect(response.ok()).toBe(true)
+    expect(await response.text()).toContain(SEPTEMBER_PROMOTION_MESSAGE)
+
+    const errors: string[] = []
+    page.on('pageerror', (error) => errors.push(error.message))
+    page.on('console', (message) => {
+      if (message.type() === 'error') {
+        errors.push(message.text())
+      }
+    })
+
+    await page.goto(referenceUrl)
+    await expect
+      .poll(() => page.evaluate(() => history.state?.__TSR_key))
+      .not.toBeFalsy()
+    await expect(
+      page.getByRole('status', { name: 'Aktywna promocja' }),
+    ).toContainText(SEPTEMBER_PROMOTION_MESSAGE)
 
     expect(errors).toEqual([])
   })

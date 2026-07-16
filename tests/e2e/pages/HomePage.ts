@@ -1,10 +1,19 @@
-import type { Locator, Page } from '@playwright/test'
+import { expect, type Locator, type Page } from '@playwright/test'
+import { homepageUrlAt } from '../utils/referenceTime'
 import { ContactComponent } from './components/ContactComponent'
 import { EffectsComponent } from './components/EffectsComponent'
 import { GalleryComponent } from './components/GalleryComponent'
 import { NavigationComponent } from './components/NavigationComponent'
 import { OpinionsComponent } from './components/OpinionsComponent'
 import { ServicesComponent } from './components/ServicesComponent'
+
+interface HomePageNavigationOptions {
+  referenceTime?: string
+}
+
+interface ActivePromotionNavigationOptions extends HomePageNavigationOptions {
+  expectedText: string
+}
 
 export class HomePage {
   readonly navigation: NavigationComponent
@@ -47,10 +56,34 @@ export class HomePage {
     this.contentInfo = page.getByRole('contentinfo')
   }
 
-  async goto() {
-    await this.page.goto('/')
+  async goto({ referenceTime }: HomePageNavigationOptions = {}) {
+    await this.page.goto(
+      referenceTime === undefined ? '/' : homepageUrlAt(referenceTime),
+    )
+    await this.waitUntilReady()
+  }
+
+  async gotoWithActivePromotion({
+    referenceTime,
+    expectedText,
+  }: ActivePromotionNavigationOptions) {
+    await this.goto({ referenceTime })
+    await this.waitForActivePromotion(expectedText)
+  }
+
+  async waitUntilReady() {
+    await expect(this.page.locator('html')).toHaveAttribute(
+      'data-react-client-ready',
+      'true',
+    )
     await this.page.waitForFunction(() => Boolean(history.state?.__TSR_key))
-    await this.page.locator('#kontakt').waitFor({ state: 'attached' })
+    await expect(this.heroHeading).toBeVisible()
+  }
+
+  async waitForActivePromotion(expectedText: string) {
+    await this.waitUntilReady()
+    await expect(this.activePromotionBanner).toBeVisible()
+    await expect(this.activePromotionBanner).toContainText(expectedText)
   }
 
   getAboutSection() {

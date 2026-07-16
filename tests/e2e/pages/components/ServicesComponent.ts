@@ -1,4 +1,4 @@
-import type { Locator, Page } from '@playwright/test'
+import { expect, type Locator, type Page } from '@playwright/test'
 
 export class ServicesComponent {
   readonly section: Locator
@@ -21,6 +21,23 @@ export class ServicesComponent {
 
   getServiceCard(name: string) {
     return this.page.getByRole('button', { name })
+  }
+
+  async selectCategory(name: string) {
+    const categoryButton = this.getCategoryButton(name)
+    await this.scrollTo()
+    await categoryButton.click()
+    await expect(categoryButton).toHaveAttribute('aria-pressed', 'true')
+  }
+
+  async selectPromotions(expectedText: string) {
+    await this.selectCategory('Promocje')
+    await expect(
+      this.servicesGrid.getByRole('heading', { name: 'Aktualna promocja' }),
+    ).toBeVisible()
+    await expect(
+      this.servicesGrid.getByText(expectedText, { exact: true }),
+    ).toBeVisible()
   }
 
   getConsultationNotice() {

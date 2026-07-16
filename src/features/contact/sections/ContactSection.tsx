@@ -2,6 +2,7 @@ import type { ContactLinkType } from '@app-types/types'
 import FacebookSVG from '@components/icons/FacebookSVG'
 import InstagramSVG from '@components/icons/InstagramSVG'
 import { Section, SectionHeader } from '@components/ui'
+import { useRenderTime } from '@context/RenderTimeProvider'
 import { contact, contactLinks } from '@data/contact'
 import { trackPlausibleEvent } from '@libs/analytics'
 import { getContactHref } from '@libs/contactLinks'
@@ -124,7 +125,8 @@ export default function ContactSection() {
 }
 
 function OpeningHoursList() {
-  const snapshot = getCurrentOpeningSnapshot()
+  const renderTime = useRenderTime()
+  const snapshot = getCurrentOpeningSnapshot(renderTime)
   const isOpenNow = Object.entries(contact.openingHours).some(([day, hours]) =>
     isOpeningSlotActive(hours, day, snapshot),
   )

@@ -22,8 +22,10 @@ export default defineConfig({
   webServer: {
     command: `pnpm build && HOST=${HOST} PORT=${PORT} pnpm start`,
     url: `http://${HOST}:${PORT}`,
-    // Opt-in reuse avoids false failures when an outdated preview server is already running.
-    reuseExistingServer: process.env.PW_REUSE_SERVER === '1',
+    env: {
+      PLAYWRIGHT_TEST_MODE: '1',
+    },
+    reuseExistingServer: false,
     stderr: 'pipe',
     stdout: 'pipe',
   },

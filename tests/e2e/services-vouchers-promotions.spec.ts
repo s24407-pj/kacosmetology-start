@@ -1,20 +1,20 @@
 import { expect, test } from '@playwright/test'
 import { HomePage } from './pages/HomePage'
 import { OCTOBER_PROMOTION_DATE } from './utils/dates'
-import { mockDate } from './utils/mockDate'
+
+const OCTOBER_PROMOTION_MESSAGE =
+  'Promocja! - oczyszczanie wodorowe – z 250 zł na 200 zł przez cały październik.'
+const OCTOBER_SERVICES_PROMOTION =
+  '-20% na oczyszczanie wodorowe – z 250 zł na 200 zł przez cały październik.'
 
 test.describe('Services vouchers and promotions', () => {
-  test.beforeEach(async ({ page }) => {
-    await mockDate(page, OCTOBER_PROMOTION_DATE)
-  })
-
   test('shows voucher-specific content for the Vouchery category', async ({
     page,
   }) => {
     const homePage = new HomePage(page)
-    await homePage.goto()
+    await homePage.goto({ referenceTime: OCTOBER_PROMOTION_DATE })
 
-    await homePage.services.getCategoryButton('Vouchery').click()
+    await homePage.services.selectCategory('Vouchery')
 
     const voucherCard = page.getByRole('heading', {
       name: 'Vouchery prezentowe',
@@ -34,12 +34,12 @@ test.describe('Services vouchers and promotions', () => {
     page,
   }) => {
     const homePage = new HomePage(page)
-    await homePage.goto()
+    await homePage.gotoWithActivePromotion({
+      referenceTime: OCTOBER_PROMOTION_DATE,
+      expectedText: OCTOBER_PROMOTION_MESSAGE,
+    })
 
-    await homePage.services.getCategoryButton('Promocje').click()
-
-    const banner = page.getByText(/-20% na oczyszczanie wodorowe/i)
-    await expect(banner).toBeVisible()
+    await homePage.services.selectPromotions(OCTOBER_SERVICES_PROMOTION)
 
     const discountedServiceCard = homePage.services.getServiceCard(
       'Oczyszczanie wodorowe',

@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { HomePage } from './pages/HomePage'
 import { OPEN_WEEKDAY_DATE } from './utils/dates'
-import { mockDate } from './utils/mockDate'
 
 test.describe('Contact section', () => {
   let homePage: HomePage
@@ -100,10 +99,8 @@ test.describe('Contact section', () => {
         'Run on desktop form factors to inspect sticky actions comfortably',
       )
 
-      await mockDate(page, OPEN_WEEKDAY_DATE)
-
       const contactHomePage = new HomePage(page)
-      await contactHomePage.goto()
+      await contactHomePage.goto({ referenceTime: OPEN_WEEKDAY_DATE })
 
       const stickyPhoneButton = contactHomePage.contact.getAsidePhoneButton()
       await expect(stickyPhoneButton).toBeVisible()

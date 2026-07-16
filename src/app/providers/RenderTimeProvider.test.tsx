@@ -19,7 +19,9 @@ describe('RenderTimeProvider', () => {
     const initialTimestamp = '2026-07-12T09:30:00.000Z'
 
     const html = renderToString(
-      <RenderTimeProvider initialTimestamp={initialTimestamp}>
+      <RenderTimeProvider
+        snapshot={{ mode: 'live', timestamp: initialTimestamp }}
+      >
         <RenderTimeValue />
       </RenderTimeProvider>,
     )
@@ -32,7 +34,12 @@ describe('RenderTimeProvider', () => {
     vi.setSystemTime(new Date('2026-07-12T10:00:00.000Z'))
 
     render(
-      <RenderTimeProvider initialTimestamp="2026-07-12T09:30:00.000Z">
+      <RenderTimeProvider
+        snapshot={{
+          mode: 'live',
+          timestamp: '2026-07-12T09:30:00.000Z',
+        }}
+      >
         <RenderTimeValue />
       </RenderTimeProvider>,
     )
@@ -44,7 +51,9 @@ describe('RenderTimeProvider', () => {
     const initialTimestamp = '2026-07-12T09:30:00.000Z'
     const container = document.createElement('div')
     container.innerHTML = renderToString(
-      <RenderTimeProvider initialTimestamp={initialTimestamp}>
+      <RenderTimeProvider
+        snapshot={{ mode: 'live', timestamp: initialTimestamp }}
+      >
         <RenderTimeValue />
       </RenderTimeProvider>,
     )
@@ -58,7 +67,9 @@ describe('RenderTimeProvider', () => {
     await act(async () => {
       root = hydrateRoot(
         container,
-        <RenderTimeProvider initialTimestamp={initialTimestamp}>
+        <RenderTimeProvider
+          snapshot={{ mode: 'live', timestamp: initialTimestamp }}
+        >
           <RenderTimeValue />
         </RenderTimeProvider>,
         { onRecoverableError },
@@ -70,6 +81,110 @@ describe('RenderTimeProvider', () => {
 
     act(() => root.unmount())
     container.remove()
+  })
+
+  it('keeps a fixed snapshot through hydration', async () => {
+    const fixedTimestamp = '2025-09-15T12:00:00.000Z'
+    const snapshot = { mode: 'fixed', timestamp: fixedTimestamp } as const
+    const container = document.createElement('div')
+    container.innerHTML = renderToString(
+      <RenderTimeProvider snapshot={snapshot}>
+        <RenderTimeValue />
+      </RenderTimeProvider>,
+    )
+    document.body.appendChild(container)
+
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-07-12T10:00:00.000Z'))
+    const onRecoverableError = vi.fn()
+    let root: ReturnType<typeof hydrateRoot>
+
+    await act(async () => {
+      root = hydrateRoot(
+        container,
+        <RenderTimeProvider snapshot={snapshot}>
+          <RenderTimeValue />
+        </RenderTimeProvider>,
+        { onRecoverableError },
+      )
+    })
+
+    expect(onRecoverableError).not.toHaveBeenCalled()
+    expect(container).toHaveTextContent(fixedTimestamp)
+
+    act(() => root.unmount())
+    container.remove()
+  })
+
+  it('publishes client readiness only after effects mount', async () => {
+    const snapshot = {
+      mode: 'fixed',
+      timestamp: '2025-09-15T12:00:00.000Z',
+    } as const
+    const container = document.createElement('div')
+    container.innerHTML = renderToString(
+      <RenderTimeProvider snapshot={snapshot}>
+        <RenderTimeValue />
+      </RenderTimeProvider>,
+    )
+    document.body.appendChild(container)
+
+    expect(document.documentElement).not.toHaveAttribute(
+      'data-react-client-ready',
+    )
+
+    let root: ReturnType<typeof hydrateRoot>
+    await act(async () => {
+      root = hydrateRoot(
+        container,
+        <RenderTimeProvider snapshot={snapshot}>
+          <RenderTimeValue />
+        </RenderTimeProvider>,
+      )
+    })
+
+    expect(document.documentElement).toHaveAttribute(
+      'data-react-client-ready',
+      'true',
+    )
+
+    act(() => root.unmount())
+    expect(document.documentElement).not.toHaveAttribute(
+      'data-react-client-ready',
+    )
+    container.remove()
+  })
+
+  it('updates consumers when a fixed snapshot changes', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-07-12T10:00:00.000Z'))
+
+    const { rerender } = render(
+      <RenderTimeProvider
+        snapshot={{
+          mode: 'fixed',
+          timestamp: '2025-09-15T12:00:00.000Z',
+        }}
+      >
+        <RenderTimeValue />
+      </RenderTimeProvider>,
+    )
+
+    rerender(
+      <RenderTimeProvider
+        snapshot={{
+          mode: 'fixed',
+          timestamp: '2025-10-15T12:00:00.000Z',
+        }}
+      >
+        <RenderTimeValue />
+      </RenderTimeProvider>,
+    )
+
+    expect(screen.getByText('2025-10-15T12:00:00.000Z')).toBeInTheDocument()
+    expect(
+      screen.queryByText('2026-07-12T10:00:00.000Z'),
+    ).not.toBeInTheDocument()
   })
 
   it('uses the current time when rendered outside the provider', () => {

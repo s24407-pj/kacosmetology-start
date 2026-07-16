@@ -1,23 +1,21 @@
 import { expect, test } from '@playwright/test'
 import { HomePage } from './pages/HomePage'
 import { SEPTEMBER_PROMOTION_DATE } from './utils/dates'
-import { mockDate } from './utils/mockDate'
+
+const SEPTEMBER_PROMOTION_MESSAGE =
+  'Promocja! - wszystkie zabiegi przez cały wrzesień.'
 
 test.describe('Promotion banner', () => {
-  test.beforeEach(async ({ page }) => {
-    await mockDate(page, SEPTEMBER_PROMOTION_DATE)
-  })
-
   test('displays active promotion banner with call to action', async ({
     page,
   }) => {
     const homePage = new HomePage(page)
-    await homePage.goto()
+    await homePage.gotoWithActivePromotion({
+      referenceTime: SEPTEMBER_PROMOTION_DATE,
+      expectedText: SEPTEMBER_PROMOTION_MESSAGE,
+    })
 
     await expect(homePage.activePromotionBanner).toBeVisible()
-    await expect(homePage.activePromotionBanner).toContainText(
-      'Promocja! - wszystkie zabiegi przez cały wrzesień.',
-    )
 
     const cta = page.getByRole('link', {
       name: 'Zarezerwuj termin',
@@ -34,9 +32,10 @@ test.describe('Promotion banner', () => {
     page,
   }) => {
     const homePage = new HomePage(page)
-    await homePage.goto()
-
-    await expect(homePage.activePromotionBanner).toBeVisible()
+    await homePage.gotoWithActivePromotion({
+      referenceTime: SEPTEMBER_PROMOTION_DATE,
+      expectedText: SEPTEMBER_PROMOTION_MESSAGE,
+    })
 
     await homePage.dismissPromotionBannerButton.click()
 
@@ -49,7 +48,6 @@ test.describe('Promotion banner', () => {
     expect(storageValue).toBeNull()
 
     await page.reload()
-
-    await expect(homePage.activePromotionBanner).toBeVisible()
+    await homePage.waitForActivePromotion(SEPTEMBER_PROMOTION_MESSAGE)
   })
 })
