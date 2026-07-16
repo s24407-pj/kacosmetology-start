@@ -1,4 +1,4 @@
-import type { ServiceCategory, ServiceId } from '@app-types/types'
+import type { ServiceCatalogCategory, ServiceId } from '@app-types/types'
 import HairsBulbSVG from '@components/icons/HairsBulbSVG'
 import {
   Alert,
@@ -22,8 +22,10 @@ import { Eye, Gift, Monitor, Percent, Sparkles } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import ExpandableServiceCard from '../components/ExpandableServiceCard'
 
+type ServiceView = ServiceCatalogCategory | 'Vouchery' | 'Promocje'
+
 const categories: Array<{
-  id: ServiceCategory
+  id: ServiceView
   label: string
   icon: React.ReactNode
 }> = [
@@ -52,7 +54,7 @@ export default function ServicesSection() {
   const navigate = useNavigate({ from: '/' })
   const hash = useRouterState({ select: (state) => state.location.hash })
   const [activeCategory, setActiveCategory] =
-    useState<ServiceCategory>('Kosmetologia')
+    useState<ServiceView>('Kosmetologia')
   const [expandedCard, setExpandedCard] = useState<ServiceId | null>(null)
 
   useEffect(() => {
@@ -81,7 +83,7 @@ export default function ServicesSection() {
       )
     : []
 
-  const handleCategoryChange = (category: ServiceCategory) => {
+  const handleCategoryChange = (category: ServiceView) => {
     setActiveCategory(category)
   }
 
@@ -97,7 +99,8 @@ export default function ServicesSection() {
       ? promotedServices
       : services.filter(
           (service) =>
-            service.category.toLowerCase() === activeCategory.toLowerCase(),
+            service.catalogCategory.toLowerCase() ===
+            activeCategory.toLowerCase(),
         )
   const standardServices = isVoucherCategory
     ? []

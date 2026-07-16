@@ -1,9 +1,7 @@
-export type ServiceCategory =
+export type ServiceCatalogCategory =
   | 'Oprawa oka'
   | 'Trychologia'
   | 'Kosmetologia'
-  | 'Vouchery'
-  | 'Promocje'
   | 'Online'
 
 export type ServiceId = `service-${string}`
@@ -21,7 +19,7 @@ export interface PriceHistoryEntry {
 export interface Service {
   id: ServiceId
   name: string
-  category: ServiceCategory
+  catalogCategory: ServiceCatalogCategory
   price: number // zł
   duration: number // min
   isNext: boolean

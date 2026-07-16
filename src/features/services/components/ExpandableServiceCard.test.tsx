@@ -46,7 +46,7 @@ describe('ExpandableServiceCard', () => {
   const service: Service = {
     id: 'service-test-service',
     name: 'Test Service',
-    category: 'Kosmetologia',
+    catalogCategory: 'Kosmetologia',
     price: 250,
     duration: 75,
     isNext: false,

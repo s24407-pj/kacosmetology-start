@@ -1,4 +1,8 @@
-import type { Service, ServiceCategory, ServiceId } from '@app-types/types'
+import type {
+  Service,
+  ServiceCatalogCategory,
+  ServiceId,
+} from '@app-types/types'
 import { getServiceById } from '@data/services'
 
 interface PromotionApplicabilityAll {
@@ -8,7 +12,7 @@ interface PromotionApplicabilityAll {
 
 interface PromotionApplicabilityCategories {
   type: 'categories'
-  categories: ServiceCategory[]
+  categories: ServiceCatalogCategory[]
   description?: string
 }
 
@@ -330,7 +334,7 @@ export function doesPromotionApplyToService(
   }
 
   if (promotion.applicability.type === 'categories') {
-    return promotion.applicability.categories.includes(service.category)
+    return promotion.applicability.categories.includes(service.catalogCategory)
   }
 
   return promotion.applicability.serviceIds.includes(service.id)

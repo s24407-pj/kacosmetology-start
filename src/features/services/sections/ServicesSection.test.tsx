@@ -8,7 +8,7 @@ vi.mock('@data/services', () => {
     {
       id: 'service-classic-facial',
       name: 'Classic Facial',
-      category: 'Kosmetologia',
+      catalogCategory: 'Kosmetologia',
       price: 150,
       duration: 60,
       isNext: false,
@@ -17,7 +17,7 @@ vi.mock('@data/services', () => {
     {
       id: 'service-consultation-peel',
       name: 'Consultation Peel',
-      category: 'Kosmetologia',
+      catalogCategory: 'Kosmetologia',
       price: 230,
       duration: 75,
       isNext: true,
@@ -26,7 +26,7 @@ vi.mock('@data/services', () => {
     {
       id: 'service-classic-facial-premium',
       name: 'Classic Facial',
-      category: 'Kosmetologia',
+      catalogCategory: 'Kosmetologia',
       price: 190,
       duration: 75,
       isNext: false,
@@ -35,7 +35,7 @@ vi.mock('@data/services', () => {
     {
       id: 'service-scalp-therapy',
       name: 'Scalp Therapy',
-      category: 'Trychologia',
+      catalogCategory: 'Trychologia',
       price: 260,
       duration: 70,
       isNext: false,

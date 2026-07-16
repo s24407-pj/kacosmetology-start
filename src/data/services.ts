@@ -5,7 +5,7 @@ export const services: Service[] = [
   {
     id: 'service-henna-brwi-z-regulacja',
     name: 'Henna brwi z regulacją',
-    category: 'Oprawa oka',
+    catalogCategory: 'Oprawa oka',
     price: 60,
     duration: 40,
     isNext: false,
@@ -24,7 +24,7 @@ export const services: Service[] = [
   {
     id: 'service-farbka-z-regulacja',
     name: 'Farbka z regulacją',
-    category: 'Oprawa oka',
+    catalogCategory: 'Oprawa oka',
     price: 80,
     duration: 40,
     isNext: false,
@@ -41,7 +41,7 @@ export const services: Service[] = [
   {
     id: 'service-regulacja-brwi',
     name: 'Regulacja brwi',
-    category: 'Oprawa oka',
+    catalogCategory: 'Oprawa oka',
     price: 30,
     duration: 20,
     isNext: false,
@@ -59,7 +59,7 @@ export const services: Service[] = [
   {
     id: 'service-laminacja-brwi-regulacja-bez-koloryzacji',
     name: 'Laminacja brwi + regulacja (bez koloryzacji)',
-    category: 'Oprawa oka',
+    catalogCategory: 'Oprawa oka',
     price: 110,
     duration: 60,
     isNext: false,
@@ -79,7 +79,7 @@ export const services: Service[] = [
   {
     id: 'service-laminacja-brwi-regulacja-koloryzacja',
     name: 'Laminacja brwi + regulacja + koloryzacja',
-    category: 'Oprawa oka',
+    catalogCategory: 'Oprawa oka',
     price: 150,
     duration: 60,
     isNext: false,
@@ -99,7 +99,7 @@ export const services: Service[] = [
   {
     id: 'service-lifting-rzes-farbka',
     name: 'Lifting rzęs + farbka',
-    category: 'Oprawa oka',
+    catalogCategory: 'Oprawa oka',
     price: 150,
     duration: 90,
     isNext: false,
@@ -138,7 +138,7 @@ export const services: Service[] = [
   {
     id: 'service-laminacja-brwi-lifting-rzes',
     name: 'Laminacja brwi + lifting rzęs',
-    category: 'Oprawa oka',
+    catalogCategory: 'Oprawa oka',
     price: 250,
     duration: 120,
     isNext: false,
@@ -163,7 +163,7 @@ export const services: Service[] = [
   {
     id: 'service-pierwsza-konsultacja-trychologiczna',
     name: 'Pierwsza konsultacja trychologiczna',
-    category: 'Trychologia',
+    catalogCategory: 'Trychologia',
     price: 200,
     duration: 60,
     isNext: false,
@@ -191,7 +191,7 @@ export const services: Service[] = [
   {
     id: 'service-zabieg-trychologiczny-dobrany-indywidualnie',
     name: 'Zabieg trychologiczny dobrany indywidualnie',
-    category: 'Trychologia',
+    catalogCategory: 'Trychologia',
     price: 350,
     duration: 90,
     isNext: true,
@@ -207,7 +207,7 @@ export const services: Service[] = [
   {
     id: 'service-rekonstrukcja-lodygi-wlosa-joico',
     name: 'Rekonstrukcja łodygi włosa – JOICO',
-    category: 'Trychologia',
+    catalogCategory: 'Trychologia',
     price: 200,
     duration: 90,
     isNext: false,
@@ -224,7 +224,7 @@ export const services: Service[] = [
   {
     id: 'service-mezoterapia-mikroiglowa-skory-glowy',
     name: 'Mezoterapia mikroigłowa skóry głowy',
-    category: 'Trychologia',
+    catalogCategory: 'Trychologia',
     price: 400,
     duration: 60,
     isNext: true,
@@ -246,7 +246,7 @@ export const services: Service[] = [
   {
     id: 'service-mezoterapia-iglowa-skory-glowy',
     name: 'Mezoterapia igłowa skóry głowy',
-    category: 'Trychologia',
+    catalogCategory: 'Trychologia',
     price: 550,
     duration: 60,
     isNext: true,
@@ -271,7 +271,7 @@ export const services: Service[] = [
   {
     id: 'service-oczyszczanie-wodorowe',
     name: 'Oczyszczanie wodorowe',
-    category: 'Kosmetologia',
+    catalogCategory: 'Kosmetologia',
     price: 250,
     duration: 60,
     isNext: false,
@@ -297,7 +297,7 @@ export const services: Service[] = [
   {
     id: 'service-mezoterapia-mikroiglowa-ampulka',
     name: 'Mezoterapia mikroigłowa + ampułka',
-    category: 'Kosmetologia',
+    catalogCategory: 'Kosmetologia',
     price: 350,
     duration: 120,
     isNext: true,
@@ -320,7 +320,7 @@ export const services: Service[] = [
   {
     id: 'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
     name: 'Pierwsza konsultacja kosmetologiczna z zabiegiem',
-    category: 'Kosmetologia',
+    catalogCategory: 'Kosmetologia',
     price: 350,
     duration: 120,
     isNext: false,
@@ -354,7 +354,7 @@ export const services: Service[] = [
   {
     id: 'service-zabieg-kosmetologiczny-dobrany-indywidualnie',
     name: 'Zabieg kosmetologiczny dobrany indywidualnie',
-    category: 'Kosmetologia',
+    catalogCategory: 'Kosmetologia',
     price: 300,
     duration: 90,
     isNext: true,
@@ -376,7 +376,7 @@ export const services: Service[] = [
   {
     id: 'service-eksfoliacja-kwasami',
     name: 'Eksfoliacja kwasami',
-    category: 'Kosmetologia',
+    catalogCategory: 'Kosmetologia',
     price: 300,
     duration: 90,
     isNext: true,
@@ -401,7 +401,7 @@ export const services: Service[] = [
   {
     id: 'service-terapia-tradziku-kolejny-zabieg',
     name: 'Terapia trądziku – kolejny zabieg',
-    category: 'Kosmetologia',
+    catalogCategory: 'Kosmetologia',
     price: 300,
     duration: 90,
     isNext: true,
@@ -439,7 +439,7 @@ export const services: Service[] = [
   {
     id: 'service-redukcja-przebarwien',
     name: 'Redukcja przebarwień',
-    category: 'Kosmetologia',
+    catalogCategory: 'Kosmetologia',
     price: 300,
     duration: 120,
     isNext: true,
@@ -460,7 +460,7 @@ export const services: Service[] = [
   {
     id: 'service-zabieg-regeneracyjny',
     name: 'Zabieg regeneracyjny',
-    category: 'Kosmetologia',
+    catalogCategory: 'Kosmetologia',
     price: 300,
     duration: 90,
     isNext: true,
@@ -481,7 +481,7 @@ export const services: Service[] = [
   {
     id: 'service-zabieg-regeneracyjny-dla-kobiet-w-ciazy',
     name: 'Zabieg regeneracyjny dla kobiet w ciąży',
-    category: 'Kosmetologia',
+    catalogCategory: 'Kosmetologia',
     price: 300,
     duration: 90,
     isNext: true,
@@ -498,7 +498,7 @@ export const services: Service[] = [
   {
     id: 'service-dzialanie-przeciwstarzeniowe',
     name: 'Działanie przeciwstarzeniowe',
-    category: 'Kosmetologia',
+    catalogCategory: 'Kosmetologia',
     price: 300,
     duration: 90,
     isNext: true,
@@ -522,7 +522,7 @@ export const services: Service[] = [
   {
     id: 'service-zabieg-nawilzajacy-odbudowujacy',
     name: 'Zabieg nawilżający / odbudowujący',
-    category: 'Kosmetologia',
+    catalogCategory: 'Kosmetologia',
     price: 300,
     duration: 90,
     isNext: true,
@@ -539,7 +539,7 @@ export const services: Service[] = [
   {
     id: 'service-zabieg-oczyszczajacy',
     name: 'Zabieg oczyszczający',
-    category: 'Kosmetologia',
+    catalogCategory: 'Kosmetologia',
     price: 300,
     duration: 90,
     isNext: false,
@@ -563,7 +563,7 @@ export const services: Service[] = [
   {
     id: 'service-konsultacja-trychologiczna-online',
     name: 'Konsultacja trychologiczna online',
-    category: 'Online',
+    catalogCategory: 'Online',
     price: 160,
     duration: 60,
     isNext: false,
@@ -594,7 +594,7 @@ export const services: Service[] = [
   {
     id: 'service-konsultacja-kosmetologiczna-online',
     name: 'Konsultacja kosmetologiczna online',
-    category: 'Online',
+    catalogCategory: 'Online',
     price: 180,
     duration: 60,
     isNext: false,

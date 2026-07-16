@@ -1,4 +1,4 @@
-import type { Service, ServiceCategory } from '@app-types/types'
+import type { Service, ServiceCatalogCategory } from '@app-types/types'
 import { describe, expect, it } from 'vitest'
 import {
   type ActivePromotion,
@@ -162,7 +162,7 @@ describe('getPromotionScopeDescription', () => {
       endDate: new Date('2025-01-31'),
       applicability: {
         type: 'categories' as const,
-        categories: ['Kosmetologia'] as ServiceCategory[],
+        categories: ['Kosmetologia'] as ServiceCatalogCategory[],
       },
       ctaLabel: 'Book',
     }
@@ -197,7 +197,7 @@ describe('getPromotionScopeDescription', () => {
       endDate: new Date('2025-01-31'),
       applicability: {
         type: 'categories' as const,
-        categories: ['Kosmetologia'] as ServiceCategory[],
+        categories: ['Kosmetologia'] as ServiceCatalogCategory[],
         description: 'wybrane zabiegi kosmetologiczne',
       },
       ctaLabel: 'Book',
@@ -264,7 +264,7 @@ describe('doesPromotionApplyToService', () => {
     const service: Service = {
       id: 'service-oczyszczanie-wodorowe',
       name: 'Oczyszczanie wodorowe',
-      category: 'Kosmetologia',
+      catalogCategory: 'Kosmetologia',
       price: 250,
       duration: 60,
       isNext: false,
