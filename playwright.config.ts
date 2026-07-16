@@ -2,15 +2,22 @@ import { defineConfig, devices } from '@playwright/test'
 
 const PORT = 4173
 const HOST = '127.0.0.1'
+const isCI = Boolean(process.env.CI)
 
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
-  retries: process.env.CI ? 2 : 0,
-  reporter: process.env.CI ? 'github' : 'list',
+  retries: isCI ? 2 : 0,
+  failOnFlakyTests: isCI,
+  reporter: isCI
+    ? [
+        ['github'],
+        ['html', { open: 'never', outputFolder: 'playwright-report' }],
+      ]
+    : 'list',
   use: {
     baseURL: `http://${HOST}:${PORT}`,
-    trace: 'on-first-retry',
+    trace: isCI ? 'retain-on-failure-and-retries' : 'retain-on-failure',
   },
   webServer: {
     command: `pnpm build && HOST=${HOST} PORT=${PORT} pnpm start`,
