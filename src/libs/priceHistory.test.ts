@@ -108,6 +108,19 @@ describe('price history helpers', () => {
     ).toBe(80)
   })
 
+  it('excludes price points scheduled after the reference time', () => {
+    recordPriceChange(SERVICE_ID, 120, new Date('2024-01-01T00:00:00Z'))
+    recordPriceChange(SERVICE_ID, 80, new Date('2024-03-01T00:00:00Z'))
+
+    expect(
+      getLowestPriceInLastDays(
+        SERVICE_ID,
+        30,
+        new Date('2024-02-01T00:00:00Z'),
+      ),
+    ).toBe(120)
+  })
+
   it('returns undefined for services without history', () => {
     expect(getLowestPriceInLastDays('service-unknown-service')).toBeUndefined()
     expect(getPriceHistory('service-unknown-service')).toEqual([])
