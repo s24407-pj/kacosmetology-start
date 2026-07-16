@@ -3,12 +3,12 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
-import { CategoryButton } from './CategoryButton'
+import { ServiceViewButton } from './ServiceViewButton'
 
-describe('CategoryButton', () => {
+describe('ServiceViewButton', () => {
   it('renders inactive state by default', () => {
     render(
-      <CategoryButton
+      <ServiceViewButton
         icon={<span aria-hidden>☆</span>}
         label="Kosmetologia"
         onClick={() => {}}
@@ -30,7 +30,7 @@ describe('CategoryButton', () => {
     const user = userEvent.setup()
 
     render(
-      <CategoryButton
+      <ServiceViewButton
         active
         icon={<span aria-hidden>★</span>}
         label="Promocje"

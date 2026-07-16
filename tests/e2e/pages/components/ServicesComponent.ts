@@ -15,7 +15,7 @@ export class ServicesComponent {
     await this.section.scrollIntoViewIfNeeded()
   }
 
-  getCategoryButton(name: string) {
+  getViewButton(name: string) {
     return this.page.getByRole('button', { name })
   }
 
@@ -24,10 +24,10 @@ export class ServicesComponent {
   }
 
   async selectCategory(name: string) {
-    const categoryButton = this.getCategoryButton(name)
+    const viewButton = this.getViewButton(name)
     await this.scrollTo()
-    await categoryButton.click()
-    await expect(categoryButton).toHaveAttribute('aria-pressed', 'true')
+    await viewButton.click()
+    await expect(viewButton).toHaveAttribute('aria-pressed', 'true')
   }
 
   async selectPromotions(expectedText: string) {

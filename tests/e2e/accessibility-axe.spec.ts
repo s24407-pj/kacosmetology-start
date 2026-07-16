@@ -45,7 +45,7 @@ test.describe('Automated accessibility checks', () => {
     await expectNoSeriousA11yViolations(page)
 
     await homePage.services.scrollTo()
-    await homePage.services.getCategoryButton('Trychologia').click()
+    await homePage.services.getViewButton('Trychologia').click()
     await homePage.services
       .getServiceCard('Pierwsza konsultacja trychologiczna')
       .click()

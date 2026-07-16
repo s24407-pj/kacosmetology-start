@@ -14,11 +14,7 @@ test.describe('Accessibility landmarks', () => {
 
     await homePage.services.scrollTo()
     await expect(homePage.services.heading).toBeVisible()
-    await expect(
-      homePage.services.getCategoryButton('Kosmetologia'),
-    ).toBeVisible()
-    await expect(
-      homePage.services.getCategoryButton('Trychologia'),
-    ).toBeVisible()
+    await expect(homePage.services.getViewButton('Kosmetologia')).toBeVisible()
+    await expect(homePage.services.getViewButton('Trychologia')).toBeVisible()
   })
 })

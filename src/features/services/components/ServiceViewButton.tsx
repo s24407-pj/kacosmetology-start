@@ -1,7 +1,7 @@
 import { cn } from '@libs/utils'
 import type { ReactNode } from 'react'
 
-interface CategoryButtonProps {
+interface ServiceViewButtonProps {
   active?: boolean
   onClick: () => void
   icon: ReactNode
@@ -9,13 +9,13 @@ interface CategoryButtonProps {
   className?: string
 }
 
-export function CategoryButton({
+export function ServiceViewButton({
   active = false,
   onClick,
   icon,
   label,
   className,
-}: CategoryButtonProps) {
+}: ServiceViewButtonProps) {
   return (
     <button
       type="button"

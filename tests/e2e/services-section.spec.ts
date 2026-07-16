@@ -9,7 +9,7 @@ test.describe('Services catalogue interactions', () => {
     await homePage.goto()
     await homePage.services.scrollTo()
 
-    await homePage.services.getCategoryButton('Trychologia').click()
+    await homePage.services.getViewButton('Trychologia').click()
 
     await expect(homePage.services.getConsultationNotice()).toBeVisible()
 

@@ -2,7 +2,6 @@ import type { ServiceCatalogCategory, ServiceId } from '@app-types/types'
 import HairsBulbSVG from '@components/icons/HairsBulbSVG'
 import {
   Alert,
-  CategoryButton,
   PromotionBannerCard,
   Section,
   SectionHeader,
@@ -21,10 +20,11 @@ import { useNavigate, useRouterState } from '@tanstack/react-router'
 import { Eye, Gift, Monitor, Percent, Sparkles } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import ExpandableServiceCard from '../components/ExpandableServiceCard'
+import { ServiceViewButton } from '../components/ServiceViewButton'
 
 type ServiceView = ServiceCatalogCategory | 'Vouchery' | 'Promocje'
 
-const categories: Array<{
+const serviceViewOptions: Array<{
   id: ServiceView
   label: string
   icon: React.ReactNode
@@ -53,8 +53,7 @@ export default function ServicesSection() {
   const renderTime = useRenderTime()
   const navigate = useNavigate({ from: '/' })
   const hash = useRouterState({ select: (state) => state.location.hash })
-  const [activeCategory, setActiveCategory] =
-    useState<ServiceView>('Kosmetologia')
+  const [activeView, setActiveView] = useState<ServiceView>('Kosmetologia')
   const [expandedCard, setExpandedCard] = useState<ServiceId | null>(null)
 
   useEffect(() => {
@@ -62,7 +61,7 @@ export default function ServicesSection() {
       return
     }
 
-    setActiveCategory('Vouchery')
+    setActiveView('Vouchery')
     void navigate({
       to: '/',
       hash: '',
@@ -83,33 +82,32 @@ export default function ServicesSection() {
       )
     : []
 
-  const handleCategoryChange = (category: ServiceView) => {
-    setActiveCategory(category)
+  const handleViewChange = (view: ServiceView) => {
+    setActiveView(view)
   }
 
   const handleCardToggle = (serviceId: ServiceId) => {
     setExpandedCard(expandedCard === serviceId ? null : serviceId)
   }
 
-  const isVoucherCategory = activeCategory === 'Vouchery'
-  const isPromotionCategory = activeCategory === 'Promocje'
-  const filteredServices = isVoucherCategory
+  const isVoucherView = activeView === 'Vouchery'
+  const isPromotionView = activeView === 'Promocje'
+  const visibleServices = isVoucherView
     ? []
-    : isPromotionCategory
+    : isPromotionView
       ? promotedServices
       : services.filter(
           (service) =>
-            service.catalogCategory.toLowerCase() ===
-            activeCategory.toLowerCase(),
+            service.catalogCategory.toLowerCase() === activeView.toLowerCase(),
         )
-  const standardServices = isVoucherCategory
+  const standardServices = isVoucherView
     ? []
-    : filteredServices.filter((service) => !service.isNext)
-  const consultationRequiredServices = isVoucherCategory
+    : visibleServices.filter((service) => !service.isNext)
+  const consultationRequiredServices = isVoucherView
     ? []
-    : filteredServices.filter((service) => service.isNext)
+    : visibleServices.filter((service) => service.isNext)
   const noPromotionsAvailable =
-    isPromotionCategory && (!promotion || filteredServices.length === 0)
+    isPromotionView && (!promotion || visibleServices.length === 0)
 
   return (
     <Section id="zabiegi" background="white">
@@ -122,20 +120,20 @@ export default function ServicesSection() {
         gradient
       />
 
-      {/* Kategorie przyciski */}
+      {/* Opcje widoku */}
       <div className="mb-10 flex justify-center animate-on-scroll">
         <div
           role="group"
           aria-label="Kategorie zabiegów"
           className="flex flex-wrap justify-center gap-2"
         >
-          {categories.map((cat) => (
-            <CategoryButton
-              key={cat.id}
-              active={activeCategory === cat.id}
-              onClick={() => handleCategoryChange(cat.id)}
-              icon={cat.icon}
-              label={cat.label}
+          {serviceViewOptions.map((viewOption) => (
+            <ServiceViewButton
+              key={viewOption.id}
+              active={activeView === viewOption.id}
+              onClick={() => handleViewChange(viewOption.id)}
+              icon={viewOption.icon}
+              label={viewOption.label}
             />
           ))}
         </div>
@@ -146,7 +144,7 @@ export default function ServicesSection() {
         id="services-grid"
         className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3"
       >
-        {isVoucherCategory ? (
+        {isVoucherView ? (
           <VoucherCard />
         ) : noPromotionsAvailable ? (
           <div className="animate-on-scroll animate-fade-up md:col-span-2 lg:col-span-3">
@@ -156,7 +154,7 @@ export default function ServicesSection() {
           </div>
         ) : (
           <>
-            {isPromotionCategory && promotion && (
+            {isPromotionView && promotion && (
               <PromotionBannerCard
                 promotion={promotion}
                 scopeDescription={getPromotionScopeDescription(promotion)}
@@ -180,7 +178,7 @@ export default function ServicesSection() {
             ))}
             {consultationRequiredServices.length > 0 && (
               <div
-                key={`consultation-notice-${activeCategory}`}
+                key={`consultation-notice-${activeView}`}
                 className="animate-on-scroll animate-fade-up md:col-span-2 lg:col-span-3"
               >
                 <Alert variant="warning">

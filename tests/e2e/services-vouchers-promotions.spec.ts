@@ -8,7 +8,7 @@ const OCTOBER_SERVICES_PROMOTION =
   '-20% na oczyszczanie wodorowe – z 250 zł na 200 zł przez cały październik.'
 
 test.describe('Services vouchers and promotions', () => {
-  test('shows voucher-specific content for the Vouchery category', async ({
+  test('shows voucher-specific content for the Vouchery view', async ({
     page,
   }) => {
     const homePage = new HomePage(page)

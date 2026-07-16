@@ -205,7 +205,7 @@ describe('ServicesSection', () => {
     ).not.toBeInTheDocument()
   })
 
-  it('shows voucher panel when Vouchery category is selected', async () => {
+  it('shows voucher panel when the Vouchery view is selected', async () => {
     const user = userEvent.setup()
 
     render(<ServicesSection />)
@@ -218,7 +218,7 @@ describe('ServicesSection', () => {
     ).not.toBeInTheDocument()
   })
 
-  it('shows empty state when promotion category has no active promotion', async () => {
+  it('shows empty state when the promotion view has no active promotion', async () => {
     const user = userEvent.setup()
 
     render(<ServicesSection />)
