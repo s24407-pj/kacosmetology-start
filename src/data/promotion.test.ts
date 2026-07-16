@@ -1,12 +1,12 @@
 import type { Service, ServiceCategory } from '@app-types/types'
 import { describe, expect, it } from 'vitest'
 import {
+  type ActivePromotion,
   doesPromotionApplyToService,
   formatPromotionDeadline,
   getActivePromotion,
   getAllActivePromotions,
   getPromotionScopeDescription,
-  type ActivePromotion,
   type PromotionApplicability,
   type PromotionConfig,
 } from './promotion'
@@ -210,9 +210,7 @@ describe('getPromotionScopeDescription', () => {
   it('lowercases a single service name when no description is provided', () => {
     const serviceApplicability: PromotionApplicability = {
       type: 'services',
-      serviceIds: [
-        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
-      ],
+      serviceIds: ['service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem'],
     }
 
     expect(
@@ -235,10 +233,7 @@ describe('getPromotionScopeDescription', () => {
       endDate: new Date('2025-01-31'),
       applicability: {
         type: 'services' as const,
-        serviceIds: [
-          'service-oczyszczanie-wodorowe',
-          'service-regulacja-brwi',
-        ],
+        serviceIds: ['service-oczyszczanie-wodorowe', 'service-regulacja-brwi'],
       },
       ctaLabel: 'Book',
     }

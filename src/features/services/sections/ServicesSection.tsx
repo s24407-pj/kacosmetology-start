@@ -165,8 +165,7 @@ export default function ServicesSection() {
                 key={service.id}
                 className={cn(
                   `animate-on-scroll stagger-${Math.min(index + 1, 6)} animate-fade-up`,
-                  expandedCard === service.id &&
-                    'lg:col-span-2 xl:col-span-2',
+                  expandedCard === service.id && 'lg:col-span-2 xl:col-span-2',
                 )}
               >
                 <ExpandableServiceCard
@@ -191,8 +190,7 @@ export default function ServicesSection() {
                 key={service.id}
                 className={cn(
                   `animate-on-scroll stagger-${Math.min(index + 1, 6)} animate-fade-up`,
-                  expandedCard === service.id &&
-                    'lg:col-span-2 xl:col-span-2',
+                  expandedCard === service.id && 'lg:col-span-2 xl:col-span-2',
                 )}
               >
                 <ExpandableServiceCard

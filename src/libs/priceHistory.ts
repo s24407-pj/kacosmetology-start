@@ -1,8 +1,4 @@
-import type {
-  PriceHistoryEntry,
-  PricePoint,
-  ServiceId,
-} from '@app-types/types'
+import type { PriceHistoryEntry, PricePoint, ServiceId } from '@app-types/types'
 import { servicePriceHistory } from '@data/servicePriceHistory'
 
 function ensureHistory(serviceId: ServiceId): PriceHistoryEntry {

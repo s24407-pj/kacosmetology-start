@@ -158,10 +158,7 @@ describe('ServicesSection', () => {
     await user.click(consultationCard)
     expect(standardCard).toHaveAttribute('data-expanded', 'false')
     expect(sameNameCard).toHaveAttribute('data-expanded', 'false')
-    expect(consultationCard).toHaveAttribute(
-      'data-expanded',
-      'true',
-    )
+    expect(consultationCard).toHaveAttribute('data-expanded', 'true')
     expect(screen.getAllByText('Classic Facial')).toHaveLength(2)
     expect(screen.getByText('Consultation Peel')).toBeInTheDocument()
   })

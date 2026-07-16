@@ -69,9 +69,7 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2025-12-31',
     applicability: {
       type: 'services',
-      serviceIds: [
-        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
-      ],
+      serviceIds: ['service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem'],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 250 zł',
     },
@@ -84,9 +82,7 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-01-31',
     applicability: {
       type: 'services',
-      serviceIds: [
-        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
-      ],
+      serviceIds: ['service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem'],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -99,9 +95,7 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-02-28',
     applicability: {
       type: 'services',
-      serviceIds: [
-        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
-      ],
+      serviceIds: ['service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem'],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -114,9 +108,7 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-03-31',
     applicability: {
       type: 'services',
-      serviceIds: [
-        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
-      ],
+      serviceIds: ['service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem'],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -129,9 +121,7 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-04-30',
     applicability: {
       type: 'services',
-      serviceIds: [
-        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
-      ],
+      serviceIds: ['service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem'],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -144,9 +134,7 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-05-31',
     applicability: {
       type: 'services',
-      serviceIds: [
-        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
-      ],
+      serviceIds: ['service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem'],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -159,9 +147,7 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-06-30',
     applicability: {
       type: 'services',
-      serviceIds: [
-        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
-      ],
+      serviceIds: ['service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem'],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -174,9 +160,7 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-07-31',
     applicability: {
       type: 'services',
-      serviceIds: [
-        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
-      ],
+      serviceIds: ['service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem'],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -189,9 +173,7 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-08-31',
     applicability: {
       type: 'services',
-      serviceIds: [
-        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
-      ],
+      serviceIds: ['service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem'],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -204,9 +186,7 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-09-30',
     applicability: {
       type: 'services',
-      serviceIds: [
-        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
-      ],
+      serviceIds: ['service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem'],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -219,9 +199,7 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-10-31',
     applicability: {
       type: 'services',
-      serviceIds: [
-        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
-      ],
+      serviceIds: ['service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem'],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -234,9 +212,7 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-11-30',
     applicability: {
       type: 'services',
-      serviceIds: [
-        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
-      ],
+      serviceIds: ['service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem'],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -249,9 +225,7 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-12-31',
     applicability: {
       type: 'services',
-      serviceIds: [
-        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
-      ],
+      serviceIds: ['service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem'],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },

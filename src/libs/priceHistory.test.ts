@@ -75,11 +75,7 @@ describe('price history helpers', () => {
 
     // Window is 2024-01-27 to 2024-02-01, last price before is 110
     expect(
-      getLowestPriceInLastDays(
-        SERVICE_ID,
-        5,
-        new Date('2024-02-01T00:00:00Z'),
-      ),
+      getLowestPriceInLastDays(SERVICE_ID, 5, new Date('2024-02-01T00:00:00Z')),
     ).toBe(110)
   })
 
@@ -113,9 +109,7 @@ describe('price history helpers', () => {
   })
 
   it('returns undefined for services without history', () => {
-    expect(
-      getLowestPriceInLastDays('service-unknown-service'),
-    ).toBeUndefined()
+    expect(getLowestPriceInLastDays('service-unknown-service')).toBeUndefined()
     expect(getPriceHistory('service-unknown-service')).toEqual([])
   })
 
