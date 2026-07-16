@@ -50,14 +50,16 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium webkit
 
       - name: Run Playwright tests
+        id: playwright
         run: pnpm test:e2e
 
       - name: Upload Playwright artifacts
         uses: actions/upload-artifact@v7
-        if: failure()
+        if: ${{ !cancelled() && steps.playwright.outcome == 'failure' }}
         with:
           name: playwright-artifacts
           path: |
             test-results/
             playwright-report/
-          if-no-files-found: ignore
+          if-no-files-found: error
+          retention-days: 14
