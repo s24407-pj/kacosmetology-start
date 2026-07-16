@@ -6,6 +6,7 @@ import {
   getActivePromotion,
   getAllActivePromotions,
   getPromotionScopeDescription,
+  type ActivePromotion,
   type PromotionApplicability,
   type PromotionConfig,
 } from './promotion'
@@ -110,7 +111,7 @@ describe('formatPromotionDeadline', () => {
 
   it('formats partial-month promotions as "do <date>"', () => {
     // A promotion that does NOT start on the 1st or end on the last day
-    const promotion = {
+    const promotion: ActivePromotion = {
       id: 'partial',
       discountPercentage: 10,
       startDate: new Date('2025-10-05'),
@@ -139,7 +140,7 @@ describe('formatPromotionDeadline', () => {
 
 describe('getPromotionScopeDescription', () => {
   it('returns the description for "all" type promotions', () => {
-    const promotion = {
+    const promotion: ActivePromotion = {
       id: 'all',
       discountPercentage: 20,
       startDate: new Date('2025-09-01'),
@@ -209,7 +210,9 @@ describe('getPromotionScopeDescription', () => {
   it('lowercases a single service name when no description is provided', () => {
     const serviceApplicability: PromotionApplicability = {
       type: 'services',
-      serviceNames: ['Pierwsza konsultacja kosmetologiczna z zabiegiem'],
+      serviceIds: [
+        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
+      ],
     }
 
     expect(
@@ -225,20 +228,39 @@ describe('getPromotionScopeDescription', () => {
   })
 
   it('joins multiple service names with "oraz"', () => {
-    const promotion = {
+    const promotion: ActivePromotion = {
       id: 'multi-svc',
       discountPercentage: 10,
       startDate: new Date('2025-01-01'),
       endDate: new Date('2025-01-31'),
       applicability: {
         type: 'services' as const,
-        serviceNames: ['Zabieg A', 'Zabieg B'],
+        serviceIds: [
+          'service-oczyszczanie-wodorowe',
+          'service-regulacja-brwi',
+        ],
       },
       ctaLabel: 'Book',
     }
     expect(getPromotionScopeDescription(promotion)).toBe(
-      'zabieg a oraz zabieg b',
+      'oczyszczanie wodorowe oraz regulacja brwi',
     )
+  })
+
+  it('uses generic copy when a service ID cannot be resolved', () => {
+    const promotion: ActivePromotion = {
+      id: 'unknown-service',
+      discountPercentage: 10,
+      startDate: new Date('2025-01-01'),
+      endDate: new Date('2025-01-31'),
+      applicability: {
+        type: 'services' as const,
+        serviceIds: ['service-nieznany'],
+      },
+      ctaLabel: 'Book',
+    }
+
+    expect(getPromotionScopeDescription(promotion)).toBe('wybrane zabiegi')
   })
 })
 
@@ -266,7 +288,7 @@ describe('doesPromotionApplyToService', () => {
 
     const servicesApplicability: PromotionApplicability = {
       type: 'services',
-      serviceNames: ['Inny zabieg'],
+      serviceIds: ['service-inny-zabieg'],
     }
 
     expect(
@@ -301,5 +323,20 @@ describe('doesPromotionApplyToService', () => {
         ctaLabel: 'Book',
       }),
     ).toBe(false)
+  })
+
+  it('keeps an ID-targeted campaign attached after a display-name change', () => {
+    const service: Service = {
+      ...services.find(
+        (candidate) => candidate.id === 'service-oczyszczanie-wodorowe',
+      )!,
+      name: 'Nowa nazwa prezentacyjna',
+    }
+    const promotion = getActivePromotion(new Date('2025-10-15'))
+
+    expect(promotion).not.toBeNull()
+    if (!promotion) return
+
+    expect(doesPromotionApplyToService(service, promotion)).toBe(true)
   })
 })

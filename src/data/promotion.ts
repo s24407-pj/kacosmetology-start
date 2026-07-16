@@ -1,4 +1,5 @@
-import type { Service, ServiceCategory } from '@app-types/types'
+import type { Service, ServiceCategory, ServiceId } from '@app-types/types'
+import { getServiceById } from '@data/services'
 
 interface PromotionApplicabilityAll {
   type: 'all'
@@ -13,7 +14,7 @@ interface PromotionApplicabilityCategories {
 
 interface PromotionApplicabilityServices {
   type: 'services'
-  serviceNames: string[]
+  serviceIds: ServiceId[]
   description?: string
 }
 
@@ -56,7 +57,7 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2025-10-31',
     applicability: {
       type: 'services',
-      serviceNames: ['Oczyszczanie wodorowe'],
+      serviceIds: ['service-oczyszczanie-wodorowe'],
       description: 'oczyszczanie wodorowe – z 250 zł na 200 zł',
     },
     ctaLabel: 'Zarezerwuj termin',
@@ -68,7 +69,9 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2025-12-31',
     applicability: {
       type: 'services',
-      serviceNames: ['Pierwsza konsultacja kosmetologiczna z zabiegiem'],
+      serviceIds: [
+        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
+      ],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 250 zł',
     },
@@ -81,7 +84,9 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-01-31',
     applicability: {
       type: 'services',
-      serviceNames: ['Pierwsza konsultacja kosmetologiczna z zabiegiem'],
+      serviceIds: [
+        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
+      ],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -94,7 +99,9 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-02-28',
     applicability: {
       type: 'services',
-      serviceNames: ['Pierwsza konsultacja kosmetologiczna z zabiegiem'],
+      serviceIds: [
+        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
+      ],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -107,7 +114,9 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-03-31',
     applicability: {
       type: 'services',
-      serviceNames: ['Pierwsza konsultacja kosmetologiczna z zabiegiem'],
+      serviceIds: [
+        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
+      ],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -120,7 +129,9 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-04-30',
     applicability: {
       type: 'services',
-      serviceNames: ['Pierwsza konsultacja kosmetologiczna z zabiegiem'],
+      serviceIds: [
+        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
+      ],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -133,7 +144,9 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-05-31',
     applicability: {
       type: 'services',
-      serviceNames: ['Pierwsza konsultacja kosmetologiczna z zabiegiem'],
+      serviceIds: [
+        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
+      ],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -146,7 +159,9 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-06-30',
     applicability: {
       type: 'services',
-      serviceNames: ['Pierwsza konsultacja kosmetologiczna z zabiegiem'],
+      serviceIds: [
+        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
+      ],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -159,7 +174,9 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-07-31',
     applicability: {
       type: 'services',
-      serviceNames: ['Pierwsza konsultacja kosmetologiczna z zabiegiem'],
+      serviceIds: [
+        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
+      ],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -172,7 +189,9 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-08-31',
     applicability: {
       type: 'services',
-      serviceNames: ['Pierwsza konsultacja kosmetologiczna z zabiegiem'],
+      serviceIds: [
+        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
+      ],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -185,7 +204,9 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-09-30',
     applicability: {
       type: 'services',
-      serviceNames: ['Pierwsza konsultacja kosmetologiczna z zabiegiem'],
+      serviceIds: [
+        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
+      ],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -198,7 +219,9 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-10-31',
     applicability: {
       type: 'services',
-      serviceNames: ['Pierwsza konsultacja kosmetologiczna z zabiegiem'],
+      serviceIds: [
+        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
+      ],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -211,7 +234,9 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-11-30',
     applicability: {
       type: 'services',
-      serviceNames: ['Pierwsza konsultacja kosmetologiczna z zabiegiem'],
+      serviceIds: [
+        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
+      ],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -224,7 +249,9 @@ export const promotionConfigs: PromotionConfig[] = [
     endDate: '2026-12-31',
     applicability: {
       type: 'services',
-      serviceNames: ['Pierwsza konsultacja kosmetologiczna z zabiegiem'],
+      serviceIds: [
+        'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
+      ],
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
@@ -332,7 +359,7 @@ export function doesPromotionApplyToService(
     return promotion.applicability.categories.includes(service.category)
   }
 
-  return promotion.applicability.serviceNames.includes(service.name)
+  return promotion.applicability.serviceIds.includes(service.id)
 }
 
 export function getPromotionScopeDescription(
@@ -366,19 +393,29 @@ export function getPromotionScopeDescription(
     return promotion.applicability.description
   }
 
-  if (promotion.applicability.serviceNames.length === 1) {
-    return promotion.applicability.serviceNames[0].toLowerCase()
+  const resolvedServices = promotion.applicability.serviceIds.map((serviceId) =>
+    getServiceById(serviceId),
+  )
+  if (
+    resolvedServices.length === 0 ||
+    resolvedServices.some((service) => !service)
+  ) {
+    return 'wybrane zabiegi'
   }
 
-  const serviceNames = promotion.applicability.serviceNames.map((serviceName) =>
-    serviceName.toLowerCase(),
+  const resolvedServiceNames = resolvedServices.map((service) =>
+    service?.name.toLowerCase(),
   )
-  const lastServiceName = serviceNames.pop()
+  if (resolvedServiceNames.length === 1) {
+    return resolvedServiceNames[0] ?? 'wybrane zabiegi'
+  }
+
+  const lastServiceName = resolvedServiceNames.pop()
   if (!lastServiceName) {
     return 'wybrane zabiegi'
   }
 
-  return `${serviceNames.join(', ')} oraz ${lastServiceName}`
+  return `${resolvedServiceNames.join(', ')} oraz ${lastServiceName}`
 }
 
 export function formatPromotionDeadline(promotion: ActivePromotion): string {

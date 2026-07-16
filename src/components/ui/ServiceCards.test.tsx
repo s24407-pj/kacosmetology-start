@@ -44,7 +44,7 @@ describe('ServiceCards', () => {
       endDate: new Date('2025-10-31'),
       applicability: {
         type: 'services',
-        serviceNames: ['Oczyszczanie wodorowe'],
+        serviceIds: ['service-oczyszczanie-wodorowe'],
         description: 'oczyszczanie wodorowe – z 250 zł na 200 zł',
       },
       ctaLabel: 'Zarezerwuj termin',

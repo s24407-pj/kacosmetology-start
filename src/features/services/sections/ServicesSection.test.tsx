@@ -3,8 +3,8 @@ import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('@data/services', () => ({
-  services: [
+vi.mock('@data/services', () => {
+  const services = [
     {
       id: 'service-classic-facial',
       name: 'Classic Facial',
@@ -32,8 +32,14 @@ vi.mock('@data/services', () => ({
       isNext: false,
       description: 'Terapia trychologiczna',
     },
-  ],
-}))
+  ]
+
+  return {
+    services,
+    getServiceById: (serviceId: string) =>
+      services.find((service) => service.id === serviceId),
+  }
+})
 
 vi.mock('@data/promotion', async () => {
   const actual =
@@ -182,14 +188,14 @@ describe('ServicesSection', () => {
       endDate: new Date('2025-12-31T23:59:59.999Z'),
       applicability: {
         type: 'services',
-        serviceNames: ['Classic Facial'],
+        serviceIds: ['service-classic-facial'],
       },
       ctaLabel: 'Zarezerwuj termin',
     }
 
     vi.mocked(getActivePromotion).mockReturnValue(promotion)
     vi.mocked(doesPromotionApplyToService).mockImplementation(
-      (service) => service.name === 'Classic Facial',
+      (service) => service.id === 'service-classic-facial',
     )
 
     render(<ServicesSection />)
