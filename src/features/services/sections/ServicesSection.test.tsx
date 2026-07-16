@@ -24,6 +24,15 @@ vi.mock('@data/services', () => {
       description: 'Wymaga konsultacji',
     },
     {
+      id: 'service-classic-facial-premium',
+      name: 'Classic Facial',
+      category: 'Kosmetologia',
+      price: 190,
+      duration: 75,
+      isNext: false,
+      description: 'Rozszerzony zabieg',
+    },
+    {
       id: 'service-scalp-therapy',
       name: 'Scalp Therapy',
       category: 'Trychologia',
@@ -68,13 +77,13 @@ vi.mock('../components/ExpandableServiceCard', () => ({
     isExpanded,
     onToggle,
   }: {
-    service: { name: string }
+    service: { id: string; name: string }
     isExpanded: boolean
     onToggle: () => void
   }) => (
     <button
       type="button"
-      data-testid={`card-${service.name}`}
+      data-testid={`card-${service.id}`}
       data-expanded={isExpanded}
       onClick={onToggle}
     >
@@ -127,31 +136,33 @@ describe('ServicesSection', () => {
 
     render(<ServicesSection />)
 
-    const standardCard = screen.getByTestId('card-Classic Facial')
-    const consultationCard = screen.getByTestId('card-Consultation Peel')
+    const standardCard = screen.getByTestId('card-service-classic-facial')
+    const sameNameCard = screen.getByTestId(
+      'card-service-classic-facial-premium',
+    )
+    const consultationCard = screen.getByTestId(
+      'card-service-consultation-peel',
+    )
 
     expect(standardCard).toHaveAttribute('data-expanded', 'false')
+    expect(sameNameCard).toHaveAttribute('data-expanded', 'false')
     expect(consultationCard).toHaveAttribute('data-expanded', 'false')
     expect(
       screen.getByText('Kolejne zabiegi wymagają wcześniejszej konsultacji.'),
     ).toBeInTheDocument()
 
     await user.click(standardCard)
-    expect(screen.getByTestId('card-Classic Facial')).toHaveAttribute(
-      'data-expanded',
-      'true',
-    )
+    expect(standardCard).toHaveAttribute('data-expanded', 'true')
+    expect(sameNameCard).toHaveAttribute('data-expanded', 'false')
 
     await user.click(consultationCard)
-    expect(screen.getByTestId('card-Classic Facial')).toHaveAttribute(
-      'data-expanded',
-      'false',
-    )
-    expect(screen.getByTestId('card-Consultation Peel')).toHaveAttribute(
+    expect(standardCard).toHaveAttribute('data-expanded', 'false')
+    expect(sameNameCard).toHaveAttribute('data-expanded', 'false')
+    expect(consultationCard).toHaveAttribute(
       'data-expanded',
       'true',
     )
-    expect(screen.getByText('Classic Facial')).toBeInTheDocument()
+    expect(screen.getAllByText('Classic Facial')).toHaveLength(2)
     expect(screen.getByText('Consultation Peel')).toBeInTheDocument()
   })
 
@@ -163,7 +174,9 @@ describe('ServicesSection', () => {
     await user.click(screen.getByRole('button', { name: /Vouchery/ }))
 
     expect(screen.getByText('Vouchery prezentowe')).toBeInTheDocument()
-    expect(screen.queryByTestId('card-Classic Facial')).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId('card-service-classic-facial'),
+    ).not.toBeInTheDocument()
   })
 
   it('shows empty state when promotion category has no active promotion', async () => {
@@ -203,9 +216,11 @@ describe('ServicesSection', () => {
     await user.click(screen.getByRole('button', { name: /Promocje/ }))
 
     expect(screen.getByText('Aktualna promocja')).toBeInTheDocument()
-    expect(screen.getByTestId('card-Classic Facial')).toBeInTheDocument()
     expect(
-      screen.queryByTestId('card-Consultation Peel'),
+      screen.getByTestId('card-service-classic-facial'),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByTestId('card-service-consultation-peel'),
     ).not.toBeInTheDocument()
   })
 })

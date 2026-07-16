@@ -131,7 +131,7 @@ describe('ExpandableServiceCard', () => {
     const detailsId = card.getAttribute('aria-controls')
 
     expect(serviceHeading).toBeInTheDocument()
-    expect(detailsId).toBeTruthy()
+    expect(detailsId).toBe(`details-${service.id}`)
     expect(document.getElementById(detailsId ?? '')).toBeInTheDocument()
 
     await user.click(card)
@@ -211,7 +211,7 @@ describe('ExpandableServiceCard', () => {
     expect(onToggle).not.toHaveBeenCalled()
     expect(trackPlausibleEvent).toHaveBeenCalledWith('CTA Booksy Click', {
       placement: 'service-card',
-      service: service.name,
+      serviceId: service.id,
     })
   })
 })

@@ -1,4 +1,4 @@
-import type { ServiceCategory } from '@app-types/types'
+import type { ServiceCategory, ServiceId } from '@app-types/types'
 import HairsBulbSVG from '@components/icons/HairsBulbSVG'
 import {
   Alert,
@@ -53,7 +53,7 @@ export default function ServicesSection() {
   const hash = useRouterState({ select: (state) => state.location.hash })
   const [activeCategory, setActiveCategory] =
     useState<ServiceCategory>('Kosmetologia')
-  const [expandedCard, setExpandedCard] = useState<string | null>(null)
+  const [expandedCard, setExpandedCard] = useState<ServiceId | null>(null)
 
   useEffect(() => {
     if (hash !== 'services-vouchery') {
@@ -85,8 +85,8 @@ export default function ServicesSection() {
     setActiveCategory(category)
   }
 
-  const handleCardToggle = (serviceName: string) => {
-    setExpandedCard(expandedCard === serviceName ? null : serviceName)
+  const handleCardToggle = (serviceId: ServiceId) => {
+    setExpandedCard(expandedCard === serviceId ? null : serviceId)
   }
 
   const isVoucherCategory = activeCategory === 'Vouchery'
@@ -162,17 +162,17 @@ export default function ServicesSection() {
             )}
             {standardServices.map((service, index) => (
               <div
-                key={`${activeCategory}-${service.name}`}
+                key={service.id}
                 className={cn(
                   `animate-on-scroll stagger-${Math.min(index + 1, 6)} animate-fade-up`,
-                  expandedCard === service.name &&
+                  expandedCard === service.id &&
                     'lg:col-span-2 xl:col-span-2',
                 )}
               >
                 <ExpandableServiceCard
                   service={service}
-                  isExpanded={expandedCard === service.name}
-                  onToggle={() => handleCardToggle(service.name)}
+                  isExpanded={expandedCard === service.id}
+                  onToggle={() => handleCardToggle(service.id)}
                 />
               </div>
             ))}
@@ -188,17 +188,17 @@ export default function ServicesSection() {
             )}
             {consultationRequiredServices.map((service, index) => (
               <div
-                key={`${activeCategory}-consultation-${service.name}`}
+                key={service.id}
                 className={cn(
                   `animate-on-scroll stagger-${Math.min(index + 1, 6)} animate-fade-up`,
-                  expandedCard === service.name &&
+                  expandedCard === service.id &&
                     'lg:col-span-2 xl:col-span-2',
                 )}
               >
                 <ExpandableServiceCard
                   service={service}
-                  isExpanded={expandedCard === service.name}
-                  onToggle={() => handleCardToggle(service.name)}
+                  isExpanded={expandedCard === service.id}
+                  onToggle={() => handleCardToggle(service.id)}
                 />
               </div>
             ))}

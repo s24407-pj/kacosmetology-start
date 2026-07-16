@@ -86,7 +86,7 @@ export default function ExpandableServiceCard({
     discountedPrice,
   ])
   const showLowestPrice = lowestPrice !== null
-  const detailsId = `service-details-${service.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
+  const detailsId = `details-${service.id}`
 
   return (
     <article
@@ -310,7 +310,7 @@ export default function ExpandableServiceCard({
                   event.stopPropagation()
                   trackPlausibleEvent('CTA Booksy Click', {
                     placement: 'service-card',
-                    service: service.name,
+                    serviceId: service.id,
                   })
                 }}
                 onKeyDown={(event) => {
