@@ -163,6 +163,48 @@ describe('ServicesSection', () => {
     expect(screen.getByText('Consultation Peel')).toBeInTheDocument()
   })
 
+  it('preserves selector order, pressed state, and catalog filtering', async () => {
+    const user = userEvent.setup()
+
+    render(<ServicesSection />)
+
+    const selector = screen.getByRole('group', {
+      name: 'Kategorie zabiegów',
+    })
+    const buttons = Array.from(selector.querySelectorAll('button'))
+
+    expect(buttons.map((button) => button.textContent)).toEqual([
+      'Kosmetologia',
+      'Trychologia',
+      'Oprawa oka',
+      'Online',
+      'Vouchery',
+      'Promocje',
+    ])
+
+    const cosmetologyButton = screen.getByRole('button', {
+      name: 'Kosmetologia',
+    })
+    const trichologyButton = screen.getByRole('button', {
+      name: 'Trychologia',
+    })
+
+    expect(cosmetologyButton).toHaveAttribute('aria-pressed', 'true')
+    expect(trichologyButton).toHaveAttribute('aria-pressed', 'false')
+
+    await user.click(trichologyButton)
+
+    expect(cosmetologyButton).toHaveAttribute('aria-pressed', 'false')
+    expect(trichologyButton).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByTestId('card-service-scalp-therapy')).toBeInTheDocument()
+    expect(
+      screen.queryByTestId('card-service-classic-facial'),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByTestId('card-service-consultation-peel'),
+    ).not.toBeInTheDocument()
+  })
+
   it('shows voucher panel when Vouchery category is selected', async () => {
     const user = userEvent.setup()
 

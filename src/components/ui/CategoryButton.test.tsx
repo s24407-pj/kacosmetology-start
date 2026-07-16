@@ -21,6 +21,7 @@ describe('CategoryButton', () => {
       'text-text-primary',
       'border-border-default',
     )
+    expect(button).toHaveAttribute('aria-pressed', 'false')
     expect(button).not.toHaveClass('bg-action')
   })
 
@@ -39,6 +40,7 @@ describe('CategoryButton', () => {
 
     const button = screen.getByRole('button', { name: 'Promocje' })
     expect(button).toHaveClass('bg-action', 'border-action', 'text-white')
+    expect(button).toHaveAttribute('aria-pressed', 'true')
 
     await user.click(button)
     expect(handleClick).toHaveBeenCalledTimes(1)
