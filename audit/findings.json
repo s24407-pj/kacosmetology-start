@@ -238,7 +238,17 @@
       "fix_direction": "Separate service taxonomy from a discriminated section filter/view-mode type.",
       "effort": "S",
       "category": "clarity",
-      "adversarial_outcome": null
+      "adversarial_outcome": null,
+      "implementation_status": "fixed",
+      "implemented": true,
+      "implemented_at": "2026-07-16T22:53:14Z",
+      "implementation_branch": "audit/fixes-2026-07-16",
+      "implementation_commits": [
+        "b9f8a676a10af0ef33335f27e34f5aa13c6f4e0b",
+        "679b66c565efb7b7c894e011fde3759d412011a3",
+        "334626fd15cebc2992c2b7e9ef5324d454cf9440"
+      ],
+      "result_path": "audit/results/F-013.md"
     },
     {
       "id": "F-014",
