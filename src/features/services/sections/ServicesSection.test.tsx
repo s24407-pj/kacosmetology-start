@@ -134,10 +134,16 @@ describe('ServicesSection', () => {
     )
 
     await user.click(consultationCard)
+    expect(screen.getByTestId('card-Classic Facial')).toHaveAttribute(
+      'data-expanded',
+      'false',
+    )
     expect(screen.getByTestId('card-Consultation Peel')).toHaveAttribute(
       'data-expanded',
       'true',
     )
+    expect(screen.getByText('Classic Facial')).toBeInTheDocument()
+    expect(screen.getByText('Consultation Peel')).toBeInTheDocument()
   })
 
   it('shows voucher panel when Vouchery category is selected', async () => {

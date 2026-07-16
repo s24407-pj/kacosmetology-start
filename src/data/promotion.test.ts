@@ -9,6 +9,7 @@ import {
   type PromotionApplicability,
   type PromotionConfig,
 } from './promotion'
+import { services } from './services'
 
 const testConfigs: PromotionConfig[] = [
   {
@@ -26,6 +27,22 @@ describe('getActivePromotion', () => {
     const promotion = getActivePromotion(new Date('2025-10-15'))
     expect(promotion?.id).toBe('october-2025-oczyszczanie-wodorowe')
     expect(promotion?.discountPercentage).toBe(20)
+  })
+
+  it('preserves the October campaign service and visible scope copy', () => {
+    const promotion = getActivePromotion(new Date('2025-10-15'))
+    const promotedService = services.find(
+      (service) => service.name === 'Oczyszczanie wodorowe',
+    )
+
+    expect(promotion).not.toBeNull()
+    expect(promotedService).toBeDefined()
+    if (!promotion || !promotedService) return
+
+    expect(doesPromotionApplyToService(promotedService, promotion)).toBe(true)
+    expect(getPromotionScopeDescription(promotion)).toBe(
+      'oczyszczanie wodorowe – z 250 zł na 200 zł',
+    )
   })
 
   it('returns null when no promotion is active', () => {

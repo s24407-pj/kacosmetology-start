@@ -124,6 +124,14 @@ describe('ExpandableServiceCard', () => {
     )
 
     const card = screen.getByRole('button', { name: /Test Service/i })
+    const serviceHeading = screen.getByRole('heading', {
+      name: service.name,
+    })
+    const detailsId = card.getAttribute('aria-controls')
+
+    expect(serviceHeading).toBeInTheDocument()
+    expect(detailsId).toBeTruthy()
+    expect(document.getElementById(detailsId ?? '')).toBeInTheDocument()
 
     await user.click(card)
     expect(onToggle).toHaveBeenCalledTimes(1)
