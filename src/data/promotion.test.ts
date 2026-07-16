@@ -82,6 +82,21 @@ describe('getActivePromotion', () => {
     )
     expect(promotion).toBeNull()
   })
+
+  it('skips a malformed config and returns the next active promotion', () => {
+    const malformedConfig: PromotionConfig = {
+      ...testConfigs[0],
+      id: 'malformed-promo',
+      startDate: 'not-a-date',
+    }
+
+    const promotion = getActivePromotion(new Date('2025-10-15'), [
+      malformedConfig,
+      ...testConfigs,
+    ])
+
+    expect(promotion?.id).toBe('test-promo')
+  })
 })
 
 describe('getAllActivePromotions', () => {
@@ -97,6 +112,21 @@ describe('getAllActivePromotions', () => {
   it('returns empty array when no promotion is active', () => {
     const promotions = getAllActivePromotions(new Date('2025-08-15'))
     expect(promotions).toHaveLength(0)
+  })
+
+  it('skips a malformed config and returns the valid active promotions', () => {
+    const malformedConfig: PromotionConfig = {
+      ...testConfigs[0],
+      id: 'malformed-promo',
+      endDate: 'not-a-date',
+    }
+
+    const promotions = getAllActivePromotions(new Date('2025-10-15'), [
+      malformedConfig,
+      ...testConfigs,
+    ])
+
+    expect(promotions.map((promotion) => promotion.id)).toEqual(['test-promo'])
   })
 })
 
