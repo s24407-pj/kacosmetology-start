@@ -6,6 +6,8 @@ export type ServiceCategory =
   | 'Promocje'
   | 'Online'
 
+export type ServiceId = `service-${string}`
+
 export interface PricePoint {
   value: number
   changedAt: string
@@ -17,6 +19,7 @@ export interface PriceHistoryEntry {
 }
 
 export interface Service {
+  id: ServiceId
   name: string
   category: ServiceCategory
   price: number // zł

@@ -44,6 +44,7 @@ import ExpandableServiceCard from './ExpandableServiceCard'
 
 describe('ExpandableServiceCard', () => {
   const service: Service = {
+    id: 'service-test-service',
     name: 'Test Service',
     category: 'Kosmetologia',
     price: 250,

@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 vi.mock('@data/services', () => ({
   services: [
     {
+      id: 'service-classic-facial',
       name: 'Classic Facial',
       category: 'Kosmetologia',
       price: 150,
@@ -14,6 +15,7 @@ vi.mock('@data/services', () => ({
       description: 'Podstawowy zabieg',
     },
     {
+      id: 'service-consultation-peel',
       name: 'Consultation Peel',
       category: 'Kosmetologia',
       price: 230,
@@ -22,6 +24,7 @@ vi.mock('@data/services', () => ({
       description: 'Wymaga konsultacji',
     },
     {
+      id: 'service-scalp-therapy',
       name: 'Scalp Therapy',
       category: 'Trychologia',
       price: 260,

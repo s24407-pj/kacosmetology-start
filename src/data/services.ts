@@ -1,8 +1,9 @@
-import type { Service } from '@app-types/types'
+import type { Service, ServiceId } from '@app-types/types'
 
 export const services: Service[] = [
   // OPRAWA OKA
   {
+    id: 'service-henna-brwi-z-regulacja',
     name: 'Henna brwi z regulacją',
     category: 'Oprawa oka',
     price: 60,
@@ -21,6 +22,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-farbka-z-regulacja',
     name: 'Farbka z regulacją',
     category: 'Oprawa oka',
     price: 80,
@@ -37,6 +39,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-regulacja-brwi',
     name: 'Regulacja brwi',
     category: 'Oprawa oka',
     price: 30,
@@ -54,6 +57,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-laminacja-brwi-regulacja-bez-koloryzacji',
     name: 'Laminacja brwi + regulacja (bez koloryzacji)',
     category: 'Oprawa oka',
     price: 110,
@@ -73,6 +77,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-laminacja-brwi-regulacja-koloryzacja',
     name: 'Laminacja brwi + regulacja + koloryzacja',
     category: 'Oprawa oka',
     price: 150,
@@ -92,6 +97,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-lifting-rzes-farbka',
     name: 'Lifting rzęs + farbka',
     category: 'Oprawa oka',
     price: 150,
@@ -130,6 +136,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-laminacja-brwi-lifting-rzes',
     name: 'Laminacja brwi + lifting rzęs',
     category: 'Oprawa oka',
     price: 250,
@@ -154,6 +161,7 @@ export const services: Service[] = [
 
   // TRYCHOLOGIA
   {
+    id: 'service-pierwsza-konsultacja-trychologiczna',
     name: 'Pierwsza konsultacja trychologiczna',
     category: 'Trychologia',
     price: 200,
@@ -181,6 +189,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-zabieg-trychologiczny-dobrany-indywidualnie',
     name: 'Zabieg trychologiczny dobrany indywidualnie',
     category: 'Trychologia',
     price: 350,
@@ -196,6 +205,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-rekonstrukcja-lodygi-wlosa-joico',
     name: 'Rekonstrukcja łodygi włosa – JOICO',
     category: 'Trychologia',
     price: 200,
@@ -212,6 +222,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-mezoterapia-mikroiglowa-skory-glowy',
     name: 'Mezoterapia mikroigłowa skóry głowy',
     category: 'Trychologia',
     price: 400,
@@ -233,6 +244,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-mezoterapia-iglowa-skory-glowy',
     name: 'Mezoterapia igłowa skóry głowy',
     category: 'Trychologia',
     price: 550,
@@ -257,6 +269,7 @@ export const services: Service[] = [
 
   // KOSMETOLOGIA
   {
+    id: 'service-oczyszczanie-wodorowe',
     name: 'Oczyszczanie wodorowe',
     category: 'Kosmetologia',
     price: 250,
@@ -282,6 +295,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-mezoterapia-mikroiglowa-ampulka',
     name: 'Mezoterapia mikroigłowa + ampułka',
     category: 'Kosmetologia',
     price: 350,
@@ -304,6 +318,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem',
     name: 'Pierwsza konsultacja kosmetologiczna z zabiegiem',
     category: 'Kosmetologia',
     price: 350,
@@ -337,6 +352,7 @@ export const services: Service[] = [
       'Brak przeciwwskazań do samej konsultacji; przeciwwskazania do zabiegów omawiane na wizycie.',
   },
   {
+    id: 'service-zabieg-kosmetologiczny-dobrany-indywidualnie',
     name: 'Zabieg kosmetologiczny dobrany indywidualnie',
     category: 'Kosmetologia',
     price: 300,
@@ -358,6 +374,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-eksfoliacja-kwasami',
     name: 'Eksfoliacja kwasami',
     category: 'Kosmetologia',
     price: 300,
@@ -382,6 +399,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-terapia-tradziku-kolejny-zabieg',
     name: 'Terapia trądziku – kolejny zabieg',
     category: 'Kosmetologia',
     price: 300,
@@ -419,6 +437,7 @@ export const services: Service[] = [
   },
 
   {
+    id: 'service-redukcja-przebarwien',
     name: 'Redukcja przebarwień',
     category: 'Kosmetologia',
     price: 300,
@@ -439,6 +458,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-zabieg-regeneracyjny',
     name: 'Zabieg regeneracyjny',
     category: 'Kosmetologia',
     price: 300,
@@ -459,6 +479,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-zabieg-regeneracyjny-dla-kobiet-w-ciazy',
     name: 'Zabieg regeneracyjny dla kobiet w ciąży',
     category: 'Kosmetologia',
     price: 300,
@@ -475,6 +496,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-dzialanie-przeciwstarzeniowe',
     name: 'Działanie przeciwstarzeniowe',
     category: 'Kosmetologia',
     price: 300,
@@ -498,6 +520,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-zabieg-nawilzajacy-odbudowujacy',
     name: 'Zabieg nawilżający / odbudowujący',
     category: 'Kosmetologia',
     price: 300,
@@ -514,6 +537,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-zabieg-oczyszczajacy',
     name: 'Zabieg oczyszczający',
     category: 'Kosmetologia',
     price: 300,
@@ -537,6 +561,7 @@ export const services: Service[] = [
   },
   // ONLINE
   {
+    id: 'service-konsultacja-trychologiczna-online',
     name: 'Konsultacja trychologiczna online',
     category: 'Online',
     price: 160,
@@ -567,6 +592,7 @@ export const services: Service[] = [
     ],
   },
   {
+    id: 'service-konsultacja-kosmetologiczna-online',
     name: 'Konsultacja kosmetologiczna online',
     category: 'Online',
     price: 180,
@@ -605,3 +631,7 @@ export const services: Service[] = [
     ],
   },
 ]
+
+export function getServiceById(serviceId: ServiceId): Service | undefined {
+  return services.find((service) => service.id === serviceId)
+}

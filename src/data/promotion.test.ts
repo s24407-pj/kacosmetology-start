@@ -245,6 +245,7 @@ describe('getPromotionScopeDescription', () => {
 describe('doesPromotionApplyToService', () => {
   it('checks applicability across promotion types', () => {
     const service: Service = {
+      id: 'service-oczyszczanie-wodorowe',
       name: 'Oczyszczanie wodorowe',
       category: 'Kosmetologia',
       price: 250,
