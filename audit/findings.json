@@ -124,7 +124,16 @@
       "fix_direction": "Validate the complete production campaign set at build/test time while allowing runtime selection to operate on already validated input.",
       "effort": "S",
       "category": "testing",
-      "adversarial_outcome": null
+      "adversarial_outcome": null,
+      "implementation_status": "fixed",
+      "implemented": true,
+      "implemented_at": "2026-07-16T23:09:10Z",
+      "implementation_branch": "audit/fixes-2026-07-16",
+      "implementation_commits": [
+        "cb1a663216a0f4f14fc6939533317e4fe1b04ad8",
+        "157532c913339b41e067bf61ce4034fab10dda80"
+      ],
+      "result_path": "audit/results/F-007.md"
     },
     {
       "id": "F-008",
