@@ -98,14 +98,14 @@ describe('ExpandableServiceCard', () => {
     ).toBeInTheDocument()
 
     expect(syncCurrentPriceWithHistoryMock).toHaveBeenCalledWith(
-      'Test Service',
+      'service-test-service',
       200,
       expect.any(Date),
     )
     const changedAt = syncCurrentPriceWithHistoryMock.mock.calls[0]?.[2] as Date
     expect(changedAt).toEqual(new Date('2025-09-01T00:00:00.000Z'))
     expect(getLowestPriceInLastDaysMock).toHaveBeenCalledWith(
-      'Test Service',
+      'service-test-service',
       30,
       new Date('2025-09-01T00:00:00.000Z'),
     )

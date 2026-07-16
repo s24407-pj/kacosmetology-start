@@ -1,13 +1,15 @@
-import type { PriceHistoryEntry, PricePoint } from '@app-types/types'
+import type {
+  PriceHistoryEntry,
+  PricePoint,
+  ServiceId,
+} from '@app-types/types'
 import { servicePriceHistory } from '@data/servicePriceHistory'
 
-function ensureHistory(serviceName: string): PriceHistoryEntry {
-  let entry = servicePriceHistory.find(
-    (item) => item.serviceName === serviceName,
-  )
+function ensureHistory(serviceId: ServiceId): PriceHistoryEntry {
+  let entry = servicePriceHistory.find((item) => item.serviceId === serviceId)
 
   if (!entry) {
-    entry = { serviceName, history: [] }
+    entry = { serviceId, history: [] }
     servicePriceHistory.push(entry)
   }
 
@@ -28,11 +30,11 @@ function toIsoString(date: Date | string): string {
 }
 
 export function recordPriceChange(
-  serviceName: string,
+  serviceId: ServiceId,
   price: number,
   changedAt: Date | string = new Date(),
 ): PricePoint {
-  const entry = ensureHistory(serviceName)
+  const entry = ensureHistory(serviceId)
   const point: PricePoint = {
     value: price,
     changedAt: toIsoString(changedAt),
@@ -46,33 +48,33 @@ export function recordPriceChange(
   return point
 }
 
-export function getPriceHistory(serviceName: string): PricePoint[] {
-  const entry = ensureHistory(serviceName)
+export function getPriceHistory(serviceId: ServiceId): PricePoint[] {
+  const entry = ensureHistory(serviceId)
   return entry.history.map((point) => ({ ...point }))
 }
 
 export function syncCurrentPriceWithHistory(
-  serviceName: string,
+  serviceId: ServiceId,
   currentPrice: number,
   changedAt: Date = new Date(),
 ): PricePoint | undefined {
-  const entry = ensureHistory(serviceName)
+  const entry = ensureHistory(serviceId)
   const latestPoint = entry.history[entry.history.length - 1]
 
   if (!latestPoint || latestPoint.value !== currentPrice) {
-    return recordPriceChange(serviceName, currentPrice, changedAt)
+    return recordPriceChange(serviceId, currentPrice, changedAt)
   }
 
   return undefined
 }
 
 export function getLowestPriceInLastDays(
-  serviceName: string,
+  serviceId: ServiceId,
   days = 30,
   now: Date = new Date(),
 ): number | undefined {
   // Consider only price points that are not in the future.
-  const relevantHistory = ensureHistory(serviceName).history.filter(
+  const relevantHistory = ensureHistory(serviceId).history.filter(
     (p) => new Date(p.changedAt) < now,
   )
 

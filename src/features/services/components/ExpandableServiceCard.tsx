@@ -61,7 +61,7 @@ export default function ExpandableServiceCard({
         ? new Date(promotionStartTimestamp)
         : undefined
 
-    syncCurrentPriceWithHistory(service.name, effectivePrice, changedAt)
+    syncCurrentPriceWithHistory(service.id, effectivePrice, changedAt)
 
     const THIRTY_DAYS_IN_MS = 30 * 24 * 60 * 60 * 1000
     let nowForLowestPrice = referenceDate
@@ -74,11 +74,11 @@ export default function ExpandableServiceCard({
       }
     }
 
-    const value = getLowestPriceInLastDays(service.name, 30, nowForLowestPrice)
+    const value = getLowestPriceInLastDays(service.id, 30, nowForLowestPrice)
 
     return typeof value === 'number' ? value : null
   }, [
-    service.name,
+    service.id,
     effectivePrice,
     promotionStartTimestamp,
     referenceDate,

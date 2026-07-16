@@ -39,7 +39,7 @@ function buildHistoryForService(service: Service): PriceHistoryEntry {
   }
 
   return {
-    serviceName: service.name,
+    serviceId: service.id,
     history,
   }
 }
@@ -50,7 +50,7 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = services.map(
 
 function cloneHistory(entries: PriceHistoryEntry[]): PriceHistoryEntry[] {
   return entries.map((entry) => ({
-    serviceName: entry.serviceName,
+    serviceId: entry.serviceId,
     history: entry.history.map((point) => ({ ...point })),
   }))
 }

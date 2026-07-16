@@ -14,7 +14,7 @@ export interface PricePoint {
 }
 
 export interface PriceHistoryEntry {
-  serviceName: string
+  serviceId: ServiceId
   history: PricePoint[]
 }
 
