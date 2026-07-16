@@ -13,7 +13,7 @@ pnpm test             # Run Vitest unit tests (single run)
 pnpm test:coverage    # Run Vitest unit tests with coverage
 pnpm test:e2e         # Run Playwright E2E tests
 pnpm check            # Run Biome format + lint checks
-pnpm ci               # Full local CI: check, build, unit, audit + E2E
+pnpm run validate     # Full local validation: check, build, unit, audit + E2E
 pnpm format:write     # Format code with Biome
 pnpm optimize-images  # Regenerate optimized WebP assets (scripts/optimize-images.mjs)
 pnpm generate-favicons # Regenerate favicons/app icons (scripts/generate-favicons.mjs)
@@ -35,7 +35,7 @@ Before finishing a task, run `pnpm check` and `pnpm test` (or a relevant subset)
 
 ### Before pushing a big PR
 
-Run `pnpm ci` before opening or pushing a substantial PR. Use it for new features, multi-file refactors, perf/bundle work, dependency upgrades, or changes touching layout, navigation, or E2E-covered flows. Small, scoped edits (copy tweak, single test fix) can keep using `pnpm check` and `pnpm test` only.
+Run `pnpm run validate` before opening or pushing a substantial PR. Use it for new features, multi-file refactors, perf/bundle work, dependency upgrades, or changes touching layout, navigation, or E2E-covered flows. Small, scoped edits (copy tweak, single test fix) can keep using `pnpm check` and `pnpm test` only.
 
 First-time E2E locally requires Playwright browsers: `pnpm exec playwright install`.
 

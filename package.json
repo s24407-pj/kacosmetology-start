@@ -18,7 +18,7 @@
     "format": "biome format",
     "lint": "biome lint",
     "check": "biome check",
-    "ci": "pnpm check && pnpm build && pnpm test:coverage && pnpm audit --audit-level high && pnpm test:e2e",
+    "validate": "pnpm run check && pnpm run build && pnpm run test:coverage && pnpm audit --audit-level high && pnpm run test:e2e",
     "format:write": "biome format --write",
     "check:write": "biome check --write",
     "optimize-images": "node scripts/optimize-images.mjs",

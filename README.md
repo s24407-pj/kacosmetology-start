@@ -29,7 +29,7 @@ The development server is available at `http://localhost:3000`.
 | `pnpm test` | Run unit tests |
 | `pnpm test:coverage` | Run unit tests with coverage |
 | `pnpm test:e2e` | Run Playwright tests |
-| `pnpm ci` | Run the complete local CI suite |
+| `pnpm run validate` | Run the complete local validation suite |
 
 ## Dokploy
 
