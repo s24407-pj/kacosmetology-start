@@ -9,6 +9,7 @@ export const businessProfile = {
   brand: {
     name: 'Ka.Cosmetology',
     practitionerName: 'Katarzyna Suwalska',
+    practitionerNameGenitive: 'Katarzyny Suwalskiej',
     siteUrl: 'https://kacosmetology.pl/',
     email: 'gabinet@kacosmetology.pl',
     socialMedia: {

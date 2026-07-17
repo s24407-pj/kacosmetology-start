@@ -41,6 +41,7 @@ export type HttpsUrl = `https://${string}`
 export interface BrandProfile {
   name: string
   practitionerName: string
+  practitionerNameGenitive: string
   siteUrl: HttpsUrl
   email: string
   socialMedia: {

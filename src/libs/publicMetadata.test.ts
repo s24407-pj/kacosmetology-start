@@ -21,6 +21,38 @@ afterEach(async () => {
 })
 
 describe('public metadata renderers', () => {
+  it('matches the committed llms file byte for byte', async () => {
+    const committed = await readFile(
+      join(process.cwd(), PUBLIC_METADATA_PATHS.llms),
+      'utf8',
+    )
+    expect(renderLlmsTxt(businessProfile)).toBe(committed)
+  })
+
+  it('uses and escapes only the canonical practitioner genitive form', () => {
+    const original = renderLlmsTxt(businessProfile)
+    const changedGenitive = renderLlmsTxt({
+      ...businessProfile,
+      brand: {
+        ...businessProfile.brand,
+        practitionerNameGenitive: 'Test [Case]',
+      },
+    })
+    expect(changedGenitive).toBe(
+      original.replace('Katarzyny Suwalskiej', 'Test \\[Case\\]'),
+    )
+
+    expect(
+      renderLlmsTxt({
+        ...businessProfile,
+        brand: {
+          ...businessProfile.brand,
+          practitionerName: 'Changed Nominative',
+        },
+      }),
+    ).toBe(original)
+  })
+
   it('are deterministic and newline terminated', () => {
     const rendered = renderPublicMetadata(businessProfile)
     expect(rendered).toEqual(renderPublicMetadata(businessProfile))

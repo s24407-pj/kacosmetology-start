@@ -44,7 +44,7 @@ export const renderLlmsTxt = (profile: BusinessProfile) => {
 
 > Gabinet kosmetologiczny i trychologiczny w Starogardzie Gdańskim. Holistyczne terapie skóry i włosów — indywidualna diagnoza i rezerwacja online.
 
-Jednostronicowa witryna gabinetu ${markdownEscape(brand.practitionerName)} (magister kosmetologii). Poniższe linki prowadzą do sekcji na stronie głównej.
+Jednostronicowa witryna gabinetu ${markdownEscape(brand.practitionerNameGenitive)} (magister kosmetologii). Poniższe linki prowadzą do sekcji na stronie głównej.
 
 ## Strona
 
