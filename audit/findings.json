@@ -83,7 +83,17 @@
       "fix_direction": "Contain deferred sections with an appropriate local error boundary and bounded recovery behavior where evidence shows route-level handling is insufficient.",
       "effort": "M",
       "category": "operability",
-      "adversarial_outcome": "rebuttal_wins_downgrade"
+      "adversarial_outcome": "rebuttal_wins_downgrade",
+      "implementation_status": "fixed",
+      "implemented": true,
+      "implemented_at": "2026-07-17T23:05:00Z",
+      "implementation_branch": "audit/fixes-2026-07-16",
+      "implementation_commits": [
+        "2cb23ab0dc4566f03b858b4bd26b5c51baf5886d",
+        "3c302ef606ab1ff6133e6386b2756bf609ea14fc",
+        "0a079051b8aa85980b18f5e8c5db6f19bcd30af9"
+      ],
+      "result_path": "audit/results/F-003.md"
     },
     {
       "id": "F-004",
@@ -181,7 +191,24 @@
       "fix_direction": "Own typed brand/location facts once and derive route, UI, map, and public representations through explicit adapters.",
       "effort": "M",
       "category": "architecture",
-      "adversarial_outcome": null
+      "adversarial_outcome": null,
+      "implementation_status": "fixed",
+      "implemented": true,
+      "implemented_at": "2026-07-17T21:45:00Z",
+      "implementation_branch": "audit/fixes-2026-07-16",
+      "implementation_commits": [
+        "3db867ef72b0c58f71db15e4706147f25bcef409",
+        "8719ff8e9462c6732388c47fdc8359a05ca56673",
+        "44217ca2a7f7f80ce6f7ae915ad150c9718695a4",
+        "20c8a64f3b602b9074c6b75b1a7ee3a1f9eeb8d6",
+        "a74a8f4ba2f8ceb54ae2cbd85a1b8bdd5c67751e",
+        "cdfeb37799dc4886f0a2364d0677548f2ad2169d",
+        "6385559ff84f3a5a40398423dbbf992d9c08231c",
+        "44d325f975d749a27f3c52a5797d07829260a8fd",
+        "5d5c9151fa117fa9883ede7b1540173859d07040",
+        "0f3367486de2ccefdd7eb19c138a0a24289d73e2"
+      ],
+      "result_path": "audit/results/F-008.md"
     },
     {
       "id": "F-009",
@@ -244,7 +271,10 @@
       "fix_direction": "Provide a canonical runbook or pointer covering release identity, expected-content verification, rollback, cache invalidation, and escalation ownership.",
       "effort": "S",
       "category": "docs",
-      "adversarial_outcome": null
+      "adversarial_outcome": null,
+      "implementation_status": "rejected",
+      "implemented": false,
+      "disposition_artifact": "audit/approvals/plan-decisions-2026-07-16.json"
     },
     {
       "id": "F-012",
@@ -261,7 +291,16 @@
       "fix_direction": "Define bounded retry or explicit non-retry policy and an independent minimal diagnostic appropriate to a non-critical analytics path.",
       "effort": "S",
       "category": "operability",
-      "adversarial_outcome": null
+      "adversarial_outcome": null,
+      "implementation_status": "fixed",
+      "implemented": true,
+      "implemented_at": "2026-07-17T22:02:47Z",
+      "implementation_branch": "audit/fixes-2026-07-16",
+      "implementation_commits": [
+        "448d9d5d48ebd3bb97657128622906b37f34879f",
+        "741f000c95a90af6f35b93c2a1d0eefdf483b32c"
+      ],
+      "result_path": "audit/results/F-012.md"
     },
     {
       "id": "F-013",
@@ -305,7 +344,18 @@
       "fix_direction": "Use explicit weekdays, structured open/closed slots, and timezone, then derive UI and Schema.org formats.",
       "effort": "M",
       "category": "clarity",
-      "adversarial_outcome": null
+      "adversarial_outcome": null,
+      "implementation_status": "fixed",
+      "implemented": true,
+      "implemented_at": "2026-07-17T19:55:00Z",
+      "implementation_branch": "audit/fixes-2026-07-16",
+      "implementation_commits": [
+        "43a23313428502ff45fcceb99639d27326e4d703",
+        "09533868c96163c00633f27c7a4c82e83f275e84",
+        "1cf2e617ae7e6a9201959366de5b709708f53445",
+        "70ca13df9f48eaaac72ac65cb55102065b824f22"
+      ],
+      "result_path": "audit/results/F-014.md"
     },
     {
       "id": "F-015",
@@ -350,7 +400,10 @@
       "effort": "M",
       "category": "duplication",
       "reissued_from": "F-006",
-      "adversarial_outcome": null
+      "adversarial_outcome": null,
+      "implementation_status": "rejected",
+      "implemented": false,
+      "disposition_artifact": "audit/approvals/triage-2026-07-16.json"
     }
   ],
   "deleted_findings": [
