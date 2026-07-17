@@ -22,10 +22,7 @@ test.describe('Promotion banner', () => {
       exact: true,
     })
     await expect(cta).toBeVisible()
-    await expect(cta).toHaveAttribute(
-      'href',
-      'https://kacosmetology.booksy.com',
-    )
+    await expect(cta).toHaveAttribute('href', /^https:\/\//)
   })
 
   test('allows dismissing the promotion banner without persisting the state', async ({

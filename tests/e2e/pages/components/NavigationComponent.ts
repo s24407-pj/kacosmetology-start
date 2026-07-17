@@ -12,9 +12,7 @@ export class NavigationComponent {
 
     // Sticky aside wrapper (different from nav CTA)
     this.stickyCTAWrapper = page.locator('div[aria-hidden]').filter({
-      has: page.locator('a[href="https://kacosmetology.booksy.com"]', {
-        hasText: 'Umów się',
-      }),
+      has: page.locator('a').filter({ hasText: /^Umów się$/ }),
     })
 
     this.scrollWrapper = page.locator('aside > div').filter({

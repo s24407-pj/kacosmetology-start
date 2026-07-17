@@ -7,18 +7,16 @@ export class ContactComponent {
 
   readonly phoneLink: Locator
   readonly emailLink: Locator
-  readonly addressRegex: RegExp
+  readonly address: Locator
   readonly booksyCta: Locator
 
   constructor(public readonly page: Page) {
     this.section = page.locator('#kontakt')
     this.footer = page.locator('footer')
     this.aside = page.locator('aside')
-    this.phoneLink = this.section.getByRole('link', { name: '+48 726 154 460' })
-    this.emailLink = this.section.getByRole('link', {
-      name: 'gabinet@kacosmetology.pl',
-    })
-    this.addressRegex = /ul\. Paderewskiego 11a/
+    this.phoneLink = this.section.locator('a[href^="tel:"]')
+    this.emailLink = this.section.locator('a[href^="mailto:"]')
+    this.address = this.section.locator('address')
     this.booksyCta = this.section.getByRole('link', {
       name: 'Umów wizytę przez Booksy',
     })
@@ -41,7 +39,10 @@ export class ContactComponent {
   }
 
   getSectionFacebookLink() {
-    return this.section.locator('a[href*="facebook.com"]')
+    return this.section.getByRole('link', {
+      name: 'Ka.Cosmetology',
+      exact: true,
+    })
   }
 
   getFooterInstagramLink() {

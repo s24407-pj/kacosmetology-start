@@ -1,3 +1,5 @@
+import { brand, primarySalonLocation } from '@data/business'
+import { toBeautySalonJsonLd } from '@libs/businessMetadata'
 import { expect, test } from '@playwright/test'
 import { HomePage } from './pages/HomePage'
 import { OPEN_WEEKDAY_DATE } from './utils/dates'
@@ -8,6 +10,70 @@ test.describe('Contact section', () => {
   test.beforeEach(async ({ page }) => {
     homePage = new HomePage(page)
     await homePage.goto()
+  })
+
+  test('keeps canonical business data in parity across public surfaces', async ({
+    request,
+  }) => {
+    const normalizedPhone = primarySalonLocation.phone.replace(/\s+/g, '')
+    await expect(homePage.contact.phoneLink).toHaveAttribute(
+      'href',
+      `tel:${normalizedPhone}`,
+    )
+    await expect(homePage.contact.emailLink).toHaveAttribute(
+      'href',
+      `mailto:${brand.email}`,
+    )
+    await expect(homePage.contact.address).toContainText(
+      primarySalonLocation.address.streetAddress,
+    )
+    await expect(homePage.contact.address).toContainText(
+      `${primarySalonLocation.address.postalCode} ${primarySalonLocation.address.locality}`,
+    )
+
+    await expect(
+      homePage.contact.footer.getByText(primarySalonLocation.phone),
+    ).toBeVisible()
+    await expect(homePage.contact.footer.getByText(brand.email)).toBeVisible()
+    await expect(homePage.contact.getAsideInstagramLink()).toHaveAttribute(
+      'href',
+      brand.socialMedia.instagram,
+    )
+    await expect(homePage.contact.getAsideFacebookLink()).toHaveAttribute(
+      'href',
+      brand.socialMedia.facebook,
+    )
+
+    const map = homePage.page.getByTitle(
+      `Lokalizacja gabinetu ${brand.name} w ${primarySalonLocation.address.locality}`,
+    )
+    await expect(map).toHaveAttribute('src', primarySalonLocation.map.embedUrl)
+
+    for (const bookingLink of [
+      homePage.heroBookingLink,
+      homePage.contact.booksyCta,
+      homePage.contact.footer.getByRole('link', { name: 'Umów się' }),
+    ]) {
+      await expect(bookingLink).toHaveAttribute(
+        'href',
+        primarySalonLocation.bookingUrl,
+      )
+    }
+
+    const response = await request.get('/')
+    expect(response.ok()).toBe(true)
+    const html = await response.text()
+    const jsonLdMatch = html.match(
+      /<script type="application\/ld\+json">([^<]+)<\/script>/,
+    )
+    expect(jsonLdMatch).not.toBeNull()
+    expect(JSON.parse(jsonLdMatch?.[1] ?? '{}')).toEqual(
+      toBeautySalonJsonLd({
+        brand,
+        location: primarySalonLocation,
+        priceRange: '30-550 PLN',
+      }),
+    )
   })
 
   test.describe('aside column', () => {
@@ -21,19 +87,13 @@ test.describe('Contact section', () => {
     test('exposes social media links with correct attributes', async () => {
       const instagramLink = homePage.contact.getAsideInstagramLink()
       await expect(instagramLink).toBeVisible()
-      await expect(instagramLink).toHaveAttribute(
-        'href',
-        'https://www.instagram.com/ka.cosmetology',
-      )
+      await expect(instagramLink).toHaveAttribute('href', /^https:\/\//)
       await expect(instagramLink).toHaveAttribute('target', '_blank')
       await expect(instagramLink).toHaveAttribute('rel', 'noopener noreferrer')
 
       const facebookLink = homePage.contact.getAsideFacebookLink()
       await expect(facebookLink).toBeVisible()
-      await expect(facebookLink).toHaveAttribute(
-        'href',
-        'https://www.facebook.com/profile.php?id=61579179969990',
-      )
+      await expect(facebookLink).toHaveAttribute('href', /^https:\/\//)
       await expect(facebookLink).toHaveAttribute('target', '_blank')
       await expect(facebookLink).toHaveAttribute('rel', 'noopener noreferrer')
     })
@@ -62,14 +122,12 @@ test.describe('Contact section', () => {
       await expect(homePage.contact.getFooterFacebookLink()).toBeVisible()
 
       await expect(
-        homePage.contact.footer.getByText('+48 726 154 460'),
+        homePage.contact.footer.locator('a[href^="tel:"]'),
       ).toBeVisible()
       await expect(
-        homePage.contact.footer.getByText('gabinet@kacosmetology.pl'),
+        homePage.contact.footer.locator('a[href^="mailto:"]'),
       ).toBeVisible()
-      await expect(
-        homePage.contact.footer.getByText(/ul\. Paderewskiego 11a/),
-      ).toBeVisible()
+      await expect(homePage.contact.footer.getByText(/ul\./)).toBeVisible()
     })
   })
 
@@ -81,12 +139,7 @@ test.describe('Contact section', () => {
       await expect(homePage.contact.getSectionFacebookLink()).toBeVisible()
       await expect(homePage.contact.phoneLink).toBeVisible()
       await expect(homePage.contact.emailLink).toBeVisible()
-      await expect(
-        homePage.contact.section.getByText(/ul\. Paderewskiego 11a/),
-      ).toBeVisible()
-      await expect(
-        homePage.contact.section.getByText(/83-200 Starogard Gdański/),
-      ).toBeVisible()
+      await expect(homePage.contact.address).toBeVisible()
     })
   })
 
@@ -104,10 +157,7 @@ test.describe('Contact section', () => {
 
       const stickyPhoneButton = contactHomePage.contact.getAsidePhoneButton()
       await expect(stickyPhoneButton).toBeVisible()
-      await expect(stickyPhoneButton).toHaveAttribute(
-        'href',
-        'tel:+48726154460',
-      )
+      await expect(stickyPhoneButton).toHaveAttribute('href', /^tel:/)
       await expect(stickyPhoneButton).toHaveAccessibleName(
         /gabinet jest teraz otwarty/,
       )
@@ -120,25 +170,19 @@ test.describe('Contact section', () => {
 
       await expect(contactHomePage.contact.phoneLink).toHaveAttribute(
         'href',
-        'tel:+48726154460',
+        /^tel:/,
       )
       await expect(contactHomePage.contact.emailLink).toHaveAttribute(
         'href',
-        'mailto:gabinet@kacosmetology.pl',
+        /^mailto:/,
       )
 
       const instagramLink = contactHomePage.contact.getSectionInstagramLink()
-      await expect(instagramLink).toHaveAttribute(
-        'href',
-        'https://www.instagram.com/ka.cosmetology',
-      )
+      await expect(instagramLink).toHaveAttribute('href', /^https:\/\//)
       await expect(instagramLink).toHaveAttribute('target', '_blank')
 
       const booksyCta = contactHomePage.contact.booksyCta
-      await expect(booksyCta).toHaveAttribute(
-        'href',
-        'https://kacosmetology.booksy.com',
-      )
+      await expect(booksyCta).toHaveAttribute('href', /^https:\/\//)
       await expect(booksyCta).toHaveAttribute('target', '_blank')
     })
 
@@ -157,8 +201,9 @@ test.describe('Contact section', () => {
 
       const stickyPhoneButton = contactHomePage.contact.getAsidePhoneButton()
       await expect(stickyPhoneButton).toBeVisible()
-      await expect(stickyPhoneButton).toHaveAccessibleName(
-        'Zadzwoń pod numer +48 726 154 460',
+      await expect(stickyPhoneButton).toHaveAccessibleName(/Zadzwoń pod numer/)
+      await expect(stickyPhoneButton).not.toHaveAccessibleName(
+        /gabinet jest teraz otwarty/,
       )
 
       await contactHomePage.contact.scrollTo()

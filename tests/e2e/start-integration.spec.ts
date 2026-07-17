@@ -15,19 +15,19 @@ test.describe('TanStack Start integration', () => {
     expect(response.ok()).toBe(true)
 
     const html = await response.text()
-    expect(html).toContain('Katarzyna Suwalska')
+    expect(html).toContain(brand.practitionerName)
     expect(html).toContain('O mnie')
     expect(html).toContain('Jak wygląda współpraca')
     expect(html).toContain('Holistycznie znaczy czule.')
     expect(html).toContain('Zabiegi')
     expect(html).toContain(
-      '<title>Katarzyna Suwalska | Kosmetolog | Trycholog | Starogard Gdański</title>',
+      `<title>${brand.practitionerName} | Kosmetolog | Trycholog | ${primarySalonLocation.address.locality}</title>`,
     )
     expect(html).toContain('rel="canonical"')
     expect(html).toContain('property="og:title"')
-    expect(html).toContain('content="https://kacosmetology.pl/"')
+    expect(html).toContain(`content="${brand.siteUrl}"`)
     expect(html).toContain(
-      'content="https://kacosmetology.pl/images/logo.webp"',
+      `content="${new URL(brand.logo.imagePath, brand.siteUrl).href}"`,
     )
 
     const jsonLdMatch = html.match(
@@ -57,7 +57,7 @@ test.describe('TanStack Start integration', () => {
 
     await page.goto('/')
     await expect(
-      page.getByRole('heading', { name: 'Katarzyna Suwalska' }),
+      page.getByRole('heading', { name: brand.practitionerName }),
     ).toBeVisible()
     await expect
       .poll(() => page.evaluate(() => history.state?.__TSR_key))

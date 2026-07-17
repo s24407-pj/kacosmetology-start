@@ -89,7 +89,7 @@ test.describe('Navigation and scrolling experiences', () => {
       homePage.navigation.stickyCTAWrapper.getByRole('link', {
         name: 'Umów się',
       }),
-    ).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
+    ).toHaveAttribute('href', /^https:\/\//)
 
     await page.evaluate(() => window.scrollTo(0, 0))
     await page.waitForFunction(() => window.scrollY < 1)

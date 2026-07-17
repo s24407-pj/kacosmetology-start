@@ -21,7 +21,7 @@ test.describe('KaCosmetology homepage', () => {
     await expect(homePage.heroBookingLink).toBeVisible()
     await expect(homePage.heroBookingLink).toHaveAttribute(
       'href',
-      'https://kacosmetology.booksy.com',
+      /^https:\/\//,
     )
   })
 
