@@ -55,6 +55,55 @@ export interface Contact {
   booksy: string
 }
 
+export type SalonLocationId = `salon-${string}`
+export type HttpsUrl = `https://${string}`
+
+export interface BrandProfile {
+  name: string
+  practitionerName: string
+  siteUrl: HttpsUrl
+  email: string
+  socialMedia: {
+    instagram: HttpsUrl
+    facebook?: HttpsUrl
+  }
+  logo: {
+    imagePath: `/${string}`
+    imageAlt: string
+  }
+  appShortName: string
+}
+
+export interface PostalAddress {
+  streetAddress: string
+  postalCode: string
+  locality: string
+  countryCode: string
+}
+
+export interface GeoCoordinates {
+  latitude: number
+  longitude: number
+}
+
+export interface SalonLocation {
+  id: SalonLocationId
+  displayName: string
+  phone: string
+  bookingUrl: HttpsUrl
+  address: PostalAddress
+  coordinates: GeoCoordinates
+  map: { embedUrl: HttpsUrl }
+  areaServed: { type: 'City'; name: string }
+  openingSchedule: OpeningSchedule
+}
+
+export interface BusinessProfile {
+  brand: BrandProfile
+  primaryLocationId: SalonLocationId
+  locations: readonly SalonLocation[]
+}
+
 export type ContactLinkType = 'phone' | 'email' | 'instagram' | 'facebook'
 
 export interface ContactLinkData {
