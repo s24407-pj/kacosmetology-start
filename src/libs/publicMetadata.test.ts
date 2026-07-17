@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { businessProfile } from '@data/business'
@@ -117,7 +117,6 @@ describe('public metadata renderers', () => {
     const path = PUBLIC_METADATA_PATHS.robots
     const absolutePath = join(root, path)
     await writeFile(absolutePath, 'stale', { flag: 'w' }).catch(async () => {
-      const { mkdir } = await import('node:fs/promises')
       await mkdir(join(root, 'public'), { recursive: true })
       await writeFile(absolutePath, 'stale')
     })
@@ -133,5 +132,20 @@ describe('public metadata renderers', () => {
     expect(await syncPublicMetadata({ root, rendered, check: false })).toEqual(
       [],
     )
+  })
+
+  it('propagates EISDIR read failures', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'public-metadata-'))
+    temporaryDirectories.push(root)
+    const path = PUBLIC_METADATA_PATHS.robots
+    await mkdir(join(root, path), { recursive: true })
+
+    await expect(
+      syncPublicMetadata({
+        root,
+        rendered: { [path]: 'fresh\n' },
+        check: true,
+      }),
+    ).rejects.toMatchObject({ code: 'EISDIR' })
   })
 })

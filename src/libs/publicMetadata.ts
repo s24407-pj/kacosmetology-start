@@ -100,6 +100,22 @@ export const renderPublicMetadata = (profile: BusinessProfile) => ({
   [PUBLIC_METADATA_PATHS.manifest]: renderSiteWebManifest(profile),
 })
 
+const readExistingFile = async (path: string) => {
+  try {
+    return await readFile(path, 'utf8')
+  } catch (error) {
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      error.code === 'ENOENT'
+    ) {
+      return null
+    }
+    throw error
+  }
+}
+
 export const syncPublicMetadata = async ({
   root,
   rendered,
@@ -112,7 +128,7 @@ export const syncPublicMetadata = async ({
   const stalePaths: string[] = []
   for (const [relativePath, expected] of Object.entries(rendered)) {
     const absolutePath = join(root, relativePath)
-    const actual = await readFile(absolutePath, 'utf8').catch(() => null)
+    const actual = await readExistingFile(absolutePath)
     if (actual === expected) continue
     stalePaths.push(relative(root, absolutePath))
     if (check) continue
