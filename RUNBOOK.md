@@ -127,8 +127,9 @@ failure may be a blocker, network policy, or missing asset. Evidence: F-012,
 
 Do not add retries or timeouts first. Local Playwright retries are zero. CI
 permits two diagnostic retries, but `failOnFlakyTests` makes a recovered retry
-fail; inspect the trace/screenshot/video artifacts and reproduce the focused
-spec. CI artifact retention is 14 days. Confirm the client-ready and
+fail; inspect the configured trace artifact and CI reporter output, then
+reproduce the focused spec. CI artifact retention is 14 days. Confirm the
+client-ready and
 fixed-reference-time contracts before interacting with SSR-visible controls.
 Evidence: F-010, F-015, `playwright.config.ts`, `.github/workflows/ci.yml`.
 
