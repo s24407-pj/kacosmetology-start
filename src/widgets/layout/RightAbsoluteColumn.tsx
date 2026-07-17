@@ -1,7 +1,7 @@
 import FacebookSVG from '@components/icons/FacebookSVG'
 import InstagramSVG from '@components/icons/InstagramSVG'
 import { useUI } from '@context/UIContext'
-import { contact } from '@data/contact'
+import { brand } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import { cn } from '@libs/utils'
 import PhoneButton from '@widgets/actions/PhoneButton'
@@ -11,7 +11,7 @@ function SocialLinks({ placement }: { placement: string }) {
   return (
     <>
       <a
-        href={contact.socialMedia.instagram}
+        href={brand.socialMedia.instagram}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Instagram"
@@ -25,9 +25,9 @@ function SocialLinks({ placement }: { placement: string }) {
       >
         <InstagramSVG className="w-6 h-6" />
       </a>
-      {contact.socialMedia.facebook && (
+      {brand.socialMedia.facebook && (
         <a
-          href={contact.socialMedia.facebook}
+          href={brand.socialMedia.facebook}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Facebook"

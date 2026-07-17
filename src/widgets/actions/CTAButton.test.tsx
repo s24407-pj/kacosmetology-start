@@ -13,6 +13,7 @@ vi.mock('@libs/analytics', () => ({
 
 import type { UIContextType } from '@app-types/types'
 import { useUI } from '@context/UIContext'
+import { primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import CTAButton from './CTAButton'
 
@@ -64,7 +65,9 @@ describe('CTAButton', () => {
 
     render(<CTAButton placement="footer" />)
 
-    await user.click(screen.getByRole('link', { name: /Umów się/ }))
+    const link = screen.getByRole('link', { name: /Umów się/ })
+    expect(link).toHaveAttribute('href', primarySalonLocation.bookingUrl)
+    await user.click(link)
 
     expect(trackPlausibleEvent).toHaveBeenCalledWith('CTA Booksy Click', {
       placement: 'footer',

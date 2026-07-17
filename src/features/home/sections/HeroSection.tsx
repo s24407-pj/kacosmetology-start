@@ -1,4 +1,4 @@
-import { contact } from '@data/contact'
+import { brand, primarySalonLocation } from '@data/business'
 import { platformStats } from '@data/platformStats'
 import { useSectionNavigation } from '@hooks/useSectionNavigation'
 import { trackPlausibleEvent } from '@libs/analytics'
@@ -35,13 +35,13 @@ export default function HeroSection() {
               <span className="inline-flex items-center gap-2 rounded-md border border-border-default bg-surface px-3 py-2">
                 <MapPin className="h-5 w-5 text-action" />
                 <span className="font-body text-lg font-medium text-action">
-                  Starogard Gdański
+                  {primarySalonLocation.address.locality}
                 </span>
               </span>
             </div>
 
             <h1 className="mb-6 font-display text-5xl font-bold leading-tight text-text-primary md:text-7xl">
-              Katarzyna Suwalska
+              {brand.practitionerName}
             </h1>
 
             <p className="mb-8 max-w-2xl font-body text-xl leading-relaxed text-text-secondary md:text-2xl">
@@ -70,7 +70,7 @@ export default function HeroSection() {
 
             <div className="flex flex-col gap-3 sm:flex-row">
               <a
-                href={contact.booksy}
+                href={primarySalonLocation.bookingUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex min-h-12 items-center justify-center rounded-md bg-action px-6 py-3 font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 focus-visible:ring-offset-2"
@@ -106,7 +106,7 @@ export default function HeroSection() {
                   src={webpFallbackSrc('/images/hero.webp')}
                   srcSet={webpSrcSet('/images/hero.webp', MOBILE_WIDTHS)}
                   sizes={IMAGE_SIZES.hero}
-                  alt="Katarzyna Suwalska"
+                  alt={brand.practitionerName}
                   className="h-full w-full object-cover object-bottom"
                   loading="eager"
                   fetchPriority="high"

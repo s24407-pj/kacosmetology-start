@@ -1,21 +1,24 @@
 import { useRenderTime } from '@context/RenderTimeProvider'
-import { contact } from '@data/contact'
+import { primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import { isSalonOpenNow } from '@libs/openingHours'
 import { PhoneCall } from 'lucide-react'
 
 export default function PhoneButton() {
   const renderTime = useRenderTime()
-  const phoneNumber = contact.phone.replace(/\s+/g, '')
-  const salonOpen = isSalonOpenNow(contact.openingSchedule, renderTime)
+  const phoneNumber = primarySalonLocation.phone.replace(/\s+/g, '')
+  const salonOpen = isSalonOpenNow(
+    primarySalonLocation.openingSchedule,
+    renderTime,
+  )
 
   return (
     <a
       href={`tel:${phoneNumber}`}
       onClick={() => trackPlausibleEvent('Call CTA Click')}
       className="relative text-text-secondary hover:text-action transition-colors p-2 hover:bg-surface-muted rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-      aria-label={`Zadzwoń pod numer ${contact.phone}${salonOpen ? ', gabinet jest teraz otwarty' : ''}`}
-      title={`Zadzwoń pod numer ${contact.phone}`}
+      aria-label={`Zadzwoń pod numer ${primarySalonLocation.phone}${salonOpen ? ', gabinet jest teraz otwarty' : ''}`}
+      title={`Zadzwoń pod numer ${primarySalonLocation.phone}`}
     >
       {salonOpen && (
         <span

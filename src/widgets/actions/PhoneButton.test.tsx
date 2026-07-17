@@ -20,7 +20,7 @@ vi.mock('@libs/analytics', () => ({
   trackPlausibleEvent: vi.fn(),
 }))
 
-import { contact } from '@data/contact'
+import { primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import { isSalonOpenNow } from '@libs/openingHours'
 import PhoneButton from './PhoneButton'
@@ -43,11 +43,14 @@ describe('PhoneButton', () => {
     render(<PhoneButton />)
 
     const link = screen.getByRole('link', {
-      name: 'Zadzwoń pod numer +48 726 154 460, gabinet jest teraz otwarty',
+      name: `Zadzwoń pod numer ${primarySalonLocation.phone}, gabinet jest teraz otwarty`,
     })
-    expect(link).toHaveAttribute('href', 'tel:+48726154460')
+    expect(link).toHaveAttribute(
+      'href',
+      `tel:${primarySalonLocation.phone.replace(/\s+/g, '')}`,
+    )
     expect(isSalonOpenNowMock).toHaveBeenCalledWith(
-      contact.openingSchedule,
+      primarySalonLocation.openingSchedule,
       referenceTime,
     )
 
@@ -61,7 +64,7 @@ describe('PhoneButton', () => {
     render(<PhoneButton />)
 
     const link = screen.getByRole('link', {
-      name: 'Zadzwoń pod numer +48 726 154 460',
+      name: `Zadzwoń pod numer ${primarySalonLocation.phone}`,
     })
     expect(link).not.toHaveAccessibleName(/gabinet jest teraz otwarty/)
   })

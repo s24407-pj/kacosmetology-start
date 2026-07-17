@@ -1,3 +1,5 @@
+import { brand } from '@data/business'
+
 type AnalyticsEventValue = string | number | boolean
 
 export type AnalyticsEventProps = Record<string, AnalyticsEventValue>
@@ -35,7 +37,7 @@ function loadPlausible(): Promise<PlausibleModule | null> {
   plausibleLoadPromise = import('@plausible-analytics/tracker')
     .then((module) => {
       module.init({
-        domain: 'kacosmetology.pl',
+        domain: new URL(brand.siteUrl).hostname,
         endpoint: 'https://analytics.mflisik.ovh/api/event',
       })
       analyticsInitialized = true

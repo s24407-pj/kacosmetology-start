@@ -47,7 +47,7 @@ const getServicePriceHistoryMock = vi.mocked(
 )
 
 import type { Service } from '@app-types/types'
-import { contact } from '@data/contact'
+import { primarySalonLocation } from '@data/business'
 import type { ActivePromotion, PromotionApplicability } from '@data/promotion'
 import { trackPlausibleEvent } from '@libs/analytics'
 import ExpandableServiceCard from './ExpandableServiceCard'
@@ -267,7 +267,7 @@ describe('ExpandableServiceCard', () => {
     )
 
     const ctaLink = screen.getByRole('link', { name: 'Umów się' })
-    expect(ctaLink).toHaveAttribute('href', contact.booksy)
+    expect(ctaLink).toHaveAttribute('href', primarySalonLocation.bookingUrl)
     expect(ctaLink).toHaveAttribute('target', '_blank')
     expect(ctaLink).toHaveAttribute('rel', 'noopener noreferrer')
 

@@ -1,5 +1,5 @@
 import { useUI } from '@context/UIContext'
-import { contact } from '@data/contact'
+import { primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import { cn } from '@libs/utils'
 import { Calendar } from 'lucide-react'
@@ -18,7 +18,7 @@ export default function StickyBookingCTA() {
       )}
     >
       <a
-        href={contact.booksy}
+        href={primarySalonLocation.bookingUrl}
         target="_blank"
         rel="noopener noreferrer"
         tabIndex={show ? undefined : -1}

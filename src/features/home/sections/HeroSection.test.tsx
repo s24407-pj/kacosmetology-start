@@ -11,6 +11,7 @@ vi.mock('@hooks/useSectionNavigation', () => ({
   useSectionNavigation: () => vi.fn(),
 }))
 
+import { brand, primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import HeroSection from './HeroSection'
 
@@ -31,18 +32,20 @@ describe('HeroSection', () => {
 
   it('displays location badge with Starogard Gdański', () => {
     render(<HeroSection />)
-    expect(screen.getByText('Starogard Gdański')).toBeInTheDocument()
+    expect(
+      screen.getByText(primarySalonLocation.address.locality),
+    ).toBeInTheDocument()
   })
 
   it('displays main heading with name', () => {
     render(<HeroSection />)
-    expect(screen.getByText('Katarzyna Suwalska')).toBeInTheDocument()
+    expect(screen.getByText(brand.practitionerName)).toBeInTheDocument()
   })
 
   it('uses the practitioner name as the hero image alternative', () => {
     render(<HeroSection />)
     expect(
-      screen.getByRole('img', { name: 'Katarzyna Suwalska' }),
+      screen.getByRole('img', { name: brand.practitionerName }),
     ).toBeVisible()
   })
 
@@ -58,7 +61,7 @@ describe('HeroSection', () => {
     const { container } = render(<HeroSection />)
 
     const booksyLink = container.querySelector(
-      'a[href="https://kacosmetology.booksy.com"]',
+      `a[href="${primarySalonLocation.bookingUrl}"]`,
     )
     expect(booksyLink).toBeInTheDocument()
     expect(booksyLink).toHaveAttribute('target', '_blank')

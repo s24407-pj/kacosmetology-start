@@ -12,7 +12,7 @@ vi.mock('@libs/analytics', () => ({
 }))
 
 import { useUI } from '@context/UIContext'
-import { contact } from '@data/contact'
+import { primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import StickyBookingCTA from './StickyBookingCTA'
 
@@ -42,7 +42,7 @@ describe('StickyBookingCTA', () => {
     render(<StickyBookingCTA />)
 
     const link = screen.getByRole('link', { name: /Umów się/ })
-    expect(link).toHaveAttribute('href', contact.booksy)
+    expect(link).toHaveAttribute('href', primarySalonLocation.bookingUrl)
     expect(link).toHaveAttribute('target', '_blank')
     expect(link).toHaveAttribute('rel', 'noopener noreferrer')
   })

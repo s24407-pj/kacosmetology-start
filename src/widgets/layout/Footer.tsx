@@ -3,9 +3,9 @@ import FacebookSVG from '@components/icons/FacebookSVG'
 import InstagramSVG from '@components/icons/InstagramSVG'
 import KaCosmetologyLogo from '@components/icons/KaCosmetologyLogo'
 import { useRenderTime } from '@context/RenderTimeProvider'
-import { contact, contactLinks } from '@data/contact'
+import { brand, primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
-import { getContactHref } from '@libs/contactLinks'
+import { createContactLinks, getContactHref } from '@libs/contactLinks'
 import { Mail, Phone } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -29,6 +29,7 @@ const trackFooterContactClick = (channel: ContactLinkType) => {
 
 export default function Footer() {
   const currentYear = useRenderTime().getFullYear()
+  const contactLinks = createContactLinks(brand, primarySalonLocation)
 
   return (
     <footer className="relative overflow-hidden bg-text-primary text-white">
@@ -41,7 +42,8 @@ export default function Footer() {
           <div>
             <KaCosmetologyLogo className="w-32 text-white" />
             <p className="mt-5 max-w-xs font-body text-gray-400">
-              Profesjonalna kosmetologia i trychologia w Starogardzie Gdańskim.
+              Profesjonalna kosmetologia i trychologia w{' '}
+              {primarySalonLocation.address.locality}.
             </p>
             <div className="mt-6 flex gap-3">
               {contactLinks.map((link) => {
@@ -69,11 +71,12 @@ export default function Footer() {
               Kontakt
             </h2>
             <div className="space-y-2 font-body text-sm text-gray-400">
-              <p>{contact.phone}</p>
-              <p>{contact.email}</p>
+              <p>{primarySalonLocation.phone}</p>
+              <p>{brand.email}</p>
               <p>
-                {contact.address.street}, {contact.address.postalCode}{' '}
-                {contact.address.city}
+                {primarySalonLocation.address.streetAddress},{' '}
+                {primarySalonLocation.address.postalCode}{' '}
+                {primarySalonLocation.address.locality}
               </p>
             </div>
           </div>
@@ -86,7 +89,7 @@ export default function Footer() {
               Zarezerwuj dogodny termin online przez Booksy.
             </p>
             <a
-              href={contact.booksy}
+              href={primarySalonLocation.bookingUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex min-h-11 items-center rounded-md bg-action px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/50"
@@ -103,7 +106,7 @@ export default function Footer() {
 
         <div className="mt-12 border-t border-gray-800 pt-8 text-center">
           <p className="text-sm text-gray-400">
-            © {currentYear} Ka.Cosmetology. Wszystkie prawa zastrzeżone.
+            © {currentYear} {brand.name}. Wszystkie prawa zastrzeżone.
           </p>
         </div>
       </div>

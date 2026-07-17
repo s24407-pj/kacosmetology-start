@@ -3,9 +3,9 @@ import FacebookSVG from '@components/icons/FacebookSVG'
 import InstagramSVG from '@components/icons/InstagramSVG'
 import { Section, SectionHeader } from '@components/ui'
 import { useRenderTime } from '@context/RenderTimeProvider'
-import { contact, contactLinks } from '@data/contact'
+import { brand, primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
-import { getContactHref } from '@libs/contactLinks'
+import { createContactLinks, getContactHref } from '@libs/contactLinks'
 import { getOpeningHoursView } from '@libs/openingHours'
 import { Clock, Heart, Mail, MapPin, Phone } from 'lucide-react'
 import type { ComponentType } from 'react'
@@ -29,6 +29,8 @@ const CONTACT_LINK_ICONS: Record<ContactLinkType, ContactIcon> = {
 }
 
 export default function ContactSection() {
+  const contactLinks = createContactLinks(brand, primarySalonLocation)
+
   return (
     <Section id="kontakt" background="contact" decorated="top">
       <SectionHeader
@@ -80,9 +82,10 @@ export default function ContactSection() {
                 <address className="not-italic">
                   <p className="font-medium text-text-primary">Adres</p>
                   <p className="text-text-secondary">
-                    {contact.address.street}
+                    {primarySalonLocation.address.streetAddress}
                     <br />
-                    {contact.address.postalCode} {contact.address.city}
+                    {primarySalonLocation.address.postalCode}{' '}
+                    {primarySalonLocation.address.locality}
                   </p>
                 </address>
               </div>
@@ -91,7 +94,7 @@ export default function ContactSection() {
 
           <div className="text-center">
             <a
-              href={contact.booksy}
+              href={primarySalonLocation.bookingUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex min-h-12 items-center rounded-md bg-action px-6 py-3 font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 focus-visible:ring-offset-2"
@@ -124,7 +127,7 @@ export default function ContactSection() {
 function OpeningHoursList() {
   const renderTime = useRenderTime()
   const { isOpenNow, rows } = getOpeningHoursView(
-    contact.openingSchedule,
+    primarySalonLocation.openingSchedule,
     renderTime,
   )
 

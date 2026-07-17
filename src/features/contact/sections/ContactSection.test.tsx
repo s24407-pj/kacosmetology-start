@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest'
-import { contact } from '@data/contact'
+import { brand, primarySalonLocation } from '@data/business'
 import { cleanup, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -107,10 +107,12 @@ describe('ContactSection', () => {
     const user = userEvent.setup()
     render(<ContactSection />)
 
-    const phoneLink = screen.getByRole('link', { name: contact.phone })
+    const phoneLink = screen.getByRole('link', {
+      name: primarySalonLocation.phone,
+    })
     expect(phoneLink).toHaveAttribute(
       'href',
-      `tel:${contact.phone.replace(/\s+/g, '')}`,
+      `tel:${primarySalonLocation.phone.replace(/\s+/g, '')}`,
     )
 
     await user.click(phoneLink)
@@ -124,8 +126,8 @@ describe('ContactSection', () => {
     const user = userEvent.setup()
     render(<ContactSection />)
 
-    const emailLink = screen.getByRole('link', { name: contact.email })
-    expect(emailLink).toHaveAttribute('href', `mailto:${contact.email}`)
+    const emailLink = screen.getByRole('link', { name: brand.email })
+    expect(emailLink).toHaveAttribute('href', `mailto:${brand.email}`)
 
     await user.click(emailLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
@@ -145,16 +147,32 @@ describe('ContactSection', () => {
     render(<ContactSection />)
 
     expect(
-      screen.getByRole('link', { name: '+48 726 154 460' }),
-    ).toHaveAttribute('href', 'tel:+48726154460')
+      screen.getByRole('link', { name: primarySalonLocation.phone }),
+    ).toHaveAttribute(
+      'href',
+      `tel:${primarySalonLocation.phone.replace(/\s+/g, '')}`,
+    )
+    expect(screen.getByRole('link', { name: brand.email })).toHaveAttribute(
+      'href',
+      `mailto:${brand.email}`,
+    )
     expect(
-      screen.getByRole('link', { name: 'gabinet@kacosmetology.pl' }),
-    ).toHaveAttribute('href', 'mailto:gabinet@kacosmetology.pl')
-    expect(screen.getByText(/ul\. Paderewskiego 11a/)).toBeInTheDocument()
-    expect(screen.getByText(/83-200 Starogard Gdański/)).toBeInTheDocument()
+      screen.getByText(
+        new RegExp(
+          primarySalonLocation.address.streetAddress.replace('.', '\\.'),
+        ),
+      ),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        new RegExp(
+          `${primarySalonLocation.address.postalCode} ${primarySalonLocation.address.locality}`,
+        ),
+      ),
+    ).toBeInTheDocument()
     expect(
       screen.getByRole('link', { name: /umów wizytę przez booksy/i }),
-    ).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
+    ).toHaveAttribute('href', primarySalonLocation.bookingUrl)
   })
 
   it('renders Instagram link with tracking', async () => {
@@ -164,7 +182,7 @@ describe('ContactSection', () => {
     const instagramLink = screen.getByRole('link', {
       name: /@ka\.cosmetology/i,
     })
-    expect(instagramLink).toHaveAttribute('href', contact.socialMedia.instagram)
+    expect(instagramLink).toHaveAttribute('href', brand.socialMedia.instagram)
     expect(instagramLink).toHaveAttribute('target', '_blank')
 
     await user.click(instagramLink)
@@ -175,7 +193,7 @@ describe('ContactSection', () => {
   })
 
   it('renders Facebook link with tracking', async () => {
-    if (!contact.socialMedia.facebook) {
+    if (!brand.socialMedia.facebook) {
       throw new Error('Expected facebook link in contact data for this test')
     }
 
@@ -183,7 +201,7 @@ describe('ContactSection', () => {
     render(<ContactSection />)
 
     const facebookLink = screen.getByRole('link', { name: /^Ka\.Cosmetology$/ })
-    expect(facebookLink).toHaveAttribute('href', contact.socialMedia.facebook)
+    expect(facebookLink).toHaveAttribute('href', brand.socialMedia.facebook)
     expect(facebookLink).toHaveAttribute('target', '_blank')
 
     await user.click(facebookLink)
@@ -200,7 +218,10 @@ describe('ContactSection', () => {
     const booksyButton = screen.getByRole('link', {
       name: /umów wizytę przez booksy/i,
     })
-    expect(booksyButton).toHaveAttribute('href', contact.booksy)
+    expect(booksyButton).toHaveAttribute(
+      'href',
+      primarySalonLocation.bookingUrl,
+    )
     expect(booksyButton).toHaveAttribute('target', '_blank')
 
     await user.click(booksyButton)
@@ -270,7 +291,7 @@ describe('ContactSection', () => {
     render(<ContactSection />)
 
     expect(mockedGetOpeningHoursView).toHaveBeenCalledWith(
-      contact.openingSchedule,
+      primarySalonLocation.openingSchedule,
       referenceTime,
     )
   })

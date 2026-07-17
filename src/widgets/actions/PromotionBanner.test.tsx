@@ -15,6 +15,7 @@ vi.mock('@libs/analytics', () => ({
   trackPlausibleEvent: vi.fn(),
 }))
 
+import { primarySalonLocation } from '@data/business'
 import type { ActivePromotion } from '@data/promotion'
 import {
   formatPromotionDeadline,
@@ -78,7 +79,7 @@ describe('PromotionBanner', () => {
     ).toBeInTheDocument()
 
     const ctaLink = view.getByRole('link', { name: 'Zarezerwuj termin' })
-    expect(ctaLink).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
+    expect(ctaLink).toHaveAttribute('href', primarySalonLocation.bookingUrl)
   })
 
   it('tracks CTA clicks', async () => {

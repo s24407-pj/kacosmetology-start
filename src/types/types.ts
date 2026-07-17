@@ -35,26 +35,6 @@ export interface Service {
   contraindications?: string[] | string
 }
 
-export interface Address {
-  street: string
-  city: string
-  postalCode: string
-}
-
-export interface SocialMediaLinks {
-  instagram: string
-  facebook?: string
-}
-
-export interface Contact {
-  phone: string
-  email: string
-  address: Address
-  openingSchedule: OpeningSchedule
-  socialMedia: SocialMediaLinks
-  booksy: string
-}
-
 export type SalonLocationId = `salon-${string}`
 export type HttpsUrl = `https://${string}`
 

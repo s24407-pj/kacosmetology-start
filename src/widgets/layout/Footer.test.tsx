@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest'
-import { contact } from '@data/contact'
+import { brand, primarySalonLocation } from '@data/business'
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -27,7 +27,7 @@ describe('Footer', () => {
     const phoneLink = screen.getByRole('link', { name: 'Telefon' })
     expect(phoneLink).toHaveAttribute(
       'href',
-      `tel:${contact.phone.replace(/\s+/g, '')}`,
+      `tel:${primarySalonLocation.phone.replace(/\s+/g, '')}`,
     )
 
     await user.click(phoneLink)
@@ -42,7 +42,7 @@ describe('Footer', () => {
     render(<Footer />)
 
     const emailLink = screen.getByRole('link', { name: 'Email' })
-    expect(emailLink).toHaveAttribute('href', `mailto:${contact.email}`)
+    expect(emailLink).toHaveAttribute('href', `mailto:${brand.email}`)
 
     await user.click(emailLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
@@ -56,7 +56,7 @@ describe('Footer', () => {
     render(<Footer />)
 
     const instagramLink = screen.getByRole('link', { name: 'Instagram' })
-    expect(instagramLink).toHaveAttribute('href', contact.socialMedia.instagram)
+    expect(instagramLink).toHaveAttribute('href', brand.socialMedia.instagram)
     expect(instagramLink).toHaveAttribute('target', '_blank')
 
     await user.click(instagramLink)
@@ -67,7 +67,7 @@ describe('Footer', () => {
   })
 
   it('renders Facebook link with tracking', async () => {
-    if (!contact.socialMedia.facebook) {
+    if (!brand.socialMedia.facebook) {
       throw new Error('Expected facebook link in contact data for this test')
     }
 
@@ -75,7 +75,7 @@ describe('Footer', () => {
     render(<Footer />)
 
     const facebookLink = screen.getByRole('link', { name: 'Facebook' })
-    expect(facebookLink).toHaveAttribute('href', contact.socialMedia.facebook)
+    expect(facebookLink).toHaveAttribute('href', brand.socialMedia.facebook)
     expect(facebookLink).toHaveAttribute('target', '_blank')
 
     await user.click(facebookLink)
@@ -88,13 +88,17 @@ describe('Footer', () => {
   it('displays contact information', () => {
     render(<Footer />)
 
-    expect(screen.getByText(contact.phone)).toBeInTheDocument()
-    expect(screen.getByText(contact.email)).toBeInTheDocument()
+    expect(screen.getByText(primarySalonLocation.phone)).toBeInTheDocument()
+    expect(screen.getByText(brand.email)).toBeInTheDocument()
     expect(screen.getByText(/ul\. Paderewskiego 11a/)).toBeInTheDocument()
-    expect(screen.getByText(/Starogard Gdański/)).toBeInTheDocument()
+    expect(
+      screen.getAllByText(primarySalonLocation.address.locality, {
+        exact: false,
+      }),
+    ).toHaveLength(2)
     expect(screen.getByRole('link', { name: 'Umów się' })).toHaveAttribute(
       'href',
-      'https://kacosmetology.booksy.com',
+      primarySalonLocation.bookingUrl,
     )
   })
 
@@ -104,7 +108,7 @@ describe('Footer', () => {
     const year = new Date().getFullYear()
     expect(
       screen.getByText(
-        new RegExp(`© ${year} Ka.Cosmetology. Wszystkie prawa zastrzeżone.`),
+        new RegExp(`© ${year} ${brand.name}. Wszystkie prawa zastrzeżone.`),
       ),
     ).toBeInTheDocument()
   })

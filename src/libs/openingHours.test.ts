@@ -1,5 +1,5 @@
 import { type OpeningSchedule, WEEKDAYS } from '@app-types/openingHours'
-import { contact } from '@data/contact'
+import { primarySalonLocation } from '@data/business'
 import { describe, expect, expectTypeOf, it, vi } from 'vitest'
 
 import {
@@ -260,13 +260,13 @@ describe('isSalonOpenNow', () => {
   it('uses an inclusive start and exclusive end for the configured Monday hours', () => {
     expect(
       isSalonOpenNow(
-        contact.openingSchedule,
+        primarySalonLocation.openingSchedule,
         new Date('2024-03-04T08:00:00.000Z'),
       ),
     ).toBe(true)
     expect(
       isSalonOpenNow(
-        contact.openingSchedule,
+        primarySalonLocation.openingSchedule,
         new Date('2024-03-04T16:00:00.000Z'),
       ),
     ).toBe(false)
@@ -276,7 +276,7 @@ describe('isSalonOpenNow', () => {
     // Wednesday 14:30 Warsaw time (2025-10-15T12:30:00Z, CEST = UTC+2)
     vi.setSystemTime(new Date('2025-10-15T12:30:00Z'))
 
-    expect(isSalonOpenNow(contact.openingSchedule)).toBe(true)
+    expect(isSalonOpenNow(primarySalonLocation.openingSchedule)).toBe(true)
 
     vi.useRealTimers()
   })
@@ -285,7 +285,7 @@ describe('isSalonOpenNow', () => {
     // Wednesday 20:00 Warsaw time (2025-10-15T18:00:00Z)
     vi.setSystemTime(new Date('2025-10-15T18:00:00Z'))
 
-    expect(isSalonOpenNow(contact.openingSchedule)).toBe(false)
+    expect(isSalonOpenNow(primarySalonLocation.openingSchedule)).toBe(false)
 
     vi.useRealTimers()
   })
@@ -294,7 +294,7 @@ describe('isSalonOpenNow', () => {
     // Sunday 11:00 Warsaw time (2025-10-19T09:00:00Z)
     vi.setSystemTime(new Date('2025-10-19T09:00:00Z'))
 
-    expect(isSalonOpenNow(contact.openingSchedule)).toBe(false)
+    expect(isSalonOpenNow(primarySalonLocation.openingSchedule)).toBe(false)
 
     vi.useRealTimers()
   })

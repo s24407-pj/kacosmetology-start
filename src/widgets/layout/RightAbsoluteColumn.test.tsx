@@ -17,6 +17,7 @@ vi.mock('@libs/openingHours', async (importOriginal) => ({
 }))
 
 import { useUI } from '@context/UIContext'
+import { brand } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import RightAbsoluteColumn from './RightAbsoluteColumn'
 
@@ -45,10 +46,7 @@ describe('RightAbsoluteColumn', () => {
     render(<RightAbsoluteColumn />)
 
     const instagramLink = screen.getByRole('link', { name: 'Instagram' })
-    expect(instagramLink).toHaveAttribute(
-      'href',
-      'https://www.instagram.com/ka.cosmetology',
-    )
+    expect(instagramLink).toHaveAttribute('href', brand.socialMedia.instagram)
     expect(instagramLink).toHaveAttribute('target', '_blank')
     expect(instagramLink).toHaveAttribute('rel', 'noopener noreferrer')
 
@@ -64,10 +62,7 @@ describe('RightAbsoluteColumn', () => {
     render(<RightAbsoluteColumn />)
 
     const facebookLink = screen.getByRole('link', { name: 'Facebook' })
-    expect(facebookLink).toHaveAttribute(
-      'href',
-      'https://www.facebook.com/profile.php?id=61579179969990',
-    )
+    expect(facebookLink).toHaveAttribute('href', brand.socialMedia.facebook)
     expect(facebookLink).toHaveAttribute('target', '_blank')
     expect(facebookLink).toHaveAttribute('rel', 'noopener noreferrer')
 

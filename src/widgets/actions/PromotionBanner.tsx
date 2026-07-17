@@ -1,5 +1,5 @@
 import { useRenderTime } from '@context/RenderTimeProvider'
-import { contact } from '@data/contact'
+import { primarySalonLocation } from '@data/business'
 import {
   formatPromotionDeadline,
   getAllActivePromotions,
@@ -71,7 +71,7 @@ export default function PromotionBanner() {
               </div>
               <div className="flex items-center pr-1 sm:pr-0">
                 <a
-                  href={contact.booksy}
+                  href={primarySalonLocation.bookingUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() =>

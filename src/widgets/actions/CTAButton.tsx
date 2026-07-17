@@ -1,5 +1,5 @@
 import { useUI } from '@context/UIContext'
-import { contact } from '@data/contact'
+import { primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import { cn } from '@libs/utils'
 import { Calendar } from 'lucide-react'
@@ -14,7 +14,7 @@ export default function CTAButton({ placement = 'navbar' }: CTAButtonProps) {
   return (
     <div className="flex items-center justify-center">
       <a
-        href={contact.booksy}
+        href={primarySalonLocation.bookingUrl}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Umów się"

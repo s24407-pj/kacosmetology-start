@@ -1,7 +1,7 @@
 import type { Service } from '@app-types/types'
 import { Alert, BulletListItem } from '@components/ui'
 import { useRenderTime } from '@context/RenderTimeProvider'
-import { contact } from '@data/contact'
+import { primarySalonLocation } from '@data/business'
 import {
   getAllActivePromotions,
   resolveServicePromotion,
@@ -279,7 +279,7 @@ export default function ExpandableServiceCard({
                 Gotowa na wizytę? Zarezerwuj dogodny termin przez Booksy.
               </div>
               <a
-                href={contact.booksy}
+                href={primarySalonLocation.bookingUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(event) => {
