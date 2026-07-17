@@ -234,13 +234,14 @@ describe('ServicesSection', () => {
     const user = userEvent.setup()
 
     const promotion: ActivePromotion = {
-      id: 'test-promo',
-      discountPercentage: 15,
-      startDate: new Date('2025-01-01T00:00:00.000Z'),
-      endDate: new Date('2025-12-31T23:59:59.999Z'),
+      id: 'october-2025-oczyszczanie-wodorowe',
+      discountPercentage: 20,
+      startDate: new Date('2025-10-01T00:00:00.000Z'),
+      endDate: new Date('2025-10-31T23:59:59.999Z'),
       applicability: {
         type: 'services',
         serviceIds: ['service-classic-facial'],
+        description: 'oczyszczanie wodorowe – z 250 zł na 200 zł',
       },
       ctaLabel: 'Zarezerwuj termin',
     }
@@ -254,7 +255,12 @@ describe('ServicesSection', () => {
 
     await user.click(screen.getByRole('button', { name: /Promocje/ }))
 
-    expect(screen.getByText('Aktualna promocja')).toBeInTheDocument()
+    expect(screen.getAllByText('Aktualna promocja')).toHaveLength(1)
+    expect(
+      screen.getByText(
+        /-20% na oczyszczanie wodorowe – z 250 zł na 200 zł przez cały październik/i,
+      ),
+    ).toBeInTheDocument()
     expect(
       screen.getByTestId('card-service-classic-facial'),
     ).toBeInTheDocument()

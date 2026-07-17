@@ -40,6 +40,7 @@ describe('getActivePromotion', () => {
     expect(promotedService).toBeDefined()
     if (!promotion || !promotedService) return
 
+    expect(promotedService.price).toBe(250)
     expect(doesPromotionApplyToService(promotedService, promotion)).toBe(true)
     expect(getPromotionScopeDescription(promotion)).toBe(
       'oczyszczanie wodorowe – z 250 zł na 200 zł',
@@ -100,6 +101,15 @@ describe('getActivePromotion', () => {
 })
 
 describe('getAllActivePromotions', () => {
+  it('returns only the October production campaign on its covered date', () => {
+    const promotions = getAllActivePromotions(new Date('2025-10-15'))
+
+    expect(promotions).toHaveLength(1)
+    expect(promotions[0].id).toBe(
+      'october-2025-oczyszczanie-wodorowe',
+    )
+  })
+
   it('returns all promotions active on a given date', () => {
     // November 2025 has one active promotion
     const promotions = getAllActivePromotions(new Date('2025-11-15'))

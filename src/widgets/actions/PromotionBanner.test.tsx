@@ -30,7 +30,7 @@ const getPromotionScopeDescriptionMock = vi.mocked(getPromotionScopeDescription)
 const trackPlausibleEventMock = vi.mocked(trackPlausibleEvent)
 
 const createPromotion = (): ActivePromotion => ({
-  id: 'test-promo',
+  id: 'september-2025-all-services',
   discountPercentage: 20,
   startDate: new Date('2025-09-01T00:00:00.000Z'),
   endDate: new Date('2025-09-30T23:59:59.999Z'),
@@ -38,7 +38,7 @@ const createPromotion = (): ActivePromotion => ({
     type: 'all',
     description: 'wszystkie zabiegi',
   },
-  ctaLabel: 'Zarezerwuj teraz',
+  ctaLabel: 'Zarezerwuj termin',
 })
 
 describe('PromotionBanner', () => {
@@ -70,11 +70,9 @@ describe('PromotionBanner', () => {
     const view: RenderResult = render(<PromotionBanner />)
 
     expect(view.getByRole('status')).toBeInTheDocument()
-    expect(
-      view.getByText('Promocja! - całe spa tylko dziś.'),
-    ).toBeInTheDocument()
+    expect(view.getByText('Promocja! - całe spa tylko dziś.')).toBeInTheDocument()
 
-    const ctaLink = view.getByRole('link', { name: 'Zarezerwuj teraz' })
+    const ctaLink = view.getByRole('link', { name: 'Zarezerwuj termin' })
     expect(ctaLink).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
   })
 
@@ -87,7 +85,7 @@ describe('PromotionBanner', () => {
     const view: RenderResult = render(<PromotionBanner />)
 
     const user: UserEvent = userEvent.setup()
-    await user.click(view.getByRole('link', { name: 'Zarezerwuj teraz' }))
+    await user.click(view.getByRole('link', { name: 'Zarezerwuj termin' }))
 
     expect(trackPlausibleEventMock).toHaveBeenCalledWith('CTA Booksy Click', {
       placement: 'promotion-banner',

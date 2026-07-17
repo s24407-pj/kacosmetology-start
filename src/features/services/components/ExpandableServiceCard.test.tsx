@@ -74,7 +74,7 @@ describe('ExpandableServiceCard', () => {
 
   it('renders discounted pricing details when a promotion applies', () => {
     const promotion = {
-      id: 'promo-1',
+      id: 'october-2025-oczyszczanie-wodorowe',
       discountPercentage: 20,
       startDate: new Date('2025-09-01T00:00:00.000Z'),
       endDate: new Date('2025-09-30T23:59:59.999Z'),
