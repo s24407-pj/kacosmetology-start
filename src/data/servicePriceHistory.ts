@@ -1,6 +1,11 @@
-import type { PriceHistoryEntry } from '@app-types/types'
+import type { PricePoint, ServiceId } from '@app-types/types'
 
-const defaultServicePriceHistory: PriceHistoryEntry[] = [
+type ServicePriceHistoryEntry = {
+  readonly serviceId: ServiceId
+  readonly history: readonly Readonly<PricePoint>[]
+}
+
+const servicePriceHistory: readonly ServicePriceHistoryEntry[] = [
   {
     serviceId: 'service-henna-brwi-z-regulacja',
     history: [
@@ -15,58 +20,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
       {
         value: 60,
         changedAt: '2025-10-01T08:00:00.000Z',
-      },
-      {
-        value: 60,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 60,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 60,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 60,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 60,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 60,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 60,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 60,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 60,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 60,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 60,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 60,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 60,
-        changedAt: '2026-12-01T08:00:00.000Z',
       },
     ],
   },
@@ -85,58 +38,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
         value: 80,
         changedAt: '2025-10-01T08:00:00.000Z',
       },
-      {
-        value: 80,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 80,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 80,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 80,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 80,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 80,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 80,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 80,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 80,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 80,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 80,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 80,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 80,
-        changedAt: '2026-12-01T08:00:00.000Z',
-      },
     ],
   },
   {
@@ -153,58 +54,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
       {
         value: 30,
         changedAt: '2025-10-01T08:00:00.000Z',
-      },
-      {
-        value: 30,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 30,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 30,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 30,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 30,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 30,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 30,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 30,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 30,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 30,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 30,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 30,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 30,
-        changedAt: '2026-12-01T08:00:00.000Z',
       },
     ],
   },
@@ -223,58 +72,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
         value: 110,
         changedAt: '2025-10-01T08:00:00.000Z',
       },
-      {
-        value: 110,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 110,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 110,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 110,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 110,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 110,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 110,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 110,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 110,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 110,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 110,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 110,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 110,
-        changedAt: '2026-12-01T08:00:00.000Z',
-      },
     ],
   },
   {
@@ -291,58 +88,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
       {
         value: 150,
         changedAt: '2025-10-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-12-01T08:00:00.000Z',
       },
     ],
   },
@@ -361,58 +106,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
         value: 150,
         changedAt: '2025-10-01T08:00:00.000Z',
       },
-      {
-        value: 150,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 150,
-        changedAt: '2026-12-01T08:00:00.000Z',
-      },
     ],
   },
   {
@@ -429,58 +122,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
       {
         value: 250,
         changedAt: '2025-10-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-12-01T08:00:00.000Z',
       },
     ],
   },
@@ -499,58 +140,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
         value: 200,
         changedAt: '2025-10-01T08:00:00.000Z',
       },
-      {
-        value: 200,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-12-01T08:00:00.000Z',
-      },
     ],
   },
   {
@@ -567,58 +156,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
       {
         value: 350,
         changedAt: '2025-10-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-12-01T08:00:00.000Z',
       },
     ],
   },
@@ -637,58 +174,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
         value: 200,
         changedAt: '2025-10-01T08:00:00.000Z',
       },
-      {
-        value: 200,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 200,
-        changedAt: '2026-12-01T08:00:00.000Z',
-      },
     ],
   },
   {
@@ -705,58 +190,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
       {
         value: 400,
         changedAt: '2025-10-01T08:00:00.000Z',
-      },
-      {
-        value: 400,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 400,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 400,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 400,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 400,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 400,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 400,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 400,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 400,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 400,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 400,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 400,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 400,
-        changedAt: '2026-12-01T08:00:00.000Z',
       },
     ],
   },
@@ -775,58 +208,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
         value: 550,
         changedAt: '2025-10-01T08:00:00.000Z',
       },
-      {
-        value: 550,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 550,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 550,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 550,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 550,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 550,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 550,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 550,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 550,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 550,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 550,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 550,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 550,
-        changedAt: '2026-12-01T08:00:00.000Z',
-      },
     ],
   },
   {
@@ -841,60 +222,8 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
         changedAt: '2025-09-01T08:00:00.000Z',
       },
       {
-        value: 200,
-        changedAt: '2025-10-01T08:00:00.000Z',
-      },
-      {
         value: 250,
         changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 250,
-        changedAt: '2026-12-01T08:00:00.000Z',
       },
     ],
   },
@@ -912,58 +241,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
       {
         value: 350,
         changedAt: '2025-10-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 350,
-        changedAt: '2026-12-01T08:00:00.000Z',
       },
     ],
   },
@@ -991,48 +268,8 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
         changedAt: '2026-01-01T08:00:00.000Z',
       },
       {
-        value: 300,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-12-01T08:00:00.000Z',
+        value: 350,
+        changedAt: '2027-01-01T08:00:00.000Z',
       },
     ],
   },
@@ -1051,58 +288,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
         value: 300,
         changedAt: '2025-10-01T08:00:00.000Z',
       },
-      {
-        value: 300,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-12-01T08:00:00.000Z',
-      },
     ],
   },
   {
@@ -1119,58 +304,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
       {
         value: 300,
         changedAt: '2025-10-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-12-01T08:00:00.000Z',
       },
     ],
   },
@@ -1189,58 +322,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
         value: 300,
         changedAt: '2025-10-01T08:00:00.000Z',
       },
-      {
-        value: 300,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-12-01T08:00:00.000Z',
-      },
     ],
   },
   {
@@ -1257,58 +338,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
       {
         value: 300,
         changedAt: '2025-10-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-12-01T08:00:00.000Z',
       },
     ],
   },
@@ -1327,58 +356,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
         value: 300,
         changedAt: '2025-10-01T08:00:00.000Z',
       },
-      {
-        value: 300,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-12-01T08:00:00.000Z',
-      },
     ],
   },
   {
@@ -1395,58 +372,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
       {
         value: 300,
         changedAt: '2025-10-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-12-01T08:00:00.000Z',
       },
     ],
   },
@@ -1465,58 +390,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
         value: 300,
         changedAt: '2025-10-01T08:00:00.000Z',
       },
-      {
-        value: 300,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-12-01T08:00:00.000Z',
-      },
     ],
   },
   {
@@ -1533,58 +406,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
       {
         value: 300,
         changedAt: '2025-10-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-12-01T08:00:00.000Z',
       },
     ],
   },
@@ -1603,58 +424,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
         value: 300,
         changedAt: '2025-10-01T08:00:00.000Z',
       },
-      {
-        value: 300,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 300,
-        changedAt: '2026-12-01T08:00:00.000Z',
-      },
     ],
   },
   {
@@ -1671,58 +440,6 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
       {
         value: 160,
         changedAt: '2025-10-01T08:00:00.000Z',
-      },
-      {
-        value: 160,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 160,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 160,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 160,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 160,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 160,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 160,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 160,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 160,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 160,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 160,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 160,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 160,
-        changedAt: '2026-12-01T08:00:00.000Z',
       },
     ],
   },
@@ -1741,81 +458,12 @@ const defaultServicePriceHistory: PriceHistoryEntry[] = [
         value: 180,
         changedAt: '2025-10-01T08:00:00.000Z',
       },
-      {
-        value: 180,
-        changedAt: '2025-11-01T08:00:00.000Z',
-      },
-      {
-        value: 180,
-        changedAt: '2026-01-01T08:00:00.000Z',
-      },
-      {
-        value: 180,
-        changedAt: '2026-02-01T08:00:00.000Z',
-      },
-      {
-        value: 180,
-        changedAt: '2026-03-01T08:00:00.000Z',
-      },
-      {
-        value: 180,
-        changedAt: '2026-04-01T08:00:00.000Z',
-      },
-      {
-        value: 180,
-        changedAt: '2026-05-01T08:00:00.000Z',
-      },
-      {
-        value: 180,
-        changedAt: '2026-06-01T08:00:00.000Z',
-      },
-      {
-        value: 180,
-        changedAt: '2026-07-01T08:00:00.000Z',
-      },
-      {
-        value: 180,
-        changedAt: '2026-08-01T08:00:00.000Z',
-      },
-      {
-        value: 180,
-        changedAt: '2026-09-01T08:00:00.000Z',
-      },
-      {
-        value: 180,
-        changedAt: '2026-10-01T08:00:00.000Z',
-      },
-      {
-        value: 180,
-        changedAt: '2026-11-01T08:00:00.000Z',
-      },
-      {
-        value: 180,
-        changedAt: '2026-12-01T08:00:00.000Z',
-      },
     ],
   },
 ]
 
-function cloneHistory(entries: PriceHistoryEntry[]): PriceHistoryEntry[] {
-  return entries.map((entry) => ({
-    serviceId: entry.serviceId,
-    history: entry.history.map((point) => ({ ...point })),
-  }))
-}
+export function getServicePriceHistory(serviceId: ServiceId): PricePoint[] {
+  const entry = servicePriceHistory.find((item) => item.serviceId === serviceId)
 
-export const servicePriceHistory: PriceHistoryEntry[] = cloneHistory(
-  defaultServicePriceHistory,
-)
-
-export function resetServicePriceHistory(entries: PriceHistoryEntry[] = []) {
-  servicePriceHistory.splice(
-    0,
-    servicePriceHistory.length,
-    ...cloneHistory(entries),
-  )
-}
-
-export function restoreDefaultServicePriceHistory() {
-  resetServicePriceHistory(defaultServicePriceHistory)
+  return entry?.history.map((point) => ({ ...point })) ?? []
 }

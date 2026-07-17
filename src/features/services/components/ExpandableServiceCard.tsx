@@ -6,11 +6,9 @@ import {
   doesPromotionApplyToService,
   getActivePromotion,
 } from '@data/promotion'
+import { getServicePriceHistory } from '@data/servicePriceHistory'
 import { trackPlausibleEvent } from '@libs/analytics'
-import {
-  getLowestPriceInLastDays,
-  syncCurrentPriceWithHistory,
-} from '@libs/priceHistory'
+import { getLowestPriceInLastDays } from '@libs/priceHistory'
 import { cn, formatDuration, formatPrice } from '@libs/utils'
 import { Calendar, ChevronDown, ChevronUp, Clock, User } from 'lucide-react'
 import { useMemo } from 'react'
@@ -46,9 +44,10 @@ export default function ExpandableServiceCard({
       : null
   }, [service, promotion])
 
-  const effectivePrice = discountedPrice ?? service.price
-  const promotionStartTimestamp =
-    discountedPrice && promotion ? promotion.startDate.getTime() : undefined
+  const servicePriceHistory = useMemo(
+    () => getServicePriceHistory(service.id),
+    [service.id],
+  )
 
   // Dyrektywa Omnibus (UE) wymaga pokazania najniższej ceny z ostatnich 30 dni
   // przed obniżką. Jeśli promocja zaczęła się mniej niż 30 dni temu, okno
@@ -56,13 +55,6 @@ export default function ExpandableServiceCard({
   // sprzed promocji. Dzięki temu "najniższa cena 30 dni" jest ceną bazową,
   // a nie samą ceną promocyjną.
   const lowestPrice = useMemo(() => {
-    const changedAt =
-      typeof promotionStartTimestamp === 'number'
-        ? new Date(promotionStartTimestamp)
-        : undefined
-
-    syncCurrentPriceWithHistory(service.id, effectivePrice, changedAt)
-
     const THIRTY_DAYS_IN_MS = 30 * 24 * 60 * 60 * 1000
     let nowForLowestPrice = referenceDate
 
@@ -74,17 +66,14 @@ export default function ExpandableServiceCard({
       }
     }
 
-    const value = getLowestPriceInLastDays(service.id, 30, nowForLowestPrice)
+    const value = getLowestPriceInLastDays(
+      servicePriceHistory,
+      30,
+      nowForLowestPrice,
+    )
 
     return typeof value === 'number' ? value : null
-  }, [
-    service.id,
-    effectivePrice,
-    promotionStartTimestamp,
-    referenceDate,
-    promotion,
-    discountedPrice,
-  ])
+  }, [servicePriceHistory, referenceDate, promotion, discountedPrice])
   const showLowestPrice = lowestPrice !== null
   const detailsId = `details-${service.id}`
 

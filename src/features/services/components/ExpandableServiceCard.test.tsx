@@ -10,8 +10,11 @@ vi.mock('@data/promotion', () => ({
 }))
 
 vi.mock('@libs/priceHistory', () => ({
-  syncCurrentPriceWithHistory: vi.fn(),
   getLowestPriceInLastDays: vi.fn(),
+}))
+
+vi.mock('@data/servicePriceHistory', () => ({
+  getServicePriceHistory: vi.fn(),
 }))
 
 vi.mock('@libs/analytics', () => ({
@@ -24,16 +27,17 @@ vi.mock('@context/RenderTimeProvider', () => ({
 
 const promotionModule = await import('@data/promotion')
 const priceHistoryModule = await import('@libs/priceHistory')
+const servicePriceHistoryModule = await import('@data/servicePriceHistory')
 
 const getActivePromotionMock = vi.mocked(promotionModule.getActivePromotion)
 const doesPromotionApplyToServiceMock = vi.mocked(
   promotionModule.doesPromotionApplyToService,
 )
-const syncCurrentPriceWithHistoryMock = vi.mocked(
-  priceHistoryModule.syncCurrentPriceWithHistory,
-)
 const getLowestPriceInLastDaysMock = vi.mocked(
   priceHistoryModule.getLowestPriceInLastDays,
+)
+const getServicePriceHistoryMock = vi.mocked(
+  servicePriceHistoryModule.getServicePriceHistory,
 )
 
 import type { Service } from '@app-types/types'
@@ -63,6 +67,9 @@ describe('ExpandableServiceCard', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    getServicePriceHistoryMock.mockReturnValue([
+      { value: 250, changedAt: '2025-07-01T08:00:00.000Z' },
+    ])
   })
 
   it('renders discounted pricing details when a promotion applies', () => {
@@ -97,15 +104,11 @@ describe('ExpandableServiceCard', () => {
       screen.getByText('Najniższa cena (30 dni): 180 zł'),
     ).toBeInTheDocument()
 
-    expect(syncCurrentPriceWithHistoryMock).toHaveBeenCalledWith(
+    expect(getServicePriceHistoryMock).toHaveBeenCalledWith(
       'service-test-service',
-      200,
-      expect.any(Date),
     )
-    const changedAt = syncCurrentPriceWithHistoryMock.mock.calls[0]?.[2] as Date
-    expect(changedAt).toEqual(new Date('2025-09-01T00:00:00.000Z'))
     expect(getLowestPriceInLastDaysMock).toHaveBeenCalledWith(
-      'service-test-service',
+      [{ value: 250, changedAt: '2025-07-01T08:00:00.000Z' }],
       30,
       new Date('2025-09-01T00:00:00.000Z'),
     )
