@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+import { contact } from '@data/contact'
 
 import {
   getCurrentOpeningSnapshot,
@@ -129,6 +130,21 @@ describe('isOpeningSlotActive', () => {
 })
 
 describe('isSalonOpenNow', () => {
+  it('uses an inclusive start and exclusive end for the configured Monday hours', () => {
+    expect(
+      isSalonOpenNow(
+        contact.openingHours,
+        new Date('2024-03-04T08:00:00.000Z'),
+      ),
+    ).toBe(true)
+    expect(
+      isSalonOpenNow(
+        contact.openingHours,
+        new Date('2024-03-04T16:00:00.000Z'),
+      ),
+    ).toBe(false)
+  })
+
   it('returns true when the current time falls within an opening slot', () => {
     // Wednesday 14:30 Warsaw time (2025-10-15T12:30:00Z, CEST = UTC+2)
     vi.setSystemTime(new Date('2025-10-15T12:30:00Z'))

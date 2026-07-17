@@ -141,5 +141,33 @@ test.describe('Contact section', () => {
       )
       await expect(booksyCta).toHaveAttribute('target', '_blank')
     })
+
+    test('shows the closed state on Sunday without an open phone suffix', async ({
+      page,
+    }) => {
+      test.skip(
+        test.info().project.name.includes('Mobile'),
+        'Run on desktop form factors to inspect sticky actions comfortably',
+      )
+
+      const contactHomePage = new HomePage(page)
+      await contactHomePage.goto({
+        referenceTime: '2024-03-10T12:00:00+01:00',
+      })
+
+      const stickyPhoneButton = contactHomePage.contact.getAsidePhoneButton()
+      await expect(stickyPhoneButton).toBeVisible()
+      await expect(stickyPhoneButton).toHaveAccessibleName(
+        'Zadzwoń pod numer +48 726 154 460',
+      )
+
+      await contactHomePage.contact.scrollTo()
+      await expect(
+        contactHomePage.contact.section.getByText('Obecnie zamknięte'),
+      ).toBeVisible()
+      await expect(contactHomePage.contact.getTodayHours()).toContainText(
+        'Zamknięte',
+      )
+    })
   })
 })

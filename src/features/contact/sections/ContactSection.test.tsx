@@ -162,6 +162,41 @@ describe('ContactSection', () => {
     expect(activeDayHours).toHaveAttribute('aria-current', 'date')
   })
 
+  it('renders the exact current opening-hours rows in weekday order', () => {
+    render(<ContactSection />)
+
+    const expectedRows = [
+      ['poniedziałek', '09:00 - 17:00'],
+      ['wtorek', '09:00 - 17:00'],
+      ['środa', '09:00 - 17:00'],
+      ['czwartek', '10:00 - 18:00'],
+      ['piątek', '10:00 - 18:00'],
+      ['sobota', '09:00 - 14:00'],
+      ['niedziela', 'Zamknięte'],
+    ]
+
+    const renderedRows = expectedRows.map(([day, hours]) => {
+      const row = screen.getByText(day).closest('div')
+      expect(row).toBeInTheDocument()
+      expect(within(row!).getByText(hours, { selector: 'span' })).toBeVisible()
+      return day
+    })
+
+    expect(renderedRows).toEqual(expectedRows.map(([day]) => day))
+  })
+
+  it('shows the current overall open and closed badge copy', () => {
+    mockedIsOpeningSlotActive.mockReturnValueOnce(true)
+    const { rerender } = render(<ContactSection />)
+
+    expect(screen.getByText('Otwarte teraz')).toBeVisible()
+
+    mockedIsOpeningSlotActive.mockReturnValue(false)
+    rerender(<ContactSection />)
+
+    expect(screen.getByText('Obecnie zamknięte')).toBeVisible()
+  })
+
   it('derives opening hours from the canonical render time', () => {
     render(<ContactSection />)
 

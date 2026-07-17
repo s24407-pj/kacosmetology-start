@@ -28,11 +28,50 @@ test.describe('TanStack Start integration', () => {
       /<script type="application\/ld\+json">([^<]+)<\/script>/,
     )
     expect(jsonLdMatch).not.toBeNull()
-    expect(JSON.parse(jsonLdMatch?.[1] ?? '{}')).toMatchObject({
+    const jsonLd = JSON.parse(jsonLdMatch?.[1] ?? '{}')
+    expect(jsonLd).toMatchObject({
       '@type': 'BeautySalon',
       name: 'Ka.Cosmetology',
       url: 'https://kacosmetology.pl/',
     })
+    expect(jsonLd.openingHoursSpecification).toEqual([
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: 'Monday',
+        opens: '09:00',
+        closes: '17:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: 'Tuesday',
+        opens: '09:00',
+        closes: '17:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: 'Wednesday',
+        opens: '09:00',
+        closes: '17:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: 'Thursday',
+        opens: '10:00',
+        closes: '18:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: 'Friday',
+        opens: '10:00',
+        closes: '18:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: 'Saturday',
+        opens: '09:00',
+        closes: '14:00',
+      },
+    ])
   })
 
   test('hydrates without browser-global or recoverable errors', async ({
