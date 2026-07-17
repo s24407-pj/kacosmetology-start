@@ -42,6 +42,11 @@ export interface ActivePromotion
   endDate: Date
 }
 
+export interface ServicePromotionResolution {
+  promotion: ActivePromotion
+  discountedPrice: number
+}
+
 export const promotionConfigs: PromotionConfig[] = [
   {
     id: 'september-2025-all-services',
@@ -338,6 +343,55 @@ export function doesPromotionApplyToService(
   }
 
   return promotion.applicability.serviceIds.includes(service.id)
+}
+
+export function resolveServicePromotion(
+  service: Service,
+  activePromotions: readonly ActivePromotion[],
+): ServicePromotionResolution | null {
+  let winningPromotion: ActivePromotion | null = null
+
+  for (const promotion of activePromotions) {
+    if (!doesPromotionApplyToService(service, promotion)) {
+      continue
+    }
+
+    if (!winningPromotion) {
+      winningPromotion = promotion
+      continue
+    }
+
+    const hasLargerDiscount =
+      promotion.discountPercentage > winningPromotion.discountPercentage
+    const hasEqualDiscount =
+      promotion.discountPercentage === winningPromotion.discountPercentage
+    const startsEarlier =
+      promotion.startDate.getTime() < winningPromotion.startDate.getTime()
+    const startsAtSameTime =
+      promotion.startDate.getTime() === winningPromotion.startDate.getTime()
+    const hasLexicallySmallerId = promotion.id < winningPromotion.id
+
+    if (
+      hasLargerDiscount ||
+      (hasEqualDiscount && startsEarlier) ||
+      (hasEqualDiscount && startsAtSameTime && hasLexicallySmallerId)
+    ) {
+      winningPromotion = promotion
+    }
+  }
+
+  if (!winningPromotion) {
+    return null
+  }
+
+  return {
+    promotion: winningPromotion,
+    discountedPrice: Number(
+      (service.price * (1 - winningPromotion.discountPercentage / 100)).toFixed(
+        0,
+      ),
+    ),
+  }
 }
 
 export function getPromotionScopeDescription(

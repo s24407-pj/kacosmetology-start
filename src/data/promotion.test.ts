@@ -9,6 +9,7 @@ import {
   getPromotionScopeDescription,
   type PromotionApplicability,
   type PromotionConfig,
+  resolveServicePromotion,
 } from './promotion'
 import { services } from './services'
 
@@ -101,13 +102,29 @@ describe('getActivePromotion', () => {
 })
 
 describe('getAllActivePromotions', () => {
+  it('returns every synthetic campaign active on the same date', () => {
+    const secondConfig: PromotionConfig = {
+      ...testConfigs[0],
+      id: 'test-promo-second',
+      discountPercentage: 15,
+    }
+
+    const promotions = getAllActivePromotions(new Date('2025-10-15'), [
+      ...testConfigs,
+      secondConfig,
+    ])
+
+    expect(promotions.map((promotion) => promotion.id)).toEqual([
+      'test-promo',
+      'test-promo-second',
+    ])
+  })
+
   it('returns only the October production campaign on its covered date', () => {
     const promotions = getAllActivePromotions(new Date('2025-10-15'))
 
     expect(promotions).toHaveLength(1)
-    expect(promotions[0].id).toBe(
-      'october-2025-oczyszczanie-wodorowe',
-    )
+    expect(promotions[0].id).toBe('october-2025-oczyszczanie-wodorowe')
   })
 
   it('returns all promotions active on a given date', () => {
@@ -137,6 +154,110 @@ describe('getAllActivePromotions', () => {
     ])
 
     expect(promotions.map((promotion) => promotion.id)).toEqual(['test-promo'])
+  })
+})
+
+describe('resolveServicePromotion', () => {
+  const service: Service = {
+    id: 'service-resolver-test',
+    name: 'Resolver Test',
+    catalogCategory: 'Kosmetologia',
+    price: 250,
+    duration: 60,
+    isNext: false,
+    description: 'desc',
+  }
+
+  const createPromotion = (
+    id: string,
+    discountPercentage: number,
+    startDate = '2025-10-01T00:00:00.000Z',
+    applicability: PromotionApplicability = {
+      type: 'all',
+      description: 'wszystkie zabiegi',
+    },
+  ): ActivePromotion => ({
+    id,
+    discountPercentage,
+    startDate: new Date(startDate),
+    endDate: new Date('2025-10-31T23:59:59.999Z'),
+    applicability,
+    ctaLabel: 'Book',
+  })
+
+  it('chooses the largest single discount without stacking or order dependence', () => {
+    const weakerPromotion = createPromotion('weaker', 15)
+    const strongerPromotion = createPromotion('stronger', 20)
+    const promotions = [weakerPromotion, strongerPromotion]
+
+    expect(resolveServicePromotion(service, promotions)).toEqual({
+      promotion: strongerPromotion,
+      discountedPrice: 200,
+    })
+    expect(resolveServicePromotion(service, [...promotions].reverse())).toEqual(
+      {
+        promotion: strongerPromotion,
+        discountedPrice: 200,
+      },
+    )
+  })
+
+  it('uses the earlier campaign start to break equal-discount ties', () => {
+    const laterPromotion = createPromotion(
+      'later',
+      20,
+      '2025-10-10T00:00:00.000Z',
+    )
+    const earlierPromotion = createPromotion(
+      'earlier',
+      20,
+      '2025-10-01T00:00:00.000Z',
+    )
+
+    expect(
+      resolveServicePromotion(service, [laterPromotion, earlierPromotion])
+        ?.promotion,
+    ).toBe(earlierPromotion)
+  })
+
+  it('uses the lexical promotion ID to break equal discount and start ties', () => {
+    const lexicalSecond = createPromotion('z-promotion', 20)
+    const lexicalFirst = createPromotion('a-promotion', 20)
+
+    expect(
+      resolveServicePromotion(service, [lexicalSecond, lexicalFirst])
+        ?.promotion,
+    ).toBe(lexicalFirst)
+  })
+
+  it('returns a rounded integer current price', () => {
+    const promotion = createPromotion('fractional-discount', 14.3)
+
+    expect(
+      resolveServicePromotion({ ...service, price: 333 }, [promotion])
+        ?.discountedPrice,
+    ).toBe(285)
+  })
+
+  it('returns null when no campaign applies', () => {
+    const promotion = createPromotion('other-service', 20, undefined, {
+      type: 'services',
+      serviceIds: ['service-other'],
+    })
+
+    expect(resolveServicePromotion(service, [promotion])).toBeNull()
+  })
+
+  it('does not mutate the caller promotion array', () => {
+    const promotions = [
+      createPromotion('weaker', 15),
+      createPromotion('stronger', 20),
+    ]
+    const originalOrder = [...promotions]
+
+    resolveServicePromotion(service, promotions)
+
+    expect(promotions).toEqual(originalOrder)
   })
 })
 
