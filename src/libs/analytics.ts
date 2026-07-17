@@ -8,9 +8,26 @@ type PlausibleModule = typeof import('@plausible-analytics/tracker')
 type PlausibleEventOptions =
   import('@plausible-analytics/tracker').PlausibleEventOptions
 
-let analyticsInitialized = false
-let analyticsInitFailed = false
-let plausibleLoadPromise: Promise<PlausibleModule | null> | null = null
+type AnalyticsModule = Pick<PlausibleModule, 'init' | 'track'>
+type AnalyticsClientStatus =
+  | 'idle'
+  | 'loading'
+  | 'retryable'
+  | 'ready'
+  | 'disabled'
+
+interface AnalyticsClientDependencies {
+  loadModule: () => Promise<AnalyticsModule>
+  prefetchDns: () => void
+  warn: (message: string) => void
+}
+
+const RETRYABLE_LOAD_WARNING =
+  '[analytics] Plausible failed to load; one later retry remains.'
+const TERMINAL_LOAD_WARNING =
+  '[analytics] Plausible failed to load after retry; analytics disabled.'
+const TERMINAL_INIT_WARNING =
+  '[analytics] Plausible initialization failed; analytics disabled.'
 
 function prefetchAnalyticsDns() {
   if (typeof document === 'undefined') {
@@ -28,40 +45,108 @@ function prefetchAnalyticsDns() {
   document.head.appendChild(link)
 }
 
-function loadPlausible(): Promise<PlausibleModule | null> {
-  if (plausibleLoadPromise) {
-    return plausibleLoadPromise
+/** @internal Deterministic lifecycle seam for analytics unit tests. */
+export function createAnalyticsClient({
+  loadModule,
+  prefetchDns,
+  warn,
+}: AnalyticsClientDependencies) {
+  let status: AnalyticsClientStatus = 'idle'
+  let attempts = 0
+  let dnsPrefetched = false
+  let module: AnalyticsModule | null = null
+  let loadPromise: Promise<AnalyticsModule | null> | null = null
+
+  const load = (): Promise<AnalyticsModule | null> => {
+    if (status === 'ready') {
+      return Promise.resolve(module)
+    }
+
+    if (status === 'disabled') {
+      return Promise.resolve(null)
+    }
+
+    if (loadPromise) {
+      return loadPromise
+    }
+
+    status = 'loading'
+    attempts += 1
+
+    if (!dnsPrefetched) {
+      prefetchDns()
+      dnsPrefetched = true
+    }
+
+    loadPromise = Promise.resolve()
+      .then(loadModule)
+      .then(
+        (loadedModule) => {
+          try {
+            loadedModule.init({
+              domain: new URL(brand.siteUrl).hostname,
+              endpoint: 'https://analytics.mflisik.ovh/api/event',
+            })
+          } catch {
+            status = 'disabled'
+            loadPromise = null
+            warn(TERMINAL_INIT_WARNING)
+            return null
+          }
+
+          module = loadedModule
+          status = 'ready'
+          return loadedModule
+        },
+        () => {
+          loadPromise = null
+
+          if (attempts === 1) {
+            status = 'retryable'
+            warn(RETRYABLE_LOAD_WARNING)
+          } else {
+            status = 'disabled'
+            warn(TERMINAL_LOAD_WARNING)
+          }
+
+          return null
+        },
+      )
+
+    return loadPromise
   }
 
-  prefetchAnalyticsDns()
-  plausibleLoadPromise = import('@plausible-analytics/tracker')
-    .then((module) => {
-      module.init({
-        domain: new URL(brand.siteUrl).hostname,
-        endpoint: 'https://analytics.mflisik.ovh/api/event',
-      })
-      analyticsInitialized = true
-      return module
-    })
-    .catch(() => {
-      analyticsInitFailed = true
-      return null
-    })
+  return {
+    init() {
+      void load()
+    },
+    track(eventName: string, props?: AnalyticsEventProps) {
+      void load().then((loadedModule) => {
+        if (!loadedModule || status !== 'ready') {
+          return
+        }
 
-  return plausibleLoadPromise
+        loadedModule.track(
+          eventName,
+          props ? ({ props } as PlausibleEventOptions) : {},
+        )
+      })
+    },
+  }
 }
 
+const analyticsClient = createAnalyticsClient({
+  loadModule: () => import('@plausible-analytics/tracker'),
+  prefetchDns: prefetchAnalyticsDns,
+  warn: (message) => console.warn(message),
+})
+
 export function initAnalytics() {
-  if (
-    analyticsInitialized ||
-    analyticsInitFailed ||
-    typeof window === 'undefined' ||
-    import.meta.env.MODE === 'test'
-  ) {
+  if (typeof window === 'undefined' || import.meta.env.MODE === 'test') {
     return
   }
 
-  void loadPlausible()
+  analyticsClient.init()
 }
 
 export function trackPlausibleEvent(
@@ -75,11 +160,5 @@ export function trackPlausibleEvent(
     return
   }
 
-  void loadPlausible().then((module) => {
-    if (!module || !analyticsInitialized) {
-      return
-    }
-
-    module.track(eventName, props ? ({ props } as PlausibleEventOptions) : {})
-  })
+  analyticsClient.track(eventName, props)
 }
