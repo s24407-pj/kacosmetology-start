@@ -6,7 +6,7 @@ import type { UserEvent } from '@testing-library/user-event'
 import userEvent from '@testing-library/user-event'
 
 vi.mock('@data/promotion', () => ({
-  getActivePromotion: vi.fn(),
+  getAllActivePromotions: vi.fn(),
   formatPromotionDeadline: vi.fn(),
   getPromotionScopeDescription: vi.fn(),
 }))
@@ -18,18 +18,20 @@ vi.mock('@libs/analytics', () => ({
 import type { ActivePromotion } from '@data/promotion'
 import {
   formatPromotionDeadline,
-  getActivePromotion,
+  getAllActivePromotions,
   getPromotionScopeDescription,
 } from '@data/promotion'
 import { trackPlausibleEvent } from '@libs/analytics'
 import PromotionBanner from './PromotionBanner'
 
-const getActivePromotionMock = vi.mocked(getActivePromotion)
+const getAllActivePromotionsMock = vi.mocked(getAllActivePromotions)
 const formatPromotionDeadlineMock = vi.mocked(formatPromotionDeadline)
 const getPromotionScopeDescriptionMock = vi.mocked(getPromotionScopeDescription)
 const trackPlausibleEventMock = vi.mocked(trackPlausibleEvent)
 
-const createPromotion = (): ActivePromotion => ({
+const createPromotion = (
+  overrides: Partial<ActivePromotion> = {},
+): ActivePromotion => ({
   id: 'september-2025-all-services',
   discountPercentage: 20,
   startDate: new Date('2025-09-01T00:00:00.000Z'),
@@ -39,6 +41,7 @@ const createPromotion = (): ActivePromotion => ({
     description: 'wszystkie zabiegi',
   },
   ctaLabel: 'Zarezerwuj termin',
+  ...overrides,
 })
 
 describe('PromotionBanner', () => {
@@ -47,14 +50,14 @@ describe('PromotionBanner', () => {
   })
 
   beforeEach(() => {
-    getActivePromotionMock.mockReset()
+    getAllActivePromotionsMock.mockReset()
     formatPromotionDeadlineMock.mockReset()
     getPromotionScopeDescriptionMock.mockReset()
     trackPlausibleEventMock.mockReset()
   })
 
   it('does not render when there is no active promotion', () => {
-    getActivePromotionMock.mockReturnValue(null)
+    getAllActivePromotionsMock.mockReturnValue([])
 
     const view: RenderResult = render(<PromotionBanner />)
 
@@ -63,14 +66,16 @@ describe('PromotionBanner', () => {
 
   it('renders promotion details when a promotion is active', () => {
     const promotion = createPromotion()
-    getActivePromotionMock.mockReturnValue(promotion)
+    getAllActivePromotionsMock.mockReturnValue([promotion])
     getPromotionScopeDescriptionMock.mockReturnValue('całe spa')
     formatPromotionDeadlineMock.mockReturnValue('tylko dziś')
 
     const view: RenderResult = render(<PromotionBanner />)
 
     expect(view.getByRole('status')).toBeInTheDocument()
-    expect(view.getByText('Promocja! - całe spa tylko dziś.')).toBeInTheDocument()
+    expect(
+      view.getByText('Promocja! - całe spa tylko dziś.'),
+    ).toBeInTheDocument()
 
     const ctaLink = view.getByRole('link', { name: 'Zarezerwuj termin' })
     expect(ctaLink).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
@@ -78,7 +83,7 @@ describe('PromotionBanner', () => {
 
   it('tracks CTA clicks', async () => {
     const promotion = createPromotion()
-    getActivePromotionMock.mockReturnValue(promotion)
+    getAllActivePromotionsMock.mockReturnValue([promotion])
     getPromotionScopeDescriptionMock.mockReturnValue('całe spa')
     formatPromotionDeadlineMock.mockReturnValue('tylko dziś')
 
@@ -95,7 +100,7 @@ describe('PromotionBanner', () => {
 
   it('dismisses the banner without persisting state', async () => {
     const promotion = createPromotion()
-    getActivePromotionMock.mockReturnValue(promotion)
+    getAllActivePromotionsMock.mockReturnValue([promotion])
     getPromotionScopeDescriptionMock.mockReturnValue('całe spa')
     formatPromotionDeadlineMock.mockReturnValue('tylko dziś')
 
@@ -113,6 +118,103 @@ describe('PromotionBanner', () => {
         promotionId: promotion.id,
       },
     )
+    await waitFor(() => {
+      expect(view.queryByRole('status')).not.toBeInTheDocument()
+    })
+  })
+
+  it('renders every message and tracks each campaign CTA independently', async () => {
+    const firstPromotion = createPromotion({
+      id: 'synthetic-first',
+      ctaLabel: 'Zarezerwuj pierwszy',
+    })
+    const secondPromotion = createPromotion({
+      id: 'synthetic-second',
+      ctaLabel: 'Zarezerwuj drugi',
+    })
+    getAllActivePromotionsMock.mockReturnValue([
+      firstPromotion,
+      secondPromotion,
+    ])
+    getPromotionScopeDescriptionMock.mockImplementation(
+      (promotion) => `zakres ${promotion.id}`,
+    )
+    formatPromotionDeadlineMock.mockReturnValue('tylko dziś')
+
+    const view = render(<PromotionBanner />)
+
+    expect(view.getAllByRole('status')).toHaveLength(1)
+    expect(
+      view.getByText('Promocja! - zakres synthetic-first tylko dziś.'),
+    ).toBeInTheDocument()
+    expect(
+      view.getByText('Promocja! - zakres synthetic-second tylko dziś.'),
+    ).toBeInTheDocument()
+
+    const user = userEvent.setup()
+    await user.click(view.getByRole('link', { name: 'Zarezerwuj pierwszy' }))
+    await user.click(view.getByRole('link', { name: 'Zarezerwuj drugi' }))
+
+    expect(trackPlausibleEventMock).toHaveBeenNthCalledWith(
+      1,
+      'CTA Booksy Click',
+      {
+        placement: 'promotion-banner',
+        promotionId: firstPromotion.id,
+      },
+    )
+    expect(trackPlausibleEventMock).toHaveBeenNthCalledWith(
+      2,
+      'CTA Booksy Click',
+      {
+        placement: 'promotion-banner',
+        promotionId: secondPromotion.id,
+      },
+    )
+  })
+
+  it('uses one auto-dismiss timer for the combined banner', () => {
+    const timerSpy = vi.spyOn(globalThis, 'setTimeout')
+    getAllActivePromotionsMock.mockReturnValue([
+      createPromotion({ id: 'synthetic-first' }),
+      createPromotion({ id: 'synthetic-second' }),
+    ])
+    getPromotionScopeDescriptionMock.mockReturnValue('całe spa')
+    formatPromotionDeadlineMock.mockReturnValue('tylko dziś')
+
+    render(<PromotionBanner />)
+
+    expect(
+      timerSpy.mock.calls.filter(([, delay]) => delay === 8000),
+    ).toHaveLength(1)
+    timerSpy.mockRestore()
+  })
+
+  it('dismisses the combined banner once and tracks every campaign', async () => {
+    const promotions = [
+      createPromotion({ id: 'synthetic-first' }),
+      createPromotion({ id: 'synthetic-second' }),
+    ]
+    getAllActivePromotionsMock.mockReturnValue(promotions)
+    getPromotionScopeDescriptionMock.mockReturnValue('całe spa')
+    formatPromotionDeadlineMock.mockReturnValue('tylko dziś')
+
+    const view = render(<PromotionBanner />)
+    const user = userEvent.setup()
+    await user.click(
+      view.getByRole('button', { name: 'Zamknij baner promocji' }),
+    )
+
+    expect(trackPlausibleEventMock).toHaveBeenCalledTimes(2)
+    for (const promotion of promotions) {
+      expect(trackPlausibleEventMock).toHaveBeenCalledWith(
+        'Promotion Banner Dismissed',
+        {
+          placement: 'promotion-banner',
+          promotionId: promotion.id,
+        },
+      )
+    }
     await waitFor(() => {
       expect(view.queryByRole('status')).not.toBeInTheDocument()
     })

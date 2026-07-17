@@ -4,7 +4,6 @@ import {
   type ActivePromotion,
   doesPromotionApplyToService,
   formatPromotionDeadline,
-  getActivePromotion,
   getAllActivePromotions,
   getPromotionScopeDescription,
   type PromotionApplicability,
@@ -24,20 +23,20 @@ const testConfigs: PromotionConfig[] = [
   },
 ]
 
-describe('getActivePromotion', () => {
+describe('getAllActivePromotions date selection', () => {
   it('selects the correct active promotion by date', () => {
-    const promotion = getActivePromotion(new Date('2025-10-15'))
+    const [promotion] = getAllActivePromotions(new Date('2025-10-15'))
     expect(promotion?.id).toBe('october-2025-oczyszczanie-wodorowe')
     expect(promotion?.discountPercentage).toBe(20)
   })
 
   it('preserves the October campaign service and visible scope copy', () => {
-    const promotion = getActivePromotion(new Date('2025-10-15'))
+    const [promotion] = getAllActivePromotions(new Date('2025-10-15'))
     const promotedService = services.find(
       (service) => service.name === 'Oczyszczanie wodorowe',
     )
 
-    expect(promotion).not.toBeNull()
+    expect(promotion).toBeDefined()
     expect(promotedService).toBeDefined()
     if (!promotion || !promotedService) return
 
@@ -48,13 +47,13 @@ describe('getActivePromotion', () => {
     )
   })
 
-  it('returns null when no promotion is active', () => {
-    const promotion = getActivePromotion(new Date('2025-03-15'))
-    expect(promotion).toBeNull()
+  it('returns an empty list when no promotion is active', () => {
+    const promotions = getAllActivePromotions(new Date('2025-03-15'))
+    expect(promotions).toEqual([])
   })
 
   it('returns the promotion on the first day (boundary inclusive)', () => {
-    const promotion = getActivePromotion(
+    const [promotion] = getAllActivePromotions(
       new Date('2025-10-01T00:00:01+02:00'),
       testConfigs,
     )
@@ -62,27 +61,27 @@ describe('getActivePromotion', () => {
   })
 
   it('returns the promotion on the last day (boundary inclusive)', () => {
-    const promotion = getActivePromotion(
+    const [promotion] = getAllActivePromotions(
       new Date('2025-10-31T23:59:58+01:00'),
       testConfigs,
     )
     expect(promotion?.id).toBe('test-promo')
   })
 
-  it('returns null the day before a promotion starts', () => {
-    const promotion = getActivePromotion(
+  it('returns an empty list the day before a promotion starts', () => {
+    const promotions = getAllActivePromotions(
       new Date('2025-09-30T23:59:58+02:00'),
       testConfigs,
     )
-    expect(promotion).toBeNull()
+    expect(promotions).toEqual([])
   })
 
-  it('returns null the day after a promotion ends', () => {
-    const promotion = getActivePromotion(
+  it('returns an empty list the day after a promotion ends', () => {
+    const promotions = getAllActivePromotions(
       new Date('2025-11-01T00:00:01+01:00'),
       testConfigs,
     )
-    expect(promotion).toBeNull()
+    expect(promotions).toEqual([])
   })
 
   it('skips a malformed config and returns the next active promotion', () => {
@@ -92,7 +91,7 @@ describe('getActivePromotion', () => {
       startDate: 'not-a-date',
     }
 
-    const promotion = getActivePromotion(new Date('2025-10-15'), [
+    const [promotion] = getAllActivePromotions(new Date('2025-10-15'), [
       malformedConfig,
       ...testConfigs,
     ])
@@ -263,8 +262,8 @@ describe('resolveServicePromotion', () => {
 
 describe('formatPromotionDeadline', () => {
   it('formats full-month promotions as "przez cały <month>"', () => {
-    const promotion = getActivePromotion(new Date('2025-09-10'))
-    expect(promotion).not.toBeNull()
+    const [promotion] = getAllActivePromotions(new Date('2025-09-10'))
+    expect(promotion).toBeDefined()
     if (!promotion) return
 
     expect(formatPromotionDeadline(promotion)).toMatch(/przez cały wrzesień/i)
@@ -289,8 +288,8 @@ describe('formatPromotionDeadline', () => {
   })
 
   it('formats multi-month promotions as "do <date>"', () => {
-    const promotion = getActivePromotion(new Date('2025-11-15'))
-    expect(promotion).not.toBeNull()
+    const [promotion] = getAllActivePromotions(new Date('2025-11-15'))
+    expect(promotion).toBeDefined()
     if (!promotion) return
 
     // November–December promotion spans two months — should use date format
@@ -488,9 +487,9 @@ describe('doesPromotionApplyToService', () => {
       )!,
       name: 'Nowa nazwa prezentacyjna',
     }
-    const promotion = getActivePromotion(new Date('2025-10-15'))
+    const [promotion] = getAllActivePromotions(new Date('2025-10-15'))
 
-    expect(promotion).not.toBeNull()
+    expect(promotion).toBeDefined()
     if (!promotion) return
 
     expect(doesPromotionApplyToService(service, promotion)).toBe(true)

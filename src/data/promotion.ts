@@ -269,36 +269,6 @@ export function getReferenceDate(): Date {
   return new Date()
 }
 
-export function getActivePromotion(
-  referenceDate: Date = getReferenceDate(),
-  configs: PromotionConfig[] = promotionConfigs,
-): ActivePromotion | null {
-  const referenceDateKey = getWarsawDateKey(referenceDate)
-
-  for (const promotionConfig of configs) {
-    const { startDate, endDate } = toPromotionDates(promotionConfig)
-
-    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
-      continue
-    }
-
-    if (
-      referenceDateKey < promotionConfig.startDate ||
-      referenceDateKey > promotionConfig.endDate
-    ) {
-      continue
-    }
-
-    return {
-      ...promotionConfig,
-      startDate,
-      endDate,
-    }
-  }
-
-  return null
-}
-
 export function getAllActivePromotions(
   referenceDate: Date = getReferenceDate(),
   configs: PromotionConfig[] = promotionConfigs,
