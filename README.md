@@ -50,7 +50,9 @@ assets aggressively; SSR HTML should remain uncached or use a short TTL.
 
 TanStack Start renders the `/` route on the server. Navigation inside the page
 continues to use the existing section hashes and scroll behavior. Static salon
-content remains in `src/data/`; there are no API calls or server functions.
+content remains in `src/data/`; there is no general business API or data-service
+layer. One narrow server function in `src/routes/index.tsx` establishes the
+shared SSR/hydration render-time snapshot.
 
 Business identity and salon-location facts have one canonical owner in
 `src/data/business.ts`. After changing them, run

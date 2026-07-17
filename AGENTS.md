@@ -21,9 +21,10 @@ pnpm start                     # run .output/server/index.mjs
 pnpm run validate              # check, build, coverage, audit, E2E
 ```
 
-Install browsers once with `pnpm exec playwright install`. Run `pnpm check` and
-`pnpm test` before finishing. Run `pnpm run validate` for multi-file, layout,
-navigation, dependency, performance, or E2E-covered changes.
+Install browsers once with `pnpm exec playwright install`; on a fresh Linux host
+use `pnpm exec playwright install --with-deps`. Run `pnpm check` and `pnpm test`
+before finishing. Run `pnpm run validate` for multi-file, layout, navigation,
+dependency, performance, or E2E-covered changes.
 
 Deployment is configured externally as a Dokploy Node service; this repository
 has no deploy command. See [RUNBOOK.md](./RUNBOOK.md) for the verified boundary.
@@ -73,23 +74,28 @@ After editing `src/data/business.ts`, run
 - TypeScript uses single quotes, no semicolons, 2-space indentation, and Biome.
 - UI copy, content, and user-facing errors are Polish.
 - Use `ServiceId` for references, history, keys, DOM IDs, and analytics; service
-  names are presentation only. Evidence: F-001.
+  names are presentation only. Evidence: F-001, `src/data/services.ts`.
 - Promotion resolution is non-stacking: highest discount, then earlier start,
   then lexical ID. Validate the complete production config. Evidence: F-005,
-  F-007.
+  F-007, `src/data/promotion.test.ts`, `promotionValidation.test.ts`.
 - Historical price rows are explicit immutable facts; never reconstruct or
-  mutate them during render. Evidence: F-002, F-004.
+  mutate them during render. Evidence: F-002, F-004,
+  `src/data/servicePriceHistory.test.ts`.
 - One render-time snapshot crosses SSR and hydration. Playwright may request a
-  fixed time only when `PLAYWRIGHT_TEST_MODE=1`. Evidence: F-010.
+  fixed time only when `PLAYWRIGHT_TEST_MODE=1`. Evidence: F-010,
+  `src/libs/renderTime.test.ts`,
+  `src/app/providers/RenderTimeProvider.test.tsx`.
 - Below-fold home sections mount after load/idle or direct-hash demand. Each has
   its own `DeferredSectionBoundary`; preserve section IDs and local recovery.
-  Evidence: F-003.
+  Evidence: F-003, `src/features/home/page/HomePage.test.tsx`.
 - Analytics remains optional and deferred. Its wrapper owns one later-demand
-  import retry and static warnings; callers never add retries. Evidence: F-012.
+  import retry and static warnings; callers never add retries. Evidence: F-012,
+  `src/libs/analytics.test.ts`.
 - Deferred fonts load on first scroll or the 4-second fallback; keep that work
   out of the critical path.
-- E2E retries are zero locally and in CI; artifacts are retained for 14 days.
-  A recovered retry is a failure, not a pass. Evidence: F-015.
+- E2E retries are zero locally. CI permits two diagnostic retries but
+  `failOnFlakyTests` makes any recovered retry fail; artifacts are retained for
+  14 days. Evidence: F-015, `playwright.config.ts`, `.github/workflows/ci.yml`.
 
 ## Boundaries
 
