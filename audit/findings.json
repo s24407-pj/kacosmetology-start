@@ -56,7 +56,17 @@
       "fix_direction": "Choose immutable effective-price transitions with start/end events or pure time-based derivation; do not reconstruct past facts from today's base price.",
       "effort": "M",
       "category": "operability",
-      "adversarial_outcome": "rebuttal_wins_downgrade"
+      "adversarial_outcome": "rebuttal_wins_downgrade",
+      "implementation_status": "fixed",
+      "implemented": true,
+      "implemented_at": "2026-07-17T15:58:26Z",
+      "implementation_branch": "audit/fixes-2026-07-16",
+      "implementation_commits": [
+        "ae0c12712a4e34ced652d880911659b657a62edb",
+        "81f38c87f83bfea1d3835b7c051d722e55ea6e12",
+        "1ca4c3f072a47159c4d1ad0e72fd11eb3721cbc9"
+      ],
+      "result_path": "audit/results/F-002.md"
     },
     {
       "id": "F-003",
@@ -90,7 +100,17 @@
       "fix_direction": "Keep render-time price derivation pure and move real history changes to an explicit immutable lifecycle or persistence owner.",
       "effort": "M",
       "category": "code_health",
-      "adversarial_outcome": null
+      "adversarial_outcome": null,
+      "implementation_status": "fixed",
+      "implemented": true,
+      "implemented_at": "2026-07-17T15:58:26Z",
+      "implementation_branch": "audit/fixes-2026-07-16",
+      "implementation_commits": [
+        "ae0c12712a4e34ced652d880911659b657a62edb",
+        "81f38c87f83bfea1d3835b7c051d722e55ea6e12",
+        "1ca4c3f072a47159c4d1ad0e72fd11eb3721cbc9"
+      ],
+      "result_path": "audit/results/F-004.md"
     },
     {
       "id": "F-005",
