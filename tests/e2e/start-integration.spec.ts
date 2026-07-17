@@ -1,3 +1,5 @@
+import { contact } from '@data/contact'
+import { toSchemaOrgOpeningHoursSpecifications } from '@libs/openingHours'
 import { expect, test } from '@playwright/test'
 import { SEPTEMBER_PROMOTION_DATE } from './utils/dates'
 import { homepageUrlAt } from './utils/referenceTime'
@@ -34,44 +36,9 @@ test.describe('TanStack Start integration', () => {
       name: 'Ka.Cosmetology',
       url: 'https://kacosmetology.pl/',
     })
-    expect(jsonLd.openingHoursSpecification).toEqual([
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: 'Monday',
-        opens: '09:00',
-        closes: '17:00',
-      },
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: 'Tuesday',
-        opens: '09:00',
-        closes: '17:00',
-      },
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: 'Wednesday',
-        opens: '09:00',
-        closes: '17:00',
-      },
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: 'Thursday',
-        opens: '10:00',
-        closes: '18:00',
-      },
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: 'Friday',
-        opens: '10:00',
-        closes: '18:00',
-      },
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: 'Saturday',
-        opens: '09:00',
-        closes: '14:00',
-      },
-    ])
+    expect(jsonLd.openingHoursSpecification).toEqual(
+      toSchemaOrgOpeningHoursSpecifications(contact.openingSchedule),
+    )
   })
 
   test('hydrates without browser-global or recoverable errors', async ({

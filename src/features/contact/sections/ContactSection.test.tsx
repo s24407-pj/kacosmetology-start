@@ -12,12 +12,9 @@ vi.mock('@context/RenderTimeProvider', () => ({
   useRenderTime: () => referenceTime,
 }))
 
-vi.mock('@libs/openingHours', () => ({
-  getCurrentOpeningSnapshot: vi.fn(() => ({
-    currentDayName: 'poniedziałek',
-    currentMinutes: 12 * 60,
-  })),
-  isOpeningSlotActive: vi.fn(() => false),
+vi.mock('@libs/openingHours', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@libs/openingHours')>()),
+  getOpeningHoursView: vi.fn(),
 }))
 
 vi.mock('@libs/analytics', () => ({
@@ -25,15 +22,68 @@ vi.mock('@libs/analytics', () => ({
 }))
 
 import { trackPlausibleEvent } from '@libs/analytics'
-import {
-  getCurrentOpeningSnapshot,
-  isOpeningSlotActive,
-  type OpeningSnapshot,
-} from '@libs/openingHours'
+import { getOpeningHoursView } from '@libs/openingHours'
 import ContactSection from './ContactSection'
 
-const mockedGetCurrentOpeningSnapshot = vi.mocked(getCurrentOpeningSnapshot)
-const mockedIsOpeningSlotActive = vi.mocked(isOpeningSlotActive)
+const mockedGetOpeningHoursView = vi.mocked(getOpeningHoursView)
+const openingHoursRows = [
+  {
+    weekday: 'monday' as const,
+    label: 'poniedziałek',
+    hoursText: '09:00 - 17:00',
+    isClosed: false,
+    isToday: true,
+    isActive: false,
+  },
+  {
+    weekday: 'tuesday' as const,
+    label: 'wtorek',
+    hoursText: '09:00 - 17:00',
+    isClosed: false,
+    isToday: false,
+    isActive: false,
+  },
+  {
+    weekday: 'wednesday' as const,
+    label: 'środa',
+    hoursText: '09:00 - 17:00',
+    isClosed: false,
+    isToday: false,
+    isActive: false,
+  },
+  {
+    weekday: 'thursday' as const,
+    label: 'czwartek',
+    hoursText: '10:00 - 18:00',
+    isClosed: false,
+    isToday: false,
+    isActive: false,
+  },
+  {
+    weekday: 'friday' as const,
+    label: 'piątek',
+    hoursText: '10:00 - 18:00',
+    isClosed: false,
+    isToday: false,
+    isActive: false,
+  },
+  {
+    weekday: 'saturday' as const,
+    label: 'sobota',
+    hoursText: '09:00 - 14:00',
+    isClosed: false,
+    isToday: false,
+    isActive: false,
+  },
+  {
+    weekday: 'sunday' as const,
+    label: 'niedziela',
+    hoursText: 'Zamknięte',
+    isClosed: true,
+    isToday: false,
+    isActive: false,
+  },
+]
 
 describe('ContactSection', () => {
   afterEach(() => {
@@ -42,11 +92,10 @@ describe('ContactSection', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    mockedGetCurrentOpeningSnapshot.mockReturnValue({
-      currentDayName: 'poniedziałek',
-      currentMinutes: 12 * 60,
+    mockedGetOpeningHoursView.mockReturnValue({
+      isOpenNow: false,
+      rows: openingHoursRows,
     })
-    mockedIsOpeningSlotActive.mockReturnValue(false)
   })
 
   it('renders contact section heading', () => {
@@ -145,12 +194,6 @@ describe('ContactSection', () => {
   })
 
   it('marks current day in opening hours list', () => {
-    const snapshot: OpeningSnapshot = {
-      currentDayName: 'poniedziałek',
-      currentMinutes: 12 * 60,
-    }
-    mockedGetCurrentOpeningSnapshot.mockReturnValue(snapshot)
-
     render(<ContactSection />)
 
     const mondayRow = screen.getByText('poniedziałek').closest('div')
@@ -186,12 +229,18 @@ describe('ContactSection', () => {
   })
 
   it('shows the current overall open and closed badge copy', () => {
-    mockedIsOpeningSlotActive.mockReturnValueOnce(true)
+    mockedGetOpeningHoursView.mockReturnValue({
+      isOpenNow: true,
+      rows: openingHoursRows,
+    })
     const { rerender } = render(<ContactSection />)
 
     expect(screen.getByText('Otwarte teraz')).toBeVisible()
 
-    mockedIsOpeningSlotActive.mockReturnValue(false)
+    mockedGetOpeningHoursView.mockReturnValue({
+      isOpenNow: false,
+      rows: openingHoursRows,
+    })
     rerender(<ContactSection />)
 
     expect(screen.getByText('Obecnie zamknięte')).toBeVisible()
@@ -200,24 +249,20 @@ describe('ContactSection', () => {
   it('derives opening hours from the canonical render time', () => {
     render(<ContactSection />)
 
-    expect(mockedGetCurrentOpeningSnapshot).toHaveBeenCalledWith(referenceTime)
+    expect(mockedGetOpeningHoursView).toHaveBeenCalledWith(
+      contact.openingSchedule,
+      referenceTime,
+    )
   })
 
   it('announces currently open state for assistive technologies', () => {
-    const snapshot: OpeningSnapshot = {
-      currentDayName: 'poniedziałek',
-      currentMinutes: 12 * 60,
-    }
-    mockedGetCurrentOpeningSnapshot.mockReturnValue(snapshot)
-    mockedIsOpeningSlotActive.mockImplementation(
-      (hours, day, currentSnapshot) => {
-        return (
-          day.toLowerCase() === currentSnapshot.currentDayName &&
-          hours === '09:00 - 17:00' &&
-          currentSnapshot.currentMinutes === 12 * 60
-        )
-      },
-    )
+    mockedGetOpeningHoursView.mockReturnValue({
+      isOpenNow: true,
+      rows: openingHoursRows.map((row) => ({
+        ...row,
+        isActive: row.weekday === 'monday',
+      })),
+    })
 
     render(<ContactSection />)
 

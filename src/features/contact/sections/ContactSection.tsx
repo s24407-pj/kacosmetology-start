@@ -6,10 +6,7 @@ import { useRenderTime } from '@context/RenderTimeProvider'
 import { contact, contactLinks } from '@data/contact'
 import { trackPlausibleEvent } from '@libs/analytics'
 import { getContactHref } from '@libs/contactLinks'
-import {
-  getCurrentOpeningSnapshot,
-  isOpeningSlotActive,
-} from '@libs/openingHours'
+import { getOpeningHoursView } from '@libs/openingHours'
 import { Clock, Heart, Mail, MapPin, Phone } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -126,9 +123,9 @@ export default function ContactSection() {
 
 function OpeningHoursList() {
   const renderTime = useRenderTime()
-  const snapshot = getCurrentOpeningSnapshot(renderTime)
-  const isOpenNow = Object.entries(contact.openingHours).some(([day, hours]) =>
-    isOpeningSlotActive(hours, day, snapshot),
+  const { isOpenNow, rows } = getOpeningHoursView(
+    contact.openingSchedule,
+    renderTime,
   )
 
   return (
@@ -146,34 +143,33 @@ function OpeningHoursList() {
         />
         {isOpenNow ? 'Otwarte teraz' : 'Obecnie zamknięte'}
       </div>
-      {Object.entries(contact.openingHours).map(([day, hours]) => {
-        const isToday = day.toLowerCase() === snapshot.currentDayName
-        const isActive = isOpeningSlotActive(hours, day, snapshot)
-
-        return (
-          <div
-            key={day}
-            className="flex justify-between items-center py-3 border-b border-border-default last:border-b-0"
-          >
-            <span className="font-medium text-text-primary">{day}</span>
-            <span
-              className={`font-medium ${
-                hours === 'Zamknięte'
-                  ? 'text-text-muted'
-                  : isToday
-                    ? 'text-action'
-                    : 'text-text-secondary'
-              } ${isToday ? 'font-semibold' : ''}`.trim()}
-              aria-current={isToday ? 'date' : undefined}
+      {rows.map(
+        ({ weekday, label, hoursText, isClosed, isToday, isActive }) => {
+          return (
+            <div
+              key={weekday}
+              className="flex justify-between items-center py-3 border-b border-border-default last:border-b-0"
             >
-              {hours}
-              {isActive && (
-                <span className="sr-only"> (gabinet jest teraz otwarty)</span>
-              )}
-            </span>
-          </div>
-        )
-      })}
+              <span className="font-medium text-text-primary">{label}</span>
+              <span
+                className={`font-medium ${
+                  isClosed
+                    ? 'text-text-muted'
+                    : isToday
+                      ? 'text-action'
+                      : 'text-text-secondary'
+                } ${isToday ? 'font-semibold' : ''}`.trim()}
+                aria-current={isToday ? 'date' : undefined}
+              >
+                {hoursText}
+                {isActive && (
+                  <span className="sr-only"> (gabinet jest teraz otwarty)</span>
+                )}
+              </span>
+            </div>
+          )
+        },
+      )}
     </div>
   )
 }

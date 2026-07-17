@@ -1,7 +1,9 @@
+import { contact } from '@data/contact'
 import crimsonLatin400 from '@fontsource/crimson-text/latin-400.css?url'
 import crimsonLatinExt400 from '@fontsource/crimson-text/latin-ext-400.css?url'
 import playfairLatin700 from '@fontsource/playfair-display/latin-700.css?url'
 import playfairLatinExt700 from '@fontsource/playfair-display/latin-ext-700.css?url'
+import { toSchemaOrgOpeningHoursSpecifications } from '@libs/openingHours'
 import { createRootRoute, HeadContent, Scripts } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import appCss from '../app/styles/index.css?url'
@@ -34,19 +36,9 @@ const structuredData = {
   },
   hasMap:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d146965.76001793574!2d18.595858632430925!3d53.898941431338294!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47029ddcdf06e639%3A0x22e7786a8b623b1a!2sKa.Cosmetology%20Kosmetolog%20%7C%20Trycholog!5e0!3m2!1spl!2spl!4v1757628479347!5m2!1spl!2spl',
-  openingHoursSpecification: [
-    ['Monday', '09:00', '17:00'],
-    ['Tuesday', '09:00', '17:00'],
-    ['Wednesday', '09:00', '17:00'],
-    ['Thursday', '10:00', '18:00'],
-    ['Friday', '10:00', '18:00'],
-    ['Saturday', '09:00', '14:00'],
-  ].map(([dayOfWeek, opens, closes]) => ({
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek,
-    opens,
-    closes,
-  })),
+  openingHoursSpecification: toSchemaOrgOpeningHoursSpecifications(
+    contact.openingSchedule,
+  ),
   sameAs: [
     'https://kacosmetology.booksy.com',
     'https://www.instagram.com/ka.cosmetology',

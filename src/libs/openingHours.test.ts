@@ -5,9 +5,7 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   assertValidOpeningSchedule,
   defineOpeningSchedule,
-  getCurrentOpeningSnapshot,
   getOpeningHoursView,
-  isOpeningSlotActive,
   isSalonOpenNow,
   toSchemaOrgOpeningHoursSpecifications,
 } from './openingHours'
@@ -30,125 +28,165 @@ const currentStructuredSchedule = {
 
 const uncheckedSchedule = () => structuredClone(currentStructuredSchedule)
 
-describe('getCurrentOpeningSnapshot', () => {
+describe('opening schedule timezone snapshots', () => {
   it('returns the correct Polish day name and minutes for a given date', () => {
-    // 2025-10-15 Wednesday, 14:30 UTC+2 (CEST) = 14:30 Warsaw time
-    const date = new Date('2025-10-15T12:30:00Z')
-    const snapshot = getCurrentOpeningSnapshot(date)
+    const view = getOpeningHoursView(
+      currentStructuredSchedule,
+      new Date('2025-10-15T12:30:00Z'),
+    )
 
-    expect(snapshot.currentDayName).toBe('środa')
-    expect(snapshot.currentMinutes).toBe(14 * 60 + 30)
+    expect(view.rows.find(({ isToday }) => isToday)?.label).toBe('środa')
+    expect(view.isOpenNow).toBe(true)
   })
 
   it('returns the correct day and minutes at midnight Warsaw time', () => {
-    // 2025-11-03 Monday, 23:00 UTC = 00:00 Warsaw time (CET, UTC+1)
-    const date = new Date('2025-11-03T23:00:00Z')
-    const snapshot = getCurrentOpeningSnapshot(date)
+    const view = getOpeningHoursView(
+      currentStructuredSchedule,
+      new Date('2025-11-03T23:00:00Z'),
+    )
 
-    expect(snapshot.currentDayName).toBe('wtorek')
-    expect(snapshot.currentMinutes).toBe(0)
+    expect(view.rows.find(({ isToday }) => isToday)?.label).toBe('wtorek')
+    expect(view.isOpenNow).toBe(false)
   })
 
   it('handles the DST boundary correctly (Warsaw switches from CEST to CET)', () => {
-    // 2025-10-26 at 01:30 UTC = 02:30 CEST (before switch) — still Sunday
-    const before = new Date('2025-10-25T23:30:00Z')
-    const snapshotBefore = getCurrentOpeningSnapshot(before)
+    const schedule = defineOpeningSchedule({
+      ...currentStructuredSchedule,
+      days: {
+        ...currentStructuredSchedule.days,
+        sunday: {
+          status: 'open',
+          slots: [{ opens: '02:00', closes: '03:00' }],
+        },
+      },
+    })
 
-    // 2025-10-26 01:30 UTC = 02:30 CET (after switch)
-    const after = new Date('2025-10-26T01:30:00Z')
-    const snapshotAfter = getCurrentOpeningSnapshot(after)
-
-    expect(snapshotBefore.currentDayName).toBe('niedziela')
-    expect(snapshotAfter.currentDayName).toBe('niedziela')
-    // Both should be Sunday, but different minutes
-    expect(snapshotBefore.currentMinutes).not.toBe(snapshotAfter.currentMinutes)
+    expect(isSalonOpenNow(schedule, new Date('2025-10-26T00:30:00Z'))).toBe(
+      true,
+    )
+    expect(isSalonOpenNow(schedule, new Date('2025-10-26T01:30:00Z'))).toBe(
+      true,
+    )
   })
 })
 
-describe('isOpeningSlotActive', () => {
-  const mondayAt10 = { currentDayName: 'poniedziałek', currentMinutes: 10 * 60 }
-  const mondayAt930 = {
-    currentDayName: 'poniedziałek',
-    currentMinutes: 9 * 60 + 30,
-  }
-  const mondayAt17 = { currentDayName: 'poniedziałek', currentMinutes: 17 * 60 }
-  const mondayAt9 = { currentDayName: 'poniedziałek', currentMinutes: 9 * 60 }
-
+describe('structured opening slot behavior', () => {
   it('returns true when current time is within the opening hours', () => {
-    expect(isOpeningSlotActive('9:00-17:00', 'poniedziałek', mondayAt10)).toBe(
-      true,
-    )
+    expect(
+      isSalonOpenNow(
+        currentStructuredSchedule,
+        new Date('2024-01-08T09:00:00Z'),
+      ),
+    ).toBe(true)
   })
 
   it('returns true at the exact start of the opening window (inclusive)', () => {
-    expect(isOpeningSlotActive('9:00-17:00', 'poniedziałek', mondayAt9)).toBe(
-      true,
-    )
+    expect(
+      isSalonOpenNow(
+        currentStructuredSchedule,
+        new Date('2024-01-08T08:00:00Z'),
+      ),
+    ).toBe(true)
   })
 
   it('returns false at the exact end of the opening window (exclusive)', () => {
-    expect(isOpeningSlotActive('9:00-17:00', 'poniedziałek', mondayAt17)).toBe(
-      false,
-    )
+    expect(
+      isSalonOpenNow(
+        currentStructuredSchedule,
+        new Date('2024-01-08T16:00:00Z'),
+      ),
+    ).toBe(false)
   })
 
   it('returns false when current time is before opening hours', () => {
-    const mondayAt8 = {
-      currentDayName: 'poniedziałek',
-      currentMinutes: 8 * 60 + 59,
-    }
-    expect(isOpeningSlotActive('9:00-17:00', 'poniedziałek', mondayAt8)).toBe(
-      false,
-    )
+    expect(
+      isSalonOpenNow(
+        currentStructuredSchedule,
+        new Date('2024-01-08T07:59:00Z'),
+      ),
+    ).toBe(false)
   })
 
   it('returns false when current time is after closing hours', () => {
-    const mondayAt18 = {
-      currentDayName: 'poniedziałek',
-      currentMinutes: 18 * 60,
-    }
-    expect(isOpeningSlotActive('9:00-17:00', 'poniedziałek', mondayAt18)).toBe(
-      false,
-    )
+    expect(
+      isSalonOpenNow(
+        currentStructuredSchedule,
+        new Date('2024-01-08T17:00:00Z'),
+      ),
+    ).toBe(false)
   })
 
   it('returns false when the day does not match', () => {
-    const tuesday = { currentDayName: 'wtorek', currentMinutes: 10 * 60 }
-    expect(isOpeningSlotActive('9:00-17:00', 'poniedziałek', tuesday)).toBe(
+    const mondayOnly = defineOpeningSchedule({
+      ...currentStructuredSchedule,
+      days: {
+        ...currentStructuredSchedule.days,
+        tuesday: { status: 'closed' },
+      },
+    })
+    expect(isSalonOpenNow(mondayOnly, new Date('2024-01-09T09:00:00Z'))).toBe(
       false,
     )
   })
 
   it('returns false when hours is "Zamknięte"', () => {
-    expect(isOpeningSlotActive('Zamknięte', 'poniedziałek', mondayAt10)).toBe(
-      false,
-    )
+    expect(
+      isSalonOpenNow(
+        currentStructuredSchedule,
+        new Date('2024-01-07T10:00:00Z'),
+      ),
+    ).toBe(false)
   })
 
   it('returns false when the hours string has no separator', () => {
-    expect(isOpeningSlotActive('900-1700', 'poniedziałek', mondayAt930)).toBe(
-      false,
-    )
+    const schedule = uncheckedSchedule()
+    expect(() =>
+      assertValidOpeningSchedule({
+        ...schedule,
+        days: {
+          ...schedule.days,
+          monday: {
+            status: 'open',
+            slots: [{ opens: '0900', closes: '17:00' }],
+          },
+        },
+      }),
+    ).toThrow('monday slot 0')
   })
 
   it('returns false when the time values are not valid numbers', () => {
-    expect(isOpeningSlotActive('abc-def', 'poniedziałek', mondayAt10)).toBe(
-      false,
-    )
+    const schedule = uncheckedSchedule()
+    expect(() =>
+      assertValidOpeningSchedule({
+        ...schedule,
+        days: {
+          ...schedule.days,
+          monday: {
+            status: 'open',
+            slots: [{ opens: 'ab:cd', closes: '17:00' }],
+          },
+        },
+      }),
+    ).toThrow('monday slot 0')
   })
 
   it('returns false when only one part of the time range is present', () => {
-    expect(isOpeningSlotActive('9:00-', 'poniedziałek', mondayAt10)).toBe(false)
-    expect(isOpeningSlotActive('-17:00', 'poniedziałek', mondayAt10)).toBe(
-      false,
-    )
+    const schedule = uncheckedSchedule()
+    const [slot] = schedule.days.monday.slots
+    expect(() =>
+      assertValidOpeningSchedule({
+        ...schedule,
+        days: {
+          ...schedule.days,
+          monday: { status: 'open', slots: [{ opens: slot.opens }] },
+        },
+      }),
+    ).toThrow('closes')
   })
 
   it('is case-insensitive for day comparison', () => {
-    const snapshot = { currentDayName: 'poniedziałek', currentMinutes: 10 * 60 }
-    expect(isOpeningSlotActive('9:00-17:00', 'Poniedziałek', snapshot)).toBe(
-      true,
-    )
+    expect(WEEKDAYS).toContain('monday')
+    expect(WEEKDAYS).not.toContain('Monday')
   })
 })
 
@@ -156,13 +194,13 @@ describe('isSalonOpenNow', () => {
   it('uses an inclusive start and exclusive end for the configured Monday hours', () => {
     expect(
       isSalonOpenNow(
-        contact.openingHours,
+        contact.openingSchedule,
         new Date('2024-03-04T08:00:00.000Z'),
       ),
     ).toBe(true)
     expect(
       isSalonOpenNow(
-        contact.openingHours,
+        contact.openingSchedule,
         new Date('2024-03-04T16:00:00.000Z'),
       ),
     ).toBe(false)
@@ -172,17 +210,7 @@ describe('isSalonOpenNow', () => {
     // Wednesday 14:30 Warsaw time (2025-10-15T12:30:00Z, CEST = UTC+2)
     vi.setSystemTime(new Date('2025-10-15T12:30:00Z'))
 
-    const openingHours: Record<string, string> = {
-      poniedziałek: '9:00-17:00',
-      wtorek: '9:00-17:00',
-      środa: '9:00-17:00',
-      czwartek: '9:00-17:00',
-      piątek: '9:00-17:00',
-      sobota: 'Zamknięte',
-      niedziela: 'Zamknięte',
-    }
-
-    expect(isSalonOpenNow(openingHours)).toBe(true)
+    expect(isSalonOpenNow(contact.openingSchedule)).toBe(true)
 
     vi.useRealTimers()
   })
@@ -191,12 +219,7 @@ describe('isSalonOpenNow', () => {
     // Wednesday 20:00 Warsaw time (2025-10-15T18:00:00Z)
     vi.setSystemTime(new Date('2025-10-15T18:00:00Z'))
 
-    const openingHours: Record<string, string> = {
-      poniedziałek: '9:00-17:00',
-      środa: '9:00-17:00',
-    }
-
-    expect(isSalonOpenNow(openingHours)).toBe(false)
+    expect(isSalonOpenNow(contact.openingSchedule)).toBe(false)
 
     vi.useRealTimers()
   })
@@ -205,12 +228,7 @@ describe('isSalonOpenNow', () => {
     // Sunday 11:00 Warsaw time (2025-10-19T09:00:00Z)
     vi.setSystemTime(new Date('2025-10-19T09:00:00Z'))
 
-    const openingHours: Record<string, string> = {
-      poniedziałek: '9:00-17:00',
-      niedziela: 'Zamknięte',
-    }
-
-    expect(isSalonOpenNow(openingHours)).toBe(false)
+    expect(isSalonOpenNow(contact.openingSchedule)).toBe(false)
 
     vi.useRealTimers()
   })

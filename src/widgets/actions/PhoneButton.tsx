@@ -7,7 +7,7 @@ import { PhoneCall } from 'lucide-react'
 export default function PhoneButton() {
   const renderTime = useRenderTime()
   const phoneNumber = contact.phone.replace(/\s+/g, '')
-  const salonOpen = isSalonOpenNow(contact.openingHours, renderTime)
+  const salonOpen = isSalonOpenNow(contact.openingSchedule, renderTime)
 
   return (
     <a

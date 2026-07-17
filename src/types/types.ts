@@ -1,3 +1,5 @@
+import type { OpeningSchedule } from './openingHours'
+
 export type ServiceCatalogCategory =
   | 'Oprawa oka'
   | 'Trychologia'
@@ -39,10 +41,6 @@ export interface Address {
   postalCode: string
 }
 
-export interface OpeningHours {
-  [day: string]: string // e.g., "monday": "09:00 - 17:00"
-}
-
 export interface SocialMediaLinks {
   instagram: string
   facebook?: string
@@ -52,7 +50,7 @@ export interface Contact {
   phone: string
   email: string
   address: Address
-  openingHours: OpeningHours
+  openingSchedule: OpeningSchedule
   socialMedia: SocialMediaLinks
   booksy: string
 }

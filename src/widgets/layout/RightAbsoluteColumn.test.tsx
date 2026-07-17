@@ -11,7 +11,8 @@ vi.mock('@libs/analytics', () => ({
   trackPlausibleEvent: vi.fn(),
 }))
 
-vi.mock('@libs/openingHours', () => ({
+vi.mock('@libs/openingHours', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@libs/openingHours')>()),
   isSalonOpenNow: () => true,
 }))
 

@@ -11,7 +11,8 @@ vi.mock('@context/RenderTimeProvider', () => ({
   useRenderTime: () => referenceTime,
 }))
 
-vi.mock('@libs/openingHours', () => ({
+vi.mock('@libs/openingHours', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@libs/openingHours')>()),
   isSalonOpenNow: vi.fn(),
 }))
 
@@ -46,7 +47,7 @@ describe('PhoneButton', () => {
     })
     expect(link).toHaveAttribute('href', 'tel:+48726154460')
     expect(isSalonOpenNowMock).toHaveBeenCalledWith(
-      contact.openingHours,
+      contact.openingSchedule,
       referenceTime,
     )
 
