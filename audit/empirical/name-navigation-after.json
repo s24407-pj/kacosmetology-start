@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "repository_sha": "2b2c8985847fc3f79198a5211e310172c19899db",
+  "branch": "audit/fixes-2026-07-16",
+  "method": "Predictions frozen from directory/file names and symbol declaration lines before implementation bodies/imports were inspected; documentation, tests, and audit artifacts were excluded.",
+  "behavior_predictions": [
+    {
+      "behavior": "active promotion selection, applicability, and precedence",
+      "locations": ["src/data/promotion.ts", "src/data/promotionValidation.ts"]
+    },
+    {
+      "behavior": "lowest-price window and immutable history ownership",
+      "locations": [
+        "src/data/servicePriceHistory.ts",
+        "src/libs/priceHistory.ts",
+        "src/features/services/components/ExpandableServiceCard.tsx"
+      ]
+    },
+    {
+      "behavior": "in-page navigation, deferred mounting, and local chunk containment",
+      "locations": [
+        "src/data/navigation.ts",
+        "src/hooks/useSectionNavigation.ts",
+        "src/features/home/page/HomePage.tsx",
+        "src/features/home/components/DeferredSectionBoundary.tsx"
+      ]
+    },
+    {
+      "behavior": "opening status plus UI and Schema.org projection",
+      "locations": [
+        "src/data/business.ts",
+        "src/libs/openingHours.ts",
+        "src/libs/businessMetadata.ts",
+        "src/features/contact/sections/ContactSection.tsx"
+      ]
+    },
+    {
+      "behavior": "deferred analytics/font startup and bounded analytics retry",
+      "locations": [
+        "src/libs/scheduleDeferredWork.ts",
+        "src/libs/loadDeferredFonts.ts",
+        "src/libs/analytics.ts"
+      ]
+    }
+  ],
+  "symbol_predictions": 30,
+  "after_metrics": {
+    "strict_behavior_hit_rate": "5/5 (100%)",
+    "partial_credit_behavior_hit_rate": "100%",
+    "expected_location_hit_rate": "16/16 (100%)",
+    "function_purpose_hit_rate": "30/30 (100%)",
+    "false_positive_locations": 0,
+    "unpredicted_material_locations": 1
+  },
+  "before_metrics": {
+    "strict_behavior_hit_rate": "80%",
+    "partial_credit_behavior_hit_rate": "90%",
+    "expected_location_hit_rate": "94.12%",
+    "function_purpose_hit_rate": "100%",
+    "source": "audit/empirical/name-navigation-before.json"
+  },
+  "remaining_ambiguity": [
+    "The scheduleDeferredWork invocation point was correctly inferred only after body inspection as src/routes/index.tsx.",
+    "PhoneButton is a secondary opening-state UI projection not predicted from the five canonical traces.",
+    "useDeferredSections and ScheduleDeferredWorkDeps produced low-severity naming findings F-017 and F-018."
+  ],
+  "verdict": "pass with two newly recorded low-severity untriaged naming findings"
+}

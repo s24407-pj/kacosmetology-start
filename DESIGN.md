@@ -140,6 +140,13 @@ test-only production branches without a guard, or broad compatibility shims.
   as explicit monthly records. Consequence: extending or changing it requires
   synchronized edits and review of repeated copy, although validation protects
   IDs, dates, and catalog references.
+- **F-017 — Low, newly discovered and untriaged.** The local
+  `useDeferredSections` name hides that it is a one-way mount-policy gate.
+  Consequence: name-only navigation requires reading its body.
+- **F-018 — Low, newly discovered and untriaged.**
+  `ScheduleDeferredWorkDeps` does not identify its analytics/font startup scope.
+  Consequence: searches for deferred behavior surface two policies that must be
+  distinguished by reading their modules.
 
 The repository contains no registry of out-of-repository consumers. That means
 none can be discovered here, not that none exist. Re-check with the relevant

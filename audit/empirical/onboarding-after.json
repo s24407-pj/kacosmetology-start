@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "stage": "CODIFY cold-agent validation",
+  "branch": "audit/fixes-2026-07-16",
+  "final_documentation_sha": "d190824535feb491640efc802c27980858f19607",
+  "before": {
+    "documentation_only_completion": "8/9 (88.89%)",
+    "after_configuration_verification": "7/9 (77.78%)",
+    "source": "audit/empirical/onboarding-before.json"
+  },
+  "after": {
+    "tasks_complete": "10/10 (100%)",
+    "ship_gate": "pass",
+    "commands_verified": [
+      "pnpm install --frozen-lockfile",
+      "pnpm dev",
+      "pnpm run validate",
+      "pnpm vitest run src/libs/utils.test.ts",
+      "pnpm playwright test tests/e2e/services-section.spec.ts",
+      "pnpm lint",
+      "pnpm typecheck",
+      "pnpm build"
+    ],
+    "representative_feature": "Customer-visible testimonial filtering belongs in the Opinions feature, with authored facts in src/data/opinions.ts, co-located unit tests, and the existing opinions E2E page object/spec.",
+    "dependency_boundary": "Feature presentation may import data, libraries, hooks, and domain-neutral UI; data and libraries do not import feature/widget presentation."
+  },
+  "validation_rounds": [
+    {
+      "sha": "2b2c8985847fc3f79198a5211e310172c19899db",
+      "verdict": "fail",
+      "corrections": [
+        "document the narrow render-time server function",
+        "distinguish zero local retries from two failing-on-recovery CI retries",
+        "add normal source/test evidence pointers"
+      ]
+    },
+    {
+      "sha": "101ea9dbc945cf1ff286dc10f9cf169f9e06bd5f",
+      "verdict": "fail",
+      "corrections": [
+        "qualify the runbook retry statement",
+        "repair the promotion-validation test path",
+        "replace audit-only evidence chains"
+      ]
+    },
+    {
+      "sha": "2315a8438696aff9a0826ff7be0cb37e4740f0da",
+      "verdict": "fail",
+      "corrections": ["remove unsupported screenshot/video artifact claims"]
+    },
+    {
+      "sha": "d190824535feb491640efc802c27980858f19607",
+      "verdict": "pass",
+      "corrections": []
+    }
+  ],
+  "remaining_ambiguity": [
+    "The external deployment, revision, rollback, cache-purge, production-log, ownership, and escalation procedures remain unavailable and are explicitly documented.",
+    "The repository cannot identify out-of-repository consumers.",
+    "A testimonial filter's criterion and URL-addressability would require product clarification."
+  ],
+  "time_consuming_steps": [
+    "pnpm run validate repeats build work through the Playwright web server",
+    "E2E runs Desktop Chromium, Mobile Chrome, and Mobile Safari",
+    "dependency audit requires registry/network availability"
+  ]
+}
