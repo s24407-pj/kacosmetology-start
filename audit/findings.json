@@ -127,7 +127,18 @@
       "fix_direction": "Validate that overlap is forbidden or define deterministic service-level precedence in one resolver used by UI and history.",
       "effort": "M",
       "category": "modularity",
-      "adversarial_outcome": null
+      "adversarial_outcome": null,
+      "implementation_status": "fixed",
+      "implemented": true,
+      "implemented_at": "2026-07-17T17:12:57Z",
+      "implementation_branch": "audit/fixes-2026-07-16",
+      "implementation_commits": [
+        "a690d79287b5e25f203de33a7a51a6384778bf0e",
+        "023533c842911adaf95eec9c189aee27ec71f4d5",
+        "744752e3480102b00d333574023b9aa9b44bda55",
+        "c278186e667c9dbd5280a90ee7d7e9b69acf71be"
+      ],
+      "result_path": "audit/results/F-005.md"
     },
     {
       "id": "F-007",
