@@ -93,4 +93,17 @@ export class HomePage {
   getAboutHeading() {
     return this.page.getByRole('heading', { name: 'O Mnie', level: 2 })
   }
+
+  getDeferredSectionFailureAlert(sectionLabel: string) {
+    return this.page
+      .getByRole('alert')
+      .filter({ hasText: `Nie udało się wczytać sekcji „${sectionLabel}”.` })
+  }
+
+  getDeferredSectionReloadButton(sectionLabel: string) {
+    return this.getDeferredSectionFailureAlert(sectionLabel).getByRole(
+      'button',
+      { name: 'Odśwież stronę' },
+    )
+  }
 }

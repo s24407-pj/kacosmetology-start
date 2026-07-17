@@ -1,7 +1,8 @@
 import ServicesSection from '@features/services/sections/ServicesSection'
 import { useScrollDepthTracking } from '@hooks/useScrollDepthTracking'
 import { useRouterState } from '@tanstack/react-router'
-import { lazy, type ReactNode, Suspense, useEffect, useState } from 'react'
+import { lazy, useEffect, useState } from 'react'
+import { DeferredSectionBoundary } from '../components/DeferredSectionBoundary'
 import AboutSection from '../sections/AboutSection'
 import HeroSection from '../sections/HeroSection'
 import ProcessSection from '../sections/ProcessSection'
@@ -16,16 +17,6 @@ const ContactSection = lazy(
   () => import('@features/contact/sections/ContactSection'),
 )
 const GoogleMap = lazy(() => import('@features/contact/sections/GoogleMap'))
-
-function LazySection({
-  children,
-  fallback = null,
-}: {
-  children: ReactNode
-  fallback?: ReactNode
-}) {
-  return <Suspense fallback={fallback}>{children}</Suspense>
-}
 
 const DEFERRED_SECTION_IDS = ['efekty', 'galeria', 'opinie', 'kontakt'] as const
 
@@ -95,21 +86,40 @@ const HomePage = () => {
       <ServicesSection />
       {shouldMountDeferredSections && (
         <>
-          <LazySection>
+          <DeferredSectionBoundary
+            sectionId="efekty"
+            sectionLabel="Efekty zabiegów"
+            background="gray"
+          >
             <EffectsGallerySection />
-          </LazySection>
-          <LazySection>
+          </DeferredSectionBoundary>
+          <DeferredSectionBoundary
+            sectionId="galeria"
+            sectionLabel="Galeria"
+            background="white"
+          >
             <GallerySection />
-          </LazySection>
-          <LazySection>
+          </DeferredSectionBoundary>
+          <DeferredSectionBoundary
+            sectionId="opinie"
+            sectionLabel="Opinie"
+            background="gray"
+          >
             <OpinionsSection />
-          </LazySection>
-          <LazySection>
+          </DeferredSectionBoundary>
+          <DeferredSectionBoundary
+            sectionId="kontakt"
+            sectionLabel="Kontakt"
+            background="contact"
+          >
             <ContactSection />
-          </LazySection>
-          <LazySection>
+          </DeferredSectionBoundary>
+          <DeferredSectionBoundary
+            sectionLabel="Mapa dojazdu"
+            background="gray"
+          >
             <GoogleMap />
-          </LazySection>
+          </DeferredSectionBoundary>
         </>
       )}
     </>
