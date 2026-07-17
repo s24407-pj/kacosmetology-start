@@ -70,6 +70,7 @@ export interface GeoCoordinates {
 export interface SalonLocation {
   id: SalonLocationId
   displayName: string
+  localityLocative: string
   phone: string
   bookingUrl: HttpsUrl
   address: PostalAddress

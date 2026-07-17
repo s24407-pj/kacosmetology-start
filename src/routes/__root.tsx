@@ -42,7 +42,7 @@ export const Route = createRootRoute({
       { property: 'og:locale', content: 'pl_PL' },
       {
         property: 'og:title',
-        content: `${brand.practitionerName} | Kosmetolog i Trycholog w Starogardzie Gdańskim`,
+        content: `${brand.practitionerName} | Kosmetolog i Trycholog w ${primarySalonLocation.localityLocative}`,
       },
       {
         property: 'og:description',

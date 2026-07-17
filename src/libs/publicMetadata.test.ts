@@ -53,6 +53,23 @@ describe('public metadata renderers', () => {
     ).toBe(original)
   })
 
+  it('uses and escapes the canonical locality locative form', () => {
+    const original = renderLlmsTxt(businessProfile)
+    const changedLocative = renderLlmsTxt({
+      ...businessProfile,
+      locations: [
+        {
+          ...businessProfile.locations[0],
+          localityLocative: 'Test [Place]',
+        },
+      ],
+    })
+
+    expect(changedLocative).toBe(
+      original.replace('Starogardzie Gdańskim', 'Test \\[Place\\]'),
+    )
+  })
+
   it('are deterministic and newline terminated', () => {
     const rendered = renderPublicMetadata(businessProfile)
     expect(rendered).toEqual(renderPublicMetadata(businessProfile))

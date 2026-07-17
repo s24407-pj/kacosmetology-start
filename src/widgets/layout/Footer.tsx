@@ -43,7 +43,7 @@ export default function Footer() {
             <KaCosmetologyLogo className="w-32 text-white" />
             <p className="mt-5 max-w-xs font-body text-gray-400">
               Profesjonalna kosmetologia i trychologia w{' '}
-              {primarySalonLocation.address.locality}.
+              {primarySalonLocation.localityLocative}.
             </p>
             <div className="mt-6 flex gap-3">
               {contactLinks.map((link) => {

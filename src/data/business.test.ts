@@ -33,6 +33,7 @@ describe('business profile', () => {
     expect(primarySalonLocation).toMatchObject({
       id: 'salon-starogard-gdanski',
       displayName: 'Ka.Cosmetology',
+      localityLocative: 'Starogardzie Gdańskim',
       phone: '+48 726 154 460',
       bookingUrl: 'https://kacosmetology.booksy.com',
       address: {

@@ -25,6 +25,9 @@ test.describe('TanStack Start integration', () => {
     )
     expect(html).toContain('rel="canonical"')
     expect(html).toContain('property="og:title"')
+    expect(html).toContain(
+      `content="${brand.practitionerName} | Kosmetolog i Trycholog w ${primarySalonLocation.localityLocative}"`,
+    )
     expect(html).toContain(`content="${brand.siteUrl}"`)
     expect(html).toContain(
       `content="${new URL(brand.logo.imagePath, brand.siteUrl).href}"`,

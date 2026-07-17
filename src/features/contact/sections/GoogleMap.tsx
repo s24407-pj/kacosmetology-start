@@ -15,7 +15,7 @@ export default function GoogleMap() {
           referrerPolicy="no-referrer-when-downgrade"
           sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
           className="w-full h-96"
-          title={`Lokalizacja gabinetu ${brand.name} w ${primarySalonLocation.address.locality}`}
+          title={`Lokalizacja gabinetu ${brand.name} w ${primarySalonLocation.localityLocative}`}
           loading="lazy"
         ></iframe>
       </div>

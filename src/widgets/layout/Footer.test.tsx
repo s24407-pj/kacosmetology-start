@@ -92,10 +92,13 @@ describe('Footer', () => {
     expect(screen.getByText(brand.email)).toBeInTheDocument()
     expect(screen.getByText(/ul\. Paderewskiego 11a/)).toBeInTheDocument()
     expect(
-      screen.getAllByText(primarySalonLocation.address.locality, {
-        exact: false,
-      }),
-    ).toHaveLength(2)
+      screen.getByText(primarySalonLocation.address.locality, { exact: false }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        `Profesjonalna kosmetologia i trychologia w ${primarySalonLocation.localityLocative}.`,
+      ),
+    ).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Umów się' })).toHaveAttribute(
       'href',
       primarySalonLocation.bookingUrl,

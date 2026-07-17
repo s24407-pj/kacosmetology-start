@@ -21,7 +21,7 @@ describe('GoogleMap', () => {
     expect(iframe).toHaveAttribute('src', primarySalonLocation.map.embedUrl)
     expect(iframe).toHaveAttribute(
       'title',
-      `Lokalizacja gabinetu ${brand.name} w ${primarySalonLocation.address.locality}`,
+      `Lokalizacja gabinetu ${brand.name} w ${primarySalonLocation.localityLocative}`,
     )
   })
 

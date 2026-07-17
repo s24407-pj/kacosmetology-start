@@ -45,7 +45,7 @@ test.describe('Contact section', () => {
     )
 
     const map = homePage.page.getByTitle(
-      `Lokalizacja gabinetu ${brand.name} w ${primarySalonLocation.address.locality}`,
+      `Lokalizacja gabinetu ${brand.name} w ${primarySalonLocation.localityLocative}`,
     )
     await expect(map).toHaveAttribute('src', primarySalonLocation.map.embedUrl)
 
