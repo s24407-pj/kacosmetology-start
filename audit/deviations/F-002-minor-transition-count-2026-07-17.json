@@ -1,0 +1,32 @@
+{
+  "finding_id": "F-002",
+  "repository_sha": "777412c4e8cbc06336be60b0cbbd4ce2554f059e",
+  "recorded_at": "2026-07-17",
+  "classification": "minor",
+  "approved_by": "main Sol orchestrator",
+  "expected_transition_count": 82,
+  "recorded_transition_count": 82,
+  "observed_transition_count": 81,
+  "derived_transition_count": 81,
+  "evidence": [
+    "The behavior-preserving mechanical freeze contains exactly 416 points.",
+    "The final normalized production ledger contains exactly 81 transitions.",
+    "A fresh independent campaign-boundary derivation produced exactly 81 transitions and matched the final ledger exactly.",
+    "No missing business transition was found.",
+    "Human decision H02 accepted the repository-derived ledger as the available historical source."
+  ],
+  "decision": "Correct the post-fix measurement from 82 to 81 and add a production-ledger contract assertion for 81. Do not add a synthetic production transition.",
+  "uncertainty": "The count is reconciled with no remaining numerical uncertainty. Historical provenance remains limited to the repository-derived ledger accepted by H02; no external business-owned ledger is available.",
+  "affected_paths": [
+    "src/data/servicePriceHistory.test.ts",
+    "audit/results/F-002.md",
+    "audit/deviations/F-002-minor-transition-count-2026-07-17.json"
+  ],
+  "scope_changed": false,
+  "design_changed": false,
+  "required_verification": [
+    "pnpm vitest run src/data/servicePriceHistory.test.ts",
+    "pnpm check",
+    "git diff --check"
+  ]
+}

@@ -28,6 +28,13 @@ describe('service price transition ledger', () => {
   })
 
   it('stores valid, strictly ordered effective-price transitions', () => {
+    const transitionCount = services.reduce(
+      (total, service) => total + getServicePriceHistory(service.id).length,
+      0,
+    )
+
+    expect(transitionCount).toBe(81)
+
     for (const service of services) {
       const history = getServicePriceHistory(service.id)
 
