@@ -17,6 +17,8 @@ pnpm run validate     # Full local validation: check, build, unit, audit + E2E
 pnpm format:write     # Format code with Biome
 pnpm optimize-images  # Regenerate optimized WebP assets (scripts/optimize-images.mjs)
 pnpm generate-favicons # Regenerate favicons/app icons (scripts/generate-favicons.mjs)
+pnpm generate-public-metadata # Regenerate committed public metadata
+pnpm check:public-metadata # Check committed public metadata for drift
 ```
 
 Run a single unit test file:
@@ -77,6 +79,8 @@ scripts/        — Image optimization + favicon generation tooling
 | Service prices, catalog | `src/data/services.ts`                               |
 | Promotions, discounts   | `src/data/promotion.ts`                              |
 | Nav links / section IDs | `src/data/navigation.ts`                             |
+| Business/salon identity | `src/data/business.ts`                               |
+| Public metadata output  | `src/libs/publicMetadata.ts` + generation script     |
 | SEO meta, JSON-LD       | `src/routes/__root.tsx`                              |
 | Unit test               | Co-located `*.test.ts(x)` next to source             |
 | E2E test                | `tests/e2e/` with page objects in `tests/e2e/pages/` |
@@ -99,8 +103,12 @@ All data is static TypeScript in `src/data/`. No API calls — data is bundled w
 
 - `services.ts` — full service catalog with pricing, durations, descriptions
 - `promotion.ts` — promotion config and applicability/scope utilities
-- `contact.ts`, `gallery.ts`, `effects.ts`, `opinions.ts`, `navigation.ts`
+- `business.ts` — canonical brand and salon identity used by UI and metadata
+- `gallery.ts`, `effects.ts`, `opinions.ts`, `navigation.ts` — authored content
 - `servicePriceHistory.ts` — historical price data (used by the 30-day lowest price feature)
+
+After changing `business.ts`, run `pnpm generate-public-metadata`. Committed
+public metadata is generated; `pnpm check` and `pnpm build` reject stale files.
 
 Do not invent prices or promotions outside the data layer.
 
