@@ -77,7 +77,8 @@ After editing `src/data/business.ts`, run
   names are presentation only. Evidence: F-001, `src/data/services.ts`.
 - Promotion resolution is non-stacking: highest discount, then earlier start,
   then lexical ID. Validate the complete production config. Evidence: F-005,
-  F-007, `src/data/promotion.test.ts`, `promotionValidation.test.ts`.
+  F-007, `src/data/promotion.test.ts`,
+  `src/data/promotionValidation.test.ts`.
 - Historical price rows are explicit immutable facts; never reconstruct or
   mutate them during render. Evidence: F-002, F-004,
   `src/data/servicePriceHistory.test.ts`.

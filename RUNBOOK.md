@@ -4,7 +4,8 @@ This runbook records only procedures supported by the repository. Production is
 described as a Dokploy Node service, possibly behind Cloudflare, but deployment
 configuration, credentials, revision APIs, cache controls, owners, and
 escalation contacts are not present. Those are explicit limits, not implied
-procedures. Evidence: F-011, `audit/empirical/incident-simulation.json`.
+procedures. Evidence: the Dokploy summary in `README.md`, the scripts in
+`package.json`, and the absence of deployment configuration in the repository.
 
 ## Local startup and shutdown
 
@@ -37,7 +38,8 @@ pnpm run validate
 This executes Biome and public-metadata drift checks, typecheck/build, unit
 coverage, a high-severity dependency audit, and Playwright. Playwright builds
 and starts the Nitro server itself. A substantial release is not locally ready
-unless this command exits zero. Evidence: F-009, F-015, `package.json`.
+unless this command exits zero. Evidence: F-009, F-015, `package.json`,
+`playwright.config.ts`.
 
 When salon identity/location changes, first run:
 
@@ -57,15 +59,16 @@ the full gate; these are static business facts bundled into the artifact.
 - **Analytics diagnostics:** browser developer tools may show one of three
   static `[analytics]` warnings for retryable load failure, exhausted retry, or
   initialization failure. They are not proven to be collected remotely.
-  Evidence: F-012.
+  Evidence: F-012, `src/libs/analytics.test.ts`.
 - **Metrics/traces:** no application metrics or tracing backend is configured.
   Plausible is product analytics, not a service-health monitor.
 - **Health:** README configures `GET /` as the Dokploy health path. A successful
   response proves only that the root is served; it does not prove the deployed
-  revision or current promotion content. Evidence: F-011.
+  revision or current promotion content. Evidence: `README.md`.
 - **Readiness:** there is no production readiness endpoint. The
   `data-react-client-ready` attribute is Playwright synchronization, not an
-  operator health contract. Evidence: F-010.
+  operator health contract. Evidence: F-010, `playwright.config.ts`,
+  `tests/e2e/pages/HomePage.ts`.
 
 ## Deployment verification
 
@@ -92,7 +95,8 @@ cache. A verified platform-specific procedure is still required for that.
 Run `pnpm check` and `pnpm build`. If public metadata is stale, change the
 canonical business data/renderer as intended, run
 `pnpm generate-public-metadata`, inspect the diff, and rerun the checks. Do not
-hand-edit generated files. Evidence: F-008.
+hand-edit generated files. Evidence: F-008, `src/libs/publicMetadata.test.ts`,
+`scripts/generate-public-metadata.mjs`.
 
 ### Wrong or missing promotion
 
@@ -100,28 +104,33 @@ Check the Warsaw-local reference date, `promotionConfigs`, production config
 validation, service applicability by `ServiceId`, and the immutable price
 ledger. Reproduce with focused unit tests and then `pnpm run validate`. Do not
 repair historical prices by deriving them from today's catalog. Evidence:
-F-001, F-002, F-005, F-007.
+F-001, F-002, F-005, F-007, `src/data/promotionValidation.test.ts`,
+`src/data/servicePriceHistory.test.ts`.
 
 ### Deferred section fails
 
 Use the section's `Odśwież stronę` action once. If it fails again, inspect the
 browser network/console for a missing fingerprinted chunk and preserve the rest
 of the page. Repository code cannot purge a CDN or repair an incoherent live
-deployment. Evidence: F-003.
+deployment. Evidence: F-003,
+`tests/e2e/deferred-section-failure.spec.ts`.
 
 ### Analytics warnings
 
 The first load warning leaves one later-demand retry. A second load warning or
 an initialization warning disables analytics for that page. Customer-facing
 rendering should continue. Reloading starts a new page lifecycle; persistent
-failure may be a blocker, network policy, or missing asset. Evidence: F-012.
+failure may be a blocker, network policy, or missing asset. Evidence: F-012,
+`src/libs/analytics.test.ts`.
 
 ### E2E failure
 
-Do not add retries or timeouts first. Playwright retries are zero; inspect the
-trace/screenshot/video artifacts and reproduce the focused spec. CI artifact
-retention is 14 days. Confirm the client-ready and fixed-reference-time
-contracts before interacting with SSR-visible controls. Evidence: F-010, F-015.
+Do not add retries or timeouts first. Local Playwright retries are zero. CI
+permits two diagnostic retries, but `failOnFlakyTests` makes a recovered retry
+fail; inspect the trace/screenshot/video artifacts and reproduce the focused
+spec. CI artifact retention is 14 days. Confirm the client-ready and
+fixed-reference-time contracts before interacting with SSR-visible controls.
+Evidence: F-010, F-015, `playwright.config.ts`, `.github/workflows/ci.yml`.
 
 ## Rollback and repair boundary
 
