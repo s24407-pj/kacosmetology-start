@@ -217,15 +217,19 @@ describe('ContactSection', () => {
       ['sobota', '09:00 - 14:00'],
       ['niedziela', 'Zamknięte'],
     ]
+    const openingHoursCard = screen
+      .getByText('Godziny otwarcia')
+      .closest('div.rounded-lg')
+    expect(openingHoursCard).toBeInTheDocument()
 
-    const renderedRows = expectedRows.map(([day, hours]) => {
-      const row = screen.getByText(day).closest('div')
-      expect(row).toBeInTheDocument()
-      expect(within(row!).getByText(hours, { selector: 'span' })).toBeVisible()
-      return day
-    })
+    const renderedRows = Array.from(
+      openingHoursCard!.querySelectorAll(
+        '.space-y-4 > div.flex.justify-between',
+      ),
+      (row) => Array.from(row.children, (cell) => cell.textContent?.trim()),
+    )
 
-    expect(renderedRows).toEqual(expectedRows.map(([day]) => day))
+    expect(renderedRows).toEqual(expectedRows)
   })
 
   it('shows the current overall open and closed badge copy', () => {

@@ -1,6 +1,6 @@
 import { type OpeningSchedule, WEEKDAYS } from '@app-types/openingHours'
 import { contact } from '@data/contact'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, expectTypeOf, it, vi } from 'vitest'
 
 import {
   assertValidOpeningSchedule,
@@ -27,6 +27,72 @@ const currentStructuredSchedule = {
 } as const satisfies OpeningSchedule
 
 const uncheckedSchedule = () => structuredClone(currentStructuredSchedule)
+
+const assertStaticOpeningScheduleContracts = () => {
+  defineOpeningSchedule({
+    ...currentStructuredSchedule,
+    // @ts-expect-error schedule fields are exact
+    label: 'Main salon',
+  })
+
+  defineOpeningSchedule({
+    timeZone: 'Europe/Warsaw',
+    days: {
+      ...currentStructuredSchedule.days,
+      // @ts-expect-error extra weekdays must be rejected statically
+      someday: { status: 'closed' },
+    },
+  })
+
+  defineOpeningSchedule({
+    timeZone: 'Europe/Warsaw',
+    days: {
+      ...currentStructuredSchedule.days,
+      monday: {
+        status: 'open',
+        slots: [
+          {
+            opens: '09:00',
+            closes: '17:00',
+            // @ts-expect-error slot fields are exact
+            note: 'morning',
+          },
+        ],
+      },
+    },
+  })
+
+  defineOpeningSchedule({
+    timeZone: 'Europe/Warsaw',
+    days: {
+      ...currentStructuredSchedule.days,
+      sunday: {
+        status: 'closed',
+        // @ts-expect-error closed days cannot carry slots
+        slots: [{ opens: '09:00', closes: '10:00' }],
+      },
+    },
+  })
+
+  const { monday: _monday, ...daysWithoutMonday } =
+    currentStructuredSchedule.days
+  defineOpeningSchedule({
+    timeZone: 'Europe/Warsaw',
+    // @ts-expect-error every canonical weekday is required
+    days: daysWithoutMonday,
+  })
+
+  defineOpeningSchedule({
+    timeZone: 'Europe/Warsaw',
+    days: {
+      ...currentStructuredSchedule.days,
+      // @ts-expect-error open days require at least one slot
+      monday: { status: 'open', slots: [] },
+    },
+  })
+}
+
+void assertStaticOpeningScheduleContracts
 
 describe('opening schedule timezone snapshots', () => {
   it('returns the correct Polish day name and minutes for a given date', () => {
@@ -245,9 +311,12 @@ describe('validated weekly opening schedule', () => {
       'saturday',
       'sunday',
     ])
-    expect(defineOpeningSchedule(currentStructuredSchedule)).toBe(
-      currentStructuredSchedule,
-    )
+    const definedSchedule = defineOpeningSchedule(currentStructuredSchedule)
+    expect(definedSchedule).toBe(currentStructuredSchedule)
+    expectTypeOf(definedSchedule.days.monday.status).toEqualTypeOf<'open'>()
+    expectTypeOf(
+      definedSchedule.days.monday.slots[0].opens,
+    ).toEqualTypeOf<'09:00'>()
   })
 
   it('rejects invalid schedule and weekday structure with actionable fields', () => {
@@ -264,6 +333,25 @@ describe('validated weekly opening schedule', () => {
         days: uncheckedSchedule().days,
       }),
     ).toThrow('timeZone')
+    expect(() =>
+      assertValidOpeningSchedule({
+        timeZone: '+01:00',
+        days: uncheckedSchedule().days,
+      }),
+    ).toThrow('timeZone')
+
+    expect(() =>
+      assertValidOpeningSchedule({
+        timeZone: 'Europe/Warsaw',
+        days: uncheckedSchedule().days,
+      }),
+    ).not.toThrow()
+    expect(() =>
+      assertValidOpeningSchedule({
+        timeZone: 'America/New_York',
+        days: uncheckedSchedule().days,
+      }),
+    ).not.toThrow()
 
     const missingMonday = uncheckedSchedule()
     const { monday: _monday, ...daysWithoutMonday } = missingMonday.days

@@ -1,6 +1,8 @@
 import {
+  type DailyOpeningHours,
   type LocalTime,
   type OpeningSchedule,
+  type OpeningSlot,
   WEEKDAYS,
   type Weekday,
 } from '@app-types/openingHours'
@@ -36,6 +38,57 @@ const ENGLISH_WEEKDAYS: Record<string, Weekday> = {
 }
 
 const LOCAL_TIME_PATTERN = /^(?:[01]\d|2[0-3]):[0-5]\d$/
+const IANA_TIME_ZONES = new Set(Intl.supportedValuesOf('timeZone'))
+
+type WithoutExtraKeys<Value, Shape> = Value &
+  Record<Exclude<keyof Value, keyof Shape>, never>
+
+type ExactOpeningSlot<Slot extends OpeningSlot> = WithoutExtraKeys<
+  Slot,
+  OpeningSlot
+>
+
+type ExactOpeningSlots<Slots extends readonly [OpeningSlot, ...OpeningSlot[]]> =
+  {
+    readonly [Index in keyof Slots]: Slots[Index] extends OpeningSlot
+      ? ExactOpeningSlot<Slots[Index]>
+      : Slots[Index]
+  }
+
+type ExactDailyOpeningHours<Day extends DailyOpeningHours> = Day extends {
+  readonly status: 'closed'
+}
+  ? WithoutExtraKeys<Day, { readonly status: 'closed' }>
+  : Day extends {
+        readonly status: 'open'
+        readonly slots: infer Slots extends readonly [
+          OpeningSlot,
+          ...OpeningSlot[],
+        ]
+      }
+    ? WithoutExtraKeys<
+        Day,
+        {
+          readonly status: 'open'
+          readonly slots: readonly [OpeningSlot, ...OpeningSlot[]]
+        }
+      > & {
+        readonly slots: ExactOpeningSlots<Slots>
+      }
+    : never
+
+type ExactOpeningDays<
+  Days extends Readonly<Record<Weekday, DailyOpeningHours>>,
+> = WithoutExtraKeys<Days, Readonly<Record<Weekday, DailyOpeningHours>>> & {
+  readonly [Day in Weekday]: ExactDailyOpeningHours<Days[Day]>
+}
+
+type ExactOpeningSchedule<Schedule extends OpeningSchedule> = WithoutExtraKeys<
+  Schedule,
+  OpeningSchedule
+> & {
+  readonly days: ExactOpeningDays<Schedule['days']>
+}
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> => {
   if (value === null || typeof value !== 'object' || Array.isArray(value)) {
@@ -83,11 +136,9 @@ export function assertValidOpeningSchedule(
   if (typeof value.timeZone !== 'string') {
     throw new Error('schedule.timeZone must be an IANA timezone')
   }
-  try {
-    new Intl.DateTimeFormat('en-US', { timeZone: value.timeZone }).format()
-  } catch {
+  if (!IANA_TIME_ZONES.has(value.timeZone)) {
     throw new Error(
-      `schedule.timeZone "${value.timeZone}" is not a valid IANA timezone`,
+      `schedule.timeZone "${value.timeZone}" must be a supported IANA location timezone`,
     )
   }
 
@@ -144,7 +195,7 @@ export function assertValidOpeningSchedule(
 }
 
 export const defineOpeningSchedule = <const Schedule extends OpeningSchedule>(
-  schedule: Schedule,
+  schedule: ExactOpeningSchedule<Schedule>,
 ): Schedule => {
   assertValidOpeningSchedule(schedule)
   return schedule
