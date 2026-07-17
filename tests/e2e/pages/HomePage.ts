@@ -31,6 +31,7 @@ export class HomePage {
   readonly heroAboutButton: Locator
 
   readonly contentInfo: Locator
+  readonly mapFrame: Locator
 
   constructor(public readonly page: Page) {
     this.navigation = new NavigationComponent(page)
@@ -54,6 +55,9 @@ export class HomePage {
     this.heroAboutButton = page.getByRole('button', { name: 'Poznaj mnie' })
 
     this.contentInfo = page.getByRole('contentinfo')
+    this.mapFrame = page.getByTitle(
+      'Lokalizacja gabinetu Ka.Cosmetology w Starogardzie Gdańskim',
+    )
   }
 
   async goto({ referenceTime }: HomePageNavigationOptions = {}) {

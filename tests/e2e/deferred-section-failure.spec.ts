@@ -43,6 +43,7 @@ async function openContainedEffectsFailure(page: Page) {
   await expect(homePage.gallery.section).toBeAttached()
   await expect(homePage.opinions.section).toBeAttached()
   await expect(homePage.contact.section).toBeAttached()
+  await expect(homePage.mapFrame).toBeAttached()
   for (const sectionLabel of ['Galeria', 'Opinie', 'Kontakt', 'Mapa dojazdu']) {
     await expect(
       homePage.getDeferredSectionFailureAlert(sectionLabel),
