@@ -3,11 +3,15 @@ import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('@data/promotion', () => ({
-  getActivePromotion: vi.fn(),
-  doesPromotionApplyToService: vi.fn(),
-  getReferenceDate: vi.fn(() => new Date('2025-09-15T12:00:00.000Z')),
-}))
+vi.mock('@data/promotion', async () => {
+  const actual =
+    await vi.importActual<typeof import('@data/promotion')>('@data/promotion')
+
+  return {
+    getAllActivePromotions: vi.fn(),
+    resolveServicePromotion: vi.fn(actual.resolveServicePromotion),
+  }
+})
 
 vi.mock('@libs/priceHistory', () => ({
   getLowestPriceInLastDays: vi.fn(),
@@ -29,9 +33,11 @@ const promotionModule = await import('@data/promotion')
 const priceHistoryModule = await import('@libs/priceHistory')
 const servicePriceHistoryModule = await import('@data/servicePriceHistory')
 
-const getActivePromotionMock = vi.mocked(promotionModule.getActivePromotion)
-const doesPromotionApplyToServiceMock = vi.mocked(
-  promotionModule.doesPromotionApplyToService,
+const getAllActivePromotionsMock = vi.mocked(
+  promotionModule.getAllActivePromotions,
+)
+const resolveServicePromotionMock = vi.mocked(
+  promotionModule.resolveServicePromotion,
 )
 const getLowestPriceInLastDaysMock = vi.mocked(
   priceHistoryModule.getLowestPriceInLastDays,
@@ -42,7 +48,7 @@ const getServicePriceHistoryMock = vi.mocked(
 
 import type { Service } from '@app-types/types'
 import { contact } from '@data/contact'
-import type { PromotionApplicability } from '@data/promotion'
+import type { ActivePromotion, PromotionApplicability } from '@data/promotion'
 import { trackPlausibleEvent } from '@libs/analytics'
 import ExpandableServiceCard from './ExpandableServiceCard'
 
@@ -67,13 +73,14 @@ describe('ExpandableServiceCard', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    getAllActivePromotionsMock.mockReturnValue([])
     getServicePriceHistoryMock.mockReturnValue([
       { value: 250, changedAt: '2025-07-01T08:00:00.000Z' },
     ])
   })
 
   it('renders discounted pricing details when a promotion applies', () => {
-    const promotion = {
+    const promotion: ActivePromotion = {
       id: 'october-2025-oczyszczanie-wodorowe',
       discountPercentage: 20,
       startDate: new Date('2025-09-01T00:00:00.000Z'),
@@ -85,8 +92,7 @@ describe('ExpandableServiceCard', () => {
       ctaLabel: 'Zarezerwuj',
     }
 
-    getActivePromotionMock.mockReturnValue(promotion)
-    doesPromotionApplyToServiceMock.mockReturnValue(true)
+    getAllActivePromotionsMock.mockReturnValue([promotion])
     getLowestPriceInLastDaysMock.mockReturnValue(180)
 
     render(
@@ -114,8 +120,68 @@ describe('ExpandableServiceCard', () => {
     )
   })
 
+  it('shows the winning offer in either order and uses its start for history', () => {
+    const weakerPromotion: ActivePromotion = {
+      id: 'synthetic-weaker',
+      discountPercentage: 15,
+      startDate: new Date('2025-09-01T00:00:00.000Z'),
+      endDate: new Date('2025-09-30T23:59:59.999Z'),
+      applicability: {
+        type: 'all',
+        description: 'wszystkie zabiegi',
+      },
+      ctaLabel: 'Zarezerwuj',
+    }
+    const strongerPromotion: ActivePromotion = {
+      ...weakerPromotion,
+      id: 'synthetic-stronger',
+      discountPercentage: 20,
+      startDate: new Date('2025-09-05T00:00:00.000Z'),
+    }
+    const activePromotions = [weakerPromotion, strongerPromotion]
+    getAllActivePromotionsMock.mockReturnValue(activePromotions)
+    getLowestPriceInLastDaysMock.mockReturnValue(180)
+
+    const view = render(
+      <ExpandableServiceCard
+        service={service}
+        isExpanded={false}
+        onToggle={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByText('-20%')).toBeInTheDocument()
+    expect(screen.getByText('200 zł')).toBeInTheDocument()
+    expect(resolveServicePromotionMock).toHaveBeenCalledWith(
+      service,
+      activePromotions,
+    )
+    expect(getLowestPriceInLastDaysMock).toHaveBeenLastCalledWith(
+      [{ value: 250, changedAt: '2025-07-01T08:00:00.000Z' }],
+      30,
+      strongerPromotion.startDate,
+    )
+
+    const reversedPromotions = [...activePromotions].reverse()
+    getAllActivePromotionsMock.mockReturnValue(reversedPromotions)
+    view.rerender(
+      <ExpandableServiceCard
+        service={service}
+        isExpanded={false}
+        onToggle={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByText('-20%')).toBeInTheDocument()
+    expect(screen.getByText('200 zł')).toBeInTheDocument()
+    expect(resolveServicePromotionMock).toHaveBeenLastCalledWith(
+      service,
+      reversedPromotions,
+    )
+    expect(getServicePriceHistoryMock).toHaveBeenCalledWith(service.id)
+  })
+
   it('supports toggling via mouse and keyboard interactions', async () => {
-    getActivePromotionMock.mockReturnValue(null)
     const onToggle = vi.fn()
     const user = userEvent.setup()
 
@@ -155,8 +221,6 @@ describe('ExpandableServiceCard', () => {
   })
 
   it('renders forWho quick-view in collapsed state and removes it when expanded', () => {
-    getActivePromotionMock.mockReturnValue(null)
-
     const { rerender } = render(
       <ExpandableServiceCard
         service={service}
@@ -181,8 +245,6 @@ describe('ExpandableServiceCard', () => {
   it('shows booking CTA only when expanded and tracks clicks separately', async () => {
     const user = userEvent.setup()
     const onToggle = vi.fn()
-
-    getActivePromotionMock.mockReturnValue(null)
 
     const { rerender } = render(
       <ExpandableServiceCard

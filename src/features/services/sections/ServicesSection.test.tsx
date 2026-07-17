@@ -56,8 +56,8 @@ vi.mock('@data/promotion', async () => {
 
   return {
     ...actual,
-    getActivePromotion: vi.fn(),
-    doesPromotionApplyToService: vi.fn(),
+    getAllActivePromotions: vi.fn(),
+    resolveServicePromotion: vi.fn(actual.resolveServicePromotion),
   }
 })
 
@@ -93,10 +93,7 @@ vi.mock('../components/ExpandableServiceCard', () => ({
 }))
 
 import type { ActivePromotion } from '@data/promotion'
-import {
-  doesPromotionApplyToService,
-  getActivePromotion,
-} from '@data/promotion'
+import { getAllActivePromotions } from '@data/promotion'
 import ServicesSection from './ServicesSection'
 
 describe('ServicesSection', () => {
@@ -112,8 +109,7 @@ describe('ServicesSection', () => {
       value: vi.fn(),
     })
 
-    vi.mocked(getActivePromotion).mockReturnValue(null)
-    vi.mocked(doesPromotionApplyToService).mockImplementation(() => false)
+    vi.mocked(getAllActivePromotions).mockReturnValue([])
   })
 
   it('consumes the legacy voucher hash through Router navigation', async () => {
@@ -246,10 +242,7 @@ describe('ServicesSection', () => {
       ctaLabel: 'Zarezerwuj termin',
     }
 
-    vi.mocked(getActivePromotion).mockReturnValue(promotion)
-    vi.mocked(doesPromotionApplyToService).mockImplementation(
-      (service) => service.id === 'service-classic-facial',
-    )
+    vi.mocked(getAllActivePromotions).mockReturnValue([promotion])
 
     render(<ServicesSection />)
 
@@ -267,5 +260,60 @@ describe('ServicesSection', () => {
     expect(
       screen.queryByTestId('card-service-consultation-peel'),
     ).not.toBeInTheDocument()
+  })
+
+  it('presents every campaign and a de-duplicated union in either active order', async () => {
+    const user = userEvent.setup()
+    const strongerPromotion: ActivePromotion = {
+      id: 'synthetic-stronger',
+      discountPercentage: 20,
+      startDate: new Date('2025-10-05T00:00:00.000Z'),
+      endDate: new Date('2025-10-31T23:59:59.999Z'),
+      applicability: {
+        type: 'services',
+        serviceIds: ['service-classic-facial'],
+        description: 'zabieg klasyczny',
+      },
+      ctaLabel: 'Zarezerwuj termin',
+    }
+    const broaderPromotion: ActivePromotion = {
+      id: 'synthetic-broader',
+      discountPercentage: 15,
+      startDate: new Date('2025-10-01T00:00:00.000Z'),
+      endDate: new Date('2025-10-31T23:59:59.999Z'),
+      applicability: {
+        type: 'services',
+        serviceIds: ['service-classic-facial', 'service-consultation-peel'],
+        description: 'zabiegi konsultacyjne',
+      },
+      ctaLabel: 'Zarezerwuj termin',
+    }
+    const activePromotions = [strongerPromotion, broaderPromotion]
+
+    vi.mocked(getAllActivePromotions).mockReturnValue(activePromotions)
+
+    const view = render(<ServicesSection />)
+    await user.click(screen.getByRole('button', { name: /Promocje/ }))
+
+    expect(screen.getAllByText('Aktualna promocja')).toHaveLength(2)
+    expect(screen.getByText(/-20% na zabieg klasyczny/)).toBeInTheDocument()
+    expect(
+      screen.getByText(/-15% na zabiegi konsultacyjne/),
+    ).toBeInTheDocument()
+    expect(screen.getAllByTestId('card-service-classic-facial')).toHaveLength(1)
+    expect(
+      screen.getByTestId('card-service-consultation-peel'),
+    ).toBeInTheDocument()
+
+    vi.mocked(getAllActivePromotions).mockReturnValue(
+      [...activePromotions].reverse(),
+    )
+    view.rerender(<ServicesSection />)
+
+    expect(screen.getAllByText('Aktualna promocja')).toHaveLength(2)
+    expect(screen.getAllByTestId('card-service-classic-facial')).toHaveLength(1)
+    expect(
+      screen.getByTestId('card-service-consultation-peel'),
+    ).toBeInTheDocument()
   })
 })

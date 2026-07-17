@@ -3,8 +3,8 @@ import { Alert, BulletListItem } from '@components/ui'
 import { useRenderTime } from '@context/RenderTimeProvider'
 import { contact } from '@data/contact'
 import {
-  doesPromotionApplyToService,
-  getActivePromotion,
+  getAllActivePromotions,
+  resolveServicePromotion,
 } from '@data/promotion'
 import { getServicePriceHistory } from '@data/servicePriceHistory'
 import { trackPlausibleEvent } from '@libs/analytics'
@@ -23,26 +23,8 @@ export default function ExpandableServiceCard({
   onToggle: () => void
 }) {
   const referenceDate = useRenderTime()
-  const promotion = getActivePromotion(referenceDate)
-
-  const discountedPrice = useMemo(() => {
-    const discount =
-      promotion && doesPromotionApplyToService(service, promotion)
-        ? promotion.discountPercentage
-        : null
-
-    if (discount === null) {
-      return null
-    }
-
-    return Number((service.price * (1 - discount / 100)).toFixed(0))
-  }, [service, promotion])
-
-  const applicableDiscountPercentage = useMemo(() => {
-    return promotion && doesPromotionApplyToService(service, promotion)
-      ? promotion.discountPercentage
-      : null
-  }, [service, promotion])
+  const activePromotions = getAllActivePromotions(referenceDate)
+  const promotionResolution = resolveServicePromotion(service, activePromotions)
 
   const servicePriceHistory = useMemo(
     () => getServicePriceHistory(service.id),
@@ -58,11 +40,12 @@ export default function ExpandableServiceCard({
     const THIRTY_DAYS_IN_MS = 30 * 24 * 60 * 60 * 1000
     let nowForLowestPrice = referenceDate
 
-    if (promotion && discountedPrice) {
+    if (promotionResolution) {
       const promotionAge =
-        referenceDate.getTime() - promotion.startDate.getTime()
+        referenceDate.getTime() -
+        promotionResolution.promotion.startDate.getTime()
       if (promotionAge < THIRTY_DAYS_IN_MS) {
-        nowForLowestPrice = promotion.startDate
+        nowForLowestPrice = promotionResolution.promotion.startDate
       }
     }
 
@@ -73,7 +56,7 @@ export default function ExpandableServiceCard({
     )
 
     return typeof value === 'number' ? value : null
-  }, [servicePriceHistory, referenceDate, promotion, discountedPrice])
+  }, [servicePriceHistory, referenceDate, promotionResolution])
   const showLowestPrice = lowestPrice !== null
   const detailsId = `details-${service.id}`
 
@@ -122,16 +105,20 @@ export default function ExpandableServiceCard({
             </div>
 
             <div className="text-right min-w-fit">
-              {discountedPrice ? (
+              {promotionResolution ? (
                 <div className="flex flex-col items-end">
                   <span className="mb-1 inline-flex items-center rounded-md bg-action px-2.5 py-0.5 text-sm font-bold text-white">
-                    -{applicableDiscountPercentage?.toFixed(0)}%
+                    -
+                    {promotionResolution.promotion.discountPercentage.toFixed(
+                      0,
+                    )}
+                    %
                   </span>
                   <span className="text-sm text-text-muted line-through whitespace-nowrap">
                     {formatPrice(service.price)}
                   </span>
                   <span className="text-md sm:text-lg font-bold text-action whitespace-nowrap">
-                    {formatPrice(discountedPrice)}
+                    {formatPrice(promotionResolution.discountedPrice)}
                   </span>
                 </div>
               ) : (
@@ -139,7 +126,7 @@ export default function ExpandableServiceCard({
                   {formatPrice(service.price)}
                 </div>
               )}
-              {showLowestPrice && discountedPrice && (
+              {showLowestPrice && promotionResolution && (
                 <div className="text-xs text-text-muted whitespace-nowrap mt-1">
                   Najniższa cena (30 dni): {formatPrice(lowestPrice)}
                 </div>

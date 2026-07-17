@@ -9,10 +9,10 @@ import {
 } from '@components/ui'
 import { useRenderTime } from '@context/RenderTimeProvider'
 import {
-  doesPromotionApplyToService,
   formatPromotionDeadline,
-  getActivePromotion,
+  getAllActivePromotions,
   getPromotionScopeDescription,
+  resolveServicePromotion,
 } from '@data/promotion'
 import { services } from '@data/services'
 import { cn } from '@libs/utils'
@@ -75,12 +75,10 @@ export default function ServicesSection() {
     })
   }, [hash, navigate])
 
-  const promotion = getActivePromotion(renderTime)
-  const promotedServices = promotion
-    ? services.filter((service) =>
-        doesPromotionApplyToService(service, promotion),
-      )
-    : []
+  const activePromotions = getAllActivePromotions(renderTime)
+  const promotedServices = services.filter(
+    (service) => resolveServicePromotion(service, activePromotions) !== null,
+  )
 
   const handleViewChange = (view: ServiceView) => {
     setActiveView(view)
@@ -107,7 +105,8 @@ export default function ServicesSection() {
     ? []
     : visibleServices.filter((service) => service.isNext)
   const noPromotionsAvailable =
-    isPromotionView && (!promotion || visibleServices.length === 0)
+    isPromotionView &&
+    (activePromotions.length === 0 || visibleServices.length === 0)
 
   return (
     <Section id="zabiegi" background="white">
@@ -154,13 +153,15 @@ export default function ServicesSection() {
           </div>
         ) : (
           <>
-            {isPromotionView && promotion && (
-              <PromotionBannerCard
-                promotion={promotion}
-                scopeDescription={getPromotionScopeDescription(promotion)}
-                deadline={formatPromotionDeadline(promotion)}
-              />
-            )}
+            {isPromotionView &&
+              activePromotions.map((promotion) => (
+                <PromotionBannerCard
+                  key={promotion.id}
+                  promotion={promotion}
+                  scopeDescription={getPromotionScopeDescription(promotion)}
+                  deadline={formatPromotionDeadline(promotion)}
+                />
+              ))}
             {standardServices.map((service, index) => (
               <div
                 key={service.id}
