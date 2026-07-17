@@ -39,6 +39,13 @@ describe('HeroSection', () => {
     expect(screen.getByText('Katarzyna Suwalska')).toBeInTheDocument()
   })
 
+  it('uses the practitioner name as the hero image alternative', () => {
+    render(<HeroSection />)
+    expect(
+      screen.getByRole('img', { name: 'Katarzyna Suwalska' }),
+    ).toBeVisible()
+  })
+
   it('displays tagline', () => {
     render(<HeroSection />)
     expect(

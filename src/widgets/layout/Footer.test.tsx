@@ -92,6 +92,10 @@ describe('Footer', () => {
     expect(screen.getByText(contact.email)).toBeInTheDocument()
     expect(screen.getByText(/ul\. Paderewskiego 11a/)).toBeInTheDocument()
     expect(screen.getByText(/Starogard Gdański/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Umów się' })).toHaveAttribute(
+      'href',
+      'https://kacosmetology.booksy.com',
+    )
   })
 
   it('displays copyright information', () => {

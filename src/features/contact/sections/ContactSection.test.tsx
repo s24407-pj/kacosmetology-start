@@ -141,6 +141,22 @@ describe('ContactSection', () => {
     expect(screen.getByText(/Starogard Gdański/)).toBeInTheDocument()
   })
 
+  it('pins the current contact facts and destinations', () => {
+    render(<ContactSection />)
+
+    expect(
+      screen.getByRole('link', { name: '+48 726 154 460' }),
+    ).toHaveAttribute('href', 'tel:+48726154460')
+    expect(
+      screen.getByRole('link', { name: 'gabinet@kacosmetology.pl' }),
+    ).toHaveAttribute('href', 'mailto:gabinet@kacosmetology.pl')
+    expect(screen.getByText(/ul\. Paderewskiego 11a/)).toBeInTheDocument()
+    expect(screen.getByText(/83-200 Starogard Gdański/)).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: /umów wizytę przez booksy/i }),
+    ).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
+  })
+
   it('renders Instagram link with tracking', async () => {
     const user = userEvent.setup()
     render(<ContactSection />)
