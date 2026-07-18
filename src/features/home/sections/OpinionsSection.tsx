@@ -51,7 +51,6 @@ export default function OpinionsSection() {
         eyebrow="Zaufały mi klientki"
         title="Opinie"
         subtitle="Wasze słowa są najlepszą rekomendacją mojej pracy."
-        gradient
       />
 
       <div className="mx-auto mb-14 grid max-w-3xl grid-cols-1 divide-y divide-border-default border-y border-border-default sm:grid-cols-2 sm:divide-x sm:divide-y-0">

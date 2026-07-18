@@ -99,6 +99,34 @@ test('landing and detail routes preserve specialization boundaries', async ({
   ).toBeVisible()
 })
 
+test('specialization pages explain a distinct path without horizontal overflow', async ({
+  page,
+}) => {
+  for (const [path, title] of [
+    ['/kosmetologia', 'Od potrzeby skóry do przemyślanego planu'],
+    ['/trychologia', 'Konsultacja, zanim wybierzesz zabieg'],
+    ['/oprawa-oka', 'Zacznij od efektu, nie od nazwy zabiegu'],
+  ] as const) {
+    await ready(page, path)
+    await expect(
+      page.getByRole('heading', { level: 2, name: title }),
+    ).toBeVisible()
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+  }
+
+  const regulation = page.getByRole('link', {
+    name: 'Regulacja brwi',
+    exact: true,
+  })
+  await expect(regulation).toHaveAttribute('href', '/oprawa-oka/regulacja-brwi')
+  await regulation.click()
+  await expect(page).toHaveURL(/\/oprawa-oka\/regulacja-brwi$/)
+})
+
 test('booking actions lead directly to Booksy and the legacy route redirects', async ({
   page,
   request,

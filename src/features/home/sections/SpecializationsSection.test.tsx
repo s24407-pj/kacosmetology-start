@@ -56,6 +56,13 @@ describe('SpecializationsSection', () => {
     expect(screen.getAllByText('Poznaj ofertę')).toHaveLength(3)
     expect(container.querySelectorAll('svg')).toHaveLength(0)
     expect(container).not.toHaveTextContent(/\b(?:01|02|03|5|7|12)\b/)
+
+    const cosmetologyImage = container.querySelector(
+      'img[src="/images/specialization-cards/cosmetology-720.webp"]',
+    )
+    expect(cosmetologyImage).toHaveAttribute('width', '1600')
+    expect(cosmetologyImage).toHaveAttribute('height', '1067')
+    expect(cosmetologyImage).toHaveClass('object-[35%_center]')
   })
 
   it('preserves specialization click analytics', () => {

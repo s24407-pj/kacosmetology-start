@@ -5,6 +5,7 @@ import {
   Section,
   SectionHeader,
   ServiceCard,
+  surfaceCardStyles,
   Text,
 } from '@components/ui'
 import { getServicesByArea } from '@data/services'
@@ -16,19 +17,13 @@ import {
   webpSrcSet,
 } from '@libs/responsiveImage'
 import BooksyLink from '@widgets/actions/BooksyLink'
-import { Check } from 'lucide-react'
+import { SpecializationEditorialSection } from '../sections/SpecializationEditorialSection'
 
 const content = {
   cosmetology: {
     eyebrow: 'Świadoma opieka nad skórą',
     intro:
       'Każda terapia rozpoczyna się od poznania potrzeb skóry. Dobór zabiegu uwzględnia jej aktualny stan, pielęgnację i indywidualne cele.',
-    concerns: [
-      'trądzik i niedoskonałości',
-      'przebarwienia',
-      'suchość i wrażliwość',
-      'oznaki starzenia',
-    ],
     process:
       'Jeżeli nie wiesz, który zabieg wybrać, zacznij od konsultacji kosmetologicznej. Podczas spotkania wspólnie ustalimy bezpieczny kierunek postępowania.',
     heroAction: 'Umów konsultację',
@@ -41,12 +36,6 @@ const content = {
     eyebrow: 'Naturalnie podkreślone spojrzenie',
     intro:
       'Zabiegi oprawy oka dobieram do rysów twarzy, kondycji brwi i rzęs oraz efektu, który chcesz uzyskać.',
-    concerns: [
-      'niesforne lub nieregularne brwi',
-      'potrzeba subtelnego podkreślenia koloru',
-      'rzęsy wymagające uniesienia',
-      'naturalny efekt bez codziennego makijażu',
-    ],
     process:
       'Jeżeli nie wiesz, który wariant wybrać, opowiedz mi o oczekiwanym efekcie przed wizytą. Dobierzemy usługę odpowiednią do brwi, rzęs i wrażliwości skóry.',
     heroAction: 'Umów wizytę',
@@ -59,12 +48,6 @@ const content = {
     eyebrow: 'Indywidualna opieka nad skórą głowy',
     intro:
       'Konsultacja trychologiczna obejmuje szczegółowy wywiad i badanie skóry głowy. Na tej podstawie powstaje indywidualny plan dalszego postępowania.',
-    concerns: [
-      'wypadanie i przerzedzenie włosów',
-      'łupież i łojotok',
-      'świąd skóry głowy',
-      'osłabiona kondycja włosów',
-    ],
     process:
       'Treści na stronie mają charakter informacyjny i nie zastępują diagnozy lekarskiej. Dobór terapii wymaga indywidualnej konsultacji.',
     heroAction: 'Umów konsultację',
@@ -118,39 +101,20 @@ export function SpecializationPage({
             width={1080}
             height={810}
             loading="eager"
-            className="aspect-[4/3] w-full rounded-lg border border-border-default object-cover object-center shadow-subtle"
+            className={surfaceCardStyles({
+              className:
+                'aspect-[4/3] w-full object-cover object-center shadow-raised',
+            })}
           />
         }
       />
-      <Section background="white">
-        <div className="mx-auto max-w-6xl">
-          <SectionHeader
-            eyebrow="Kiedy warto się zgłosić"
-            title="Najczęstsze potrzeby"
-            gradient
-          />
-          <ul className="grid border-y border-border-default sm:grid-cols-2">
-            {copy.concerns.map((concern) => (
-              <li
-                key={concern}
-                className="flex items-center gap-4 border-b border-border-default px-1 py-4 font-body text-lg last:border-b-0 sm:[&:nth-last-child(-n+2)]:border-b-0"
-              >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center text-action">
-                  <Check className="h-5 w-5" aria-hidden="true" />
-                </span>
-                {concern}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Section>
+      <SpecializationEditorialSection specializationId={specializationId} />
       {featured.length ? (
         <Section background="gray">
           <div className="mx-auto max-w-6xl">
             <SectionHeader
               eyebrow="Dobry pierwszy krok"
               title="Polecane na początek"
-              gradient
             />
             <div className="grid gap-x-10 md:grid-cols-2">
               {featured.map((service) => (
@@ -166,7 +130,6 @@ export function SpecializationPage({
             eyebrow={specialization.name}
             title="Pełna oferta"
             subtitle="Po polecanych pierwszych krokach poznaj pozostałe zabiegi dostępne w tym obszarze."
-            gradient
           />
           <div className="grid gap-x-10 md:grid-cols-2">
             {remainingServices.map((service) => (
@@ -175,7 +138,7 @@ export function SpecializationPage({
           </div>
           {onlineServices.length ? (
             <section className="mt-14 border-t border-border-default pt-10">
-              <Heading level={3} className="mb-5 text-2xl md:text-3xl">
+              <Heading level={3} variant="content" className="mb-5">
                 Konsultacja online
               </Heading>
               <div className="grid gap-x-10 md:grid-cols-2">
@@ -189,7 +152,9 @@ export function SpecializationPage({
       </Section>
       <Section background="gray">
         <div className="mx-auto max-w-3xl text-center">
-          <Heading level={2}>Jak zacząć?</Heading>
+          <Heading level={2} variant="section">
+            Jak zacząć?
+          </Heading>
           <Text
             font="crimson"
             className="mx-auto mt-4 max-w-3xl text-lg leading-relaxed"

@@ -20,4 +20,13 @@ describe('Alert', () => {
     const alert = alerts.pop()
     expect(alert).toHaveClass('bg-red-50', 'border-danger-500', 'text-red-900')
   })
+
+  it('renders an optional semantic title', () => {
+    render(<Alert title="Ważne">Treść komunikatu</Alert>)
+
+    expect(
+      screen.getByRole('heading', { level: 3, name: 'Ważne' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Treść komunikatu')).toBeInTheDocument()
+  })
 })

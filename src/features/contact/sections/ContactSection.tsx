@@ -1,7 +1,12 @@
 import type { ContactLinkType } from '@app-types/types'
 import FacebookSVG from '@components/icons/FacebookSVG'
 import InstagramSVG from '@components/icons/InstagramSVG'
-import { Section, SectionHeader } from '@components/ui'
+import {
+  Heading,
+  Section,
+  SectionHeader,
+  surfaceCardStyles,
+} from '@components/ui'
 import { useRenderTime } from '@context/RenderTimeProvider'
 import { brand, primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
@@ -38,18 +43,19 @@ export default function ContactSection() {
         title="Kontakt"
         eyebrow="Zapraszam"
         subtitle="Skontaktuj się ze mną, aby umówić wizytę."
-        gradient
       />
 
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
         <div className="space-y-8 animate-on-scroll">
           <div
             id="voucher"
-            className="scroll-mt-48 rounded-lg border border-border-default bg-surface p-6 shadow-subtle sm:p-8"
+            className={surfaceCardStyles({
+              className: 'scroll-mt-48 p-6 sm:p-8',
+            })}
           >
-            <h3 className="mb-6 font-display text-2xl font-bold text-text-primary">
+            <Heading level={3} variant="card" className="mb-6">
               Informacje kontaktowe
-            </h3>
+            </Heading>
             <div className="space-y-5">
               {contactLinks.map((link) => {
                 const Icon = CONTACT_LINK_ICONS[link.type]
@@ -110,12 +116,16 @@ export default function ContactSection() {
           </div>
         </div>
 
-        <div className="rounded-lg border border-border-default bg-surface p-6 shadow-subtle animate-on-scroll stagger-1 sm:p-8">
+        <div
+          className={surfaceCardStyles({
+            className: 'p-6 animate-on-scroll stagger-1 sm:p-8',
+          })}
+        >
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <h3 className="flex items-center font-display text-2xl font-bold text-text-primary">
+            <Heading level={3} variant="card" className="flex items-center">
               <Clock className="mr-3 h-6 w-6 text-action" />
               Godziny otwarcia
-            </h3>
+            </Heading>
           </div>
           <OpeningHoursList />
         </div>

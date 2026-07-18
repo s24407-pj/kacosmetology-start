@@ -12,9 +12,9 @@ import { Link } from '@tanstack/react-router'
 const specializationImages = {
   cosmetology: {
     src: '/images/specialization-cards/cosmetology.webp',
-    width: 1080,
-    height: 608,
-    position: 'object-[58%_center]',
+    width: 1600,
+    height: 1067,
+    position: 'object-[35%_center]',
   },
   'eye-styling': {
     src: '/images/specialization-cards/eye-styling.webp',
@@ -36,7 +36,6 @@ export default function SpecializationsSection() {
       <SectionHeader
         title="Trzy obszary. Jedno uważne podejście."
         eyebrow="Wybierz obszar"
-        gradient
       />
       <div className="mx-auto grid max-w-6xl gap-4 lg:grid-cols-3">
         {specializations.map((item) => {

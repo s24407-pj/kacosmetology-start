@@ -1,4 +1,4 @@
-import { Alert, Section } from '@components/ui'
+import { Alert, actionLinkStyles, Section } from '@components/ui'
 import { Component, type ReactNode, Suspense } from 'react'
 
 type SectionBackground = 'white' | 'gradient' | 'gray' | 'contact' | 'mesh'
@@ -46,7 +46,12 @@ export class DeferredSectionBoundary extends Component<
             <p className="mt-1">Odśwież stronę, aby spróbować ponownie.</p>
             <button
               type="button"
-              className="mt-3 min-h-11 rounded-md border border-current px-4 py-2 font-semibold transition-colors hover:bg-white/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2"
+              className={actionLinkStyles({
+                variant: 'outline',
+                size: 'sm',
+                className:
+                  'mt-3 border-current text-current hover:bg-white/50 hover:text-current focus-visible:ring-current',
+              })}
               onClick={this.reloadPage}
             >
               Odśwież stronę

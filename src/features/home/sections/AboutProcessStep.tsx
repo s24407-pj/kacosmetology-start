@@ -2,7 +2,7 @@ import type {
   AboutProcessStep as AboutProcessStepData,
   AboutProcessStepIcon,
 } from '@app-types/types'
-import { Heading, Text } from '@components/ui'
+import { Heading, surfaceCardStyles, Text } from '@components/ui'
 import { cn } from '@libs/utils'
 import AboutVideo from './AboutVideo'
 
@@ -105,7 +105,7 @@ export default function AboutProcessStep({
     >
       <div
         className={cn(
-          'relative overflow-hidden rounded-lg border border-border-default bg-surface shadow-subtle',
+          surfaceCardStyles({ className: 'relative overflow-hidden' }),
           isAccordion &&
             'origin-center transition-all duration-500 ease-in-out',
           isAccordion && active && 'z-10 scale-[1.025] ring-1 ring-action/20',
@@ -134,7 +134,7 @@ export default function AboutProcessStep({
           {String(step.step).padStart(2, '0')}
         </span>
         <div className="relative px-6 pt-10 pb-6">
-          <Heading level={3} className="mb-2 text-center text-xl md:text-2xl">
+          <Heading level={3} variant="card" className="mb-2 text-center">
             {step.title}
           </Heading>
           <Text font="crimson" className="text-center text-sm md:text-base">

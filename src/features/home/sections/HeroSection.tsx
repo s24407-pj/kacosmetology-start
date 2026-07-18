@@ -1,3 +1,4 @@
+import { actionLinkStyles, Heading, surfaceCardStyles } from '@components/ui'
 import { brand, primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import {
@@ -32,11 +33,11 @@ export default function HeroSection() {
               </span>
             </div>
 
-            <h1 className="mb-6 font-display text-5xl font-bold leading-tight text-text-primary md:text-7xl">
+            <Heading level={1} variant="hero" className="mb-6">
               {brand.practitionerName}
-            </h1>
+            </Heading>
 
-            <p className="mb-3 font-body text-lg font-semibold uppercase tracking-[0.12em] text-action sm:text-xl">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-action sm:text-base">
               Kosmetologia · Trychologia · Oprawa oka
             </p>
             <p className="mb-8 max-w-xl font-body text-xl leading-relaxed text-text-secondary md:text-2xl">
@@ -57,7 +58,10 @@ export default function HeroSection() {
                     target: 'o-mnie',
                   })
                 }}
-                className="inline-flex min-h-12 cursor-pointer items-center justify-center px-2 py-3 font-semibold text-action underline-offset-4 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 focus-visible:ring-offset-2"
+                className={actionLinkStyles({
+                  variant: 'text',
+                  className: 'cursor-pointer px-2',
+                })}
               >
                 Poznaj moje podejście
               </a>
@@ -65,7 +69,11 @@ export default function HeroSection() {
           </div>
 
           <div className="relative mx-auto w-full max-w-md min-[810px]:max-w-none">
-            <div className="relative overflow-hidden rounded-lg border border-border-default bg-surface">
+            <div
+              className={surfaceCardStyles({
+                className: 'relative overflow-hidden',
+              })}
+            >
               <div className="aspect-4/5 bg-surface-strong">
                 <img
                   src={webpFallbackSrc('/images/hero.webp')}

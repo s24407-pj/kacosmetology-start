@@ -23,7 +23,7 @@ function DetailList({ title, items }: { title: string; items?: string[] }) {
   if (!items?.length) return null
   return (
     <section className="border-t border-border-default pt-6">
-      <Heading level={2} className="text-2xl md:text-3xl">
+      <Heading level={2} variant="content">
         {title}
       </Heading>
       <ul className="mt-4 list-disc space-y-2 pl-6 text-text-secondary">
@@ -116,12 +116,11 @@ export function ServiceDetailPage({ service }: { service: PublicService }) {
           <SectionHeader
             eyebrow="Informacje o usłudze"
             title="Przebieg i przygotowanie"
-            gradient
           />
           <div className="space-y-8">
             {service.forWho ? (
               <section className="border-t border-border-default pt-6">
-                <Heading level={2} className="text-2xl md:text-3xl">
+                <Heading level={2} variant="content">
                   Dla kogo?
                 </Heading>
                 <Text className="mt-4 leading-relaxed">{service.forWho}</Text>
@@ -135,27 +134,25 @@ export function ServiceDetailPage({ service }: { service: PublicService }) {
               items={service.recommendedTests}
             />
             {service.requiresPriorConsultation ? (
-              <Alert variant="warning">
-                <h2 className="font-semibold">
-                  Wymagana wcześniejsza konsultacja
-                </h2>
-                <p className="mt-2">
+              <Alert
+                variant="warning"
+                title="Wymagana wcześniejsza konsultacja"
+              >
+                <p>
                   Przed wykonaniem tej usługi umów konsultację odpowiednią dla
                   wybranego obszaru.
                 </p>
               </Alert>
             ) : null}
             {service.note ? (
-              <Alert>
-                <h2 className="font-semibold">Ważna informacja</h2>
-                <p className="mt-2">{service.note}</p>
+              <Alert title="Ważna informacja">
+                <p>{service.note}</p>
               </Alert>
             ) : null}
             {service.contraindications ? (
-              <Alert variant="error">
-                <h2 className="font-semibold">Przeciwwskazania</h2>
+              <Alert variant="error" title="Przeciwwskazania">
                 {Array.isArray(service.contraindications) ? (
-                  <ul className="mt-2 list-disc pl-6">
+                  <ul className="list-disc pl-6">
                     {service.contraindications.map((item) => (
                       <li key={item}>{item}</li>
                     ))}
@@ -174,7 +171,6 @@ export function ServiceDetailPage({ service }: { service: PublicService }) {
             <SectionHeader
               eyebrow="Dalsze możliwości"
               title="Powiązane usługi"
-              gradient
             />
             <div className="mx-auto grid max-w-4xl gap-x-10 sm:grid-cols-2">
               {related.map((item) => (

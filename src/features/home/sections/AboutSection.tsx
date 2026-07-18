@@ -1,4 +1,4 @@
-import { Section, SectionHeader } from '@components/ui'
+import { Section, SectionHeader, surfaceCardStyles } from '@components/ui'
 import { ABOUT_SECTION } from '@data/about'
 import { platformStats } from '@data/platformStats'
 import { stationaryServiceCount } from '@data/specializations'
@@ -61,12 +61,7 @@ function StatItem({
 export default function AboutSection() {
   return (
     <Section id="o-mnie" background="white" decorated>
-      <SectionHeader
-        title="O mnie"
-        eyebrow="Poznajmy się"
-        gradient
-        className="mb-12"
-      />
+      <SectionHeader title="O mnie" eyebrow="Poznajmy się" className="mb-12" />
 
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 items-center gap-10 min-[810px]:grid-cols-2">
@@ -85,7 +80,11 @@ export default function AboutSection() {
           </div>
 
           <div className="relative order-2 min-[810px]:order-1 animate-on-scroll stagger-1">
-            <div className="relative overflow-hidden rounded-lg border border-border-default bg-surface shadow-subtle">
+            <div
+              className={surfaceCardStyles({
+                className: 'relative overflow-hidden',
+              })}
+            >
               <div className="aspect-4/5 bg-surface-strong">
                 <img
                   src={webpFallbackSrc(ABOUT_SECTION.image.src)}

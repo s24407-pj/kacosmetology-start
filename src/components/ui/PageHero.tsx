@@ -1,5 +1,6 @@
 import { cn } from '@libs/utils'
 import type { ReactNode } from 'react'
+import { Eyebrow } from './Eyebrow'
 import { Heading } from './Heading'
 import { Text } from './Text'
 
@@ -44,15 +45,8 @@ export function PageHero({
         >
           <div>
             {breadcrumbs ? <div className="mb-7">{breadcrumbs}</div> : null}
-            {eyebrow ? (
-              <span className="mb-4 inline-block text-xs font-semibold uppercase tracking-[0.16em] text-action">
-                {eyebrow}
-              </span>
-            ) : null}
-            <Heading
-              level={1}
-              className="text-4xl leading-tight sm:text-5xl md:text-6xl"
-            >
+            {eyebrow ? <Eyebrow className="mb-3">{eyebrow}</Eyebrow> : null}
+            <Heading level={1} variant="page">
               {title}
             </Heading>
             {description ? (

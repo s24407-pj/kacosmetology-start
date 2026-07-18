@@ -8,7 +8,7 @@ stored WebP variants. The photos are free to use under the
 
 | Specialization | Photographer | Source |
 | --- | --- | --- |
-| Cosmetology | Kindel Media | [Natural skin texture, photo 7298680](https://www.pexels.com/photo/7298680/) |
+| Cosmetology | cottonbro studio | [Woman during a beauty procedure, photo 7581075](https://www.pexels.com/photo/woman-on-a-beauty-procedure-7581075/) |
 | Eye styling | Chloe Amaya | [Warm close-up of an eye, eyebrow and eyelashes, photo 4079216](https://www.pexels.com/photo/womans-face-in-close-up-4079216/) |
 | Trichology | Beyzanur K. | [Applying serum at the hair part, photo 28994390](https://www.pexels.com/photo/applying-hair-serum-with-precision-dropper-28994390/) |
 

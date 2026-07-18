@@ -1,3 +1,4 @@
+import { actionLinkStyles } from '@components/ui'
 import { useUI } from '@context/UIContext'
 import { primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
@@ -20,11 +21,8 @@ export default function CTAButton({ placement = 'navbar' }: CTAButtonProps) {
         aria-label="Umów wizytę w Booksy (otwiera nową kartę)"
         onClick={() => trackPlausibleEvent('CTA Booksy Click', { placement })}
         className={cn(
-          // stała wysokość + centrowanie
-          'inline-flex h-10 items-center justify-center rounded-md leading-none px-4',
-          'bg-action text-white',
-          'transition-colors duration-200 ease-in-out hover:bg-action-hover',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 focus-visible:ring-offset-2',
+          actionLinkStyles({ size: 'xs' }),
+          'h-10 min-h-0 leading-none',
         )}
       >
         <Calendar className="w-5 h-5 block shrink-0" />

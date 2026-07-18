@@ -1,3 +1,4 @@
+import { Section, SectionHeader, surfaceCardStyles } from '@components/ui'
 import { brand, primarySalonLocation } from '@data/business'
 import { useState } from 'react'
 
@@ -9,9 +10,12 @@ export default function GoogleMap() {
         eyebrow="Dojazd"
         title="Znajdź gabinet"
         subtitle="Sprawdź lokalizację i zaplanuj wygodny dojazd."
-        gradient
       />
-      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-lg border border-border-default bg-surface shadow-subtle">
+      <div
+        className={surfaceCardStyles({
+          className: 'relative mx-auto max-w-6xl overflow-hidden',
+        })}
+      >
         {!mapLoaded && (
           <div className="absolute inset-0 animate-pulse bg-surface-strong" />
         )}
@@ -28,5 +32,3 @@ export default function GoogleMap() {
     </Section>
   )
 }
-
-import { Section, SectionHeader } from '@components/ui'

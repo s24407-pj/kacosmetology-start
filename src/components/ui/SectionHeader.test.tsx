@@ -13,10 +13,17 @@ describe('SectionHeader', () => {
     expect(screen.getByText('Learn more')).toBeInTheDocument()
   })
 
-  it('applies gradient styling when enabled', () => {
-    render(<SectionHeader title="Services" gradient />)
+  it('supports accent tone and left alignment', () => {
+    render(<SectionHeader title="Services" tone="accent" align="left" />)
 
     const heading = screen.getByRole('heading', { name: 'Services' })
     expect(heading).toHaveClass('text-action')
+    expect(heading.parentElement).not.toHaveClass('mx-auto', 'text-center')
+  })
+
+  it('does not render a decorative divider by default', () => {
+    const { container } = render(<SectionHeader title="Services" />)
+
+    expect(container.querySelector('[aria-hidden="true"]')).toBeNull()
   })
 })

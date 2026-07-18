@@ -1,7 +1,7 @@
 import { cn } from '@libs/utils'
 
-type ActionVariant = 'primary' | 'secondary' | 'outline' | 'text'
-type ActionSize = 'sm' | 'md' | 'lg'
+type ActionVariant = 'primary' | 'secondary' | 'outline' | 'inverse' | 'text'
+type ActionSize = 'xs' | 'sm' | 'md' | 'lg'
 
 export function actionLinkStyles({
   variant = 'primary',
@@ -18,9 +18,11 @@ export function actionLinkStyles({
       'border border-border-default bg-surface text-action hover:bg-surface-strong',
     outline:
       'border border-action bg-transparent text-action hover:bg-action hover:text-white',
+    inverse: 'bg-white text-action hover:bg-surface-muted',
     text: 'text-action underline-offset-4 hover:underline',
   }
   const sizes: Record<ActionSize, string> = {
+    xs: 'min-h-10 px-4 py-2 text-sm',
     sm: 'min-h-11 px-4 py-2 text-sm',
     md: 'min-h-12 px-6 py-3 text-base',
     lg: 'min-h-12 px-8 py-4 text-lg',
@@ -36,16 +38,53 @@ export function actionLinkStyles({
 }
 
 export function surfaceCardStyles({
+  variant = 'raised',
   interactive = false,
   className,
 }: {
+  variant?: 'flat' | 'outlined' | 'raised'
   interactive?: boolean
   className?: string
 } = {}) {
+  const variants = {
+    flat: 'bg-transparent',
+    outlined: 'rounded-lg border border-border-default bg-surface',
+    raised: 'rounded-lg bg-surface shadow-subtle',
+  }
+
   return cn(
-    'rounded-lg border border-border-default bg-surface shadow-subtle',
+    variants[variant],
     interactive &&
-      'transition-[border-color,background-color] duration-200 hover:border-action/50 hover:bg-surface-muted/40 focus-within:border-action/50',
+      'transition-[background-color,box-shadow] duration-200 hover:bg-surface-muted/40 hover:shadow-raised focus-within:shadow-raised',
+    className,
+  )
+}
+
+export function iconActionStyles({
+  tone = 'default',
+  size = 'md',
+  className,
+}: {
+  tone?: 'default' | 'inverse' | 'overlay'
+  size?: 'sm' | 'md' | 'lg'
+  className?: string
+} = {}) {
+  const tones = {
+    default: 'text-text-secondary hover:bg-surface-muted hover:text-action',
+    inverse: 'text-white/80 hover:bg-white/10 hover:text-white',
+    overlay: 'bg-surface/90 text-text-primary hover:bg-surface',
+  }
+  const sizes = {
+    sm: 'h-9 w-9',
+    md: 'h-10 w-10',
+    lg: 'h-11 w-11',
+  }
+
+  return cn(
+    'inline-flex shrink-0 items-center justify-center rounded-md transition-colors duration-200',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 focus-visible:ring-offset-2',
+    tones[tone],
+    sizes[size],
     className,
   )
 }

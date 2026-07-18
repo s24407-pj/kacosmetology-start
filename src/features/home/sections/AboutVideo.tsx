@@ -1,4 +1,5 @@
 import type { AboutVideo as AboutVideoData } from '@app-types/types'
+import { surfaceCardStyles } from '@components/ui'
 import {
   IMAGE_SIZES,
   POSTER_WIDTHS,
@@ -118,9 +119,7 @@ export default function AboutVideo({
     <div
       className={cn(
         'relative overflow-hidden',
-        isEmbedded
-          ? 'h-full w-full'
-          : 'rounded-lg border border-border-default shadow-subtle',
+        isEmbedded ? 'h-full w-full' : surfaceCardStyles(),
       )}
     >
       <div

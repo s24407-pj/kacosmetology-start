@@ -4,8 +4,8 @@ import { actionLinkStyles } from './styles'
 
 interface ButtonProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   children: ReactNode
-  variant?: 'primary' | 'secondary' | 'outline'
-  size?: 'sm' | 'md' | 'lg'
+  variant?: 'primary' | 'secondary' | 'outline' | 'inverse'
+  size?: 'xs' | 'sm' | 'md' | 'lg'
   className?: string
   href: string
 }
@@ -21,11 +21,7 @@ export function Button({
   return (
     <a
       href={href}
-      className={cn(
-        actionLinkStyles({ variant, size }),
-        'shadow-subtle',
-        className,
-      )}
+      className={cn(actionLinkStyles({ variant, size }), className)}
       {...props}
     >
       {children}

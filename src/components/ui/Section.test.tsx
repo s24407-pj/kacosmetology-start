@@ -92,4 +92,15 @@ describe('Section', () => {
     const container = screen.getByText('Wide content').parentElement
     expect(container).toHaveClass('xl:max-w-[85rem]')
   })
+
+  it('supports a compact accent section', () => {
+    render(
+      <Section background="accent" spacing="compact">
+        <p>Accent content</p>
+      </Section>,
+    )
+
+    const section = screen.getByText('Accent content').closest('section')
+    expect(section).toHaveClass('bg-action', 'py-14', 'sm:py-16')
+  })
 })

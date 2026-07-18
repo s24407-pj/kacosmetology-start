@@ -1,5 +1,6 @@
 import KaCosmetologyLogo from '@components/icons/KaCosmetologyLogo'
 import KaLogo from '@components/icons/KaLogo'
+import { iconActionStyles } from '@components/ui'
 import { useUI } from '@context/UIContext'
 import { MAIN_NAV_ITEMS } from '@data/navigation'
 import { trackPlausibleEvent } from '@libs/analytics'
@@ -82,7 +83,10 @@ export default function NavBar() {
             <button
               ref={menuButtonRef}
               type="button"
-              className="flex h-11 w-11 items-center justify-center justify-self-start rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 min-[1180px]:hidden"
+              className={iconActionStyles({
+                size: 'lg',
+                className: 'justify-self-start min-[1180px]:hidden',
+              })}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
               aria-label={isMenuOpen ? 'Zamknij menu' : 'Otwórz menu'}

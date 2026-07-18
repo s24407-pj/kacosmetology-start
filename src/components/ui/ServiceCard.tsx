@@ -2,6 +2,7 @@ import type { PublicService } from '@app-types/types'
 import { Link } from '@tanstack/react-router'
 import BooksyLink from '@widgets/actions/BooksyLink'
 import { ArrowRight, Clock } from 'lucide-react'
+import { Heading } from './Heading'
 import { ServicePrice } from './ServicePrice'
 import { actionLinkStyles } from './styles'
 
@@ -15,9 +16,9 @@ export function ServiceCard({ service }: { service: PublicService }) {
 
   return (
     <article className="group flex h-full flex-col border-t border-border-default py-6 sm:py-7">
-      <h3 className="font-display text-2xl font-bold text-text-primary">
+      <Heading level={3} variant="card">
         {service.name}
-      </h3>
+      </Heading>
       <p className="mt-3 grow leading-relaxed text-text-secondary">
         {service.shortDescription}
       </p>

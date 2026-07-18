@@ -2,10 +2,12 @@ import type { ContactLinkType } from '@app-types/types'
 import FacebookSVG from '@components/icons/FacebookSVG'
 import InstagramSVG from '@components/icons/InstagramSVG'
 import KaCosmetologyLogo from '@components/icons/KaCosmetologyLogo'
+import { Heading, iconActionStyles } from '@components/ui'
 import { useRenderTime } from '@context/RenderTimeProvider'
 import { brand, primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import { createContactLinks, getContactHref } from '@libs/contactLinks'
+import BooksyLink from '@widgets/actions/BooksyLink'
 import { Mail, Phone } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -41,7 +43,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
           <div>
             <KaCosmetologyLogo className="w-32 text-white" />
-            <p className="mt-5 max-w-xs font-body text-gray-400">
+            <p className="mt-5 max-w-xs font-body text-white/70">
               Profesjonalna kosmetologia i trychologia w{' '}
               {primarySalonLocation.localityLocative}.
             </p>
@@ -55,7 +57,7 @@ export default function Footer() {
                     href={getContactHref(link.type, link.value)}
                     target={link.external ? '_blank' : undefined}
                     rel={link.external ? 'noopener noreferrer' : undefined}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white/5 text-gray-300 transition-colors hover:bg-action hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/50"
+                    className={iconActionStyles({ tone: 'inverse' })}
                     aria-label={link.label}
                     onClick={() => trackFooterContactClick(link.type)}
                   >
@@ -67,10 +69,15 @@ export default function Footer() {
           </div>
 
           <div>
-            <h2 className="mb-4 font-display text-lg font-semibold text-white">
+            <Heading
+              level={2}
+              variant="utility"
+              tone="inverse"
+              className="mb-4"
+            >
               Kontakt
-            </h2>
-            <div className="space-y-2 font-body text-sm text-gray-400">
+            </Heading>
+            <div className="space-y-2 font-body text-sm text-white/70">
               <p>{primarySalonLocation.phone}</p>
               <p>{brand.email}</p>
               <p>
@@ -82,31 +89,29 @@ export default function Footer() {
           </div>
 
           <div>
-            <h2 className="mb-4 font-display text-lg font-semibold text-white">
+            <Heading
+              level={2}
+              variant="utility"
+              tone="inverse"
+              className="mb-4"
+            >
               Umów wizytę
-            </h2>
-            <p className="mb-4 font-body text-sm text-gray-400">
+            </Heading>
+            <p className="mb-4 font-body text-sm text-white/70">
               Zarezerwuj dogodny termin online przez Booksy.
             </p>
-            <a
-              href={primarySalonLocation.bookingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Przejdź do rezerwacji w Booksy (otwiera nową kartę)"
-              className="inline-flex min-h-11 items-center rounded-md bg-action px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/50"
-              onClick={() =>
-                trackPlausibleEvent('CTA Booksy Click', {
-                  placement: FOOTER_PLACEMENT,
-                })
-              }
+            <BooksyLink
+              placement={FOOTER_PLACEMENT}
+              showExternalIcon={false}
+              className="min-h-11 px-6 py-3 text-sm"
             >
               Przejdź do rezerwacji
-            </a>
+            </BooksyLink>
           </div>
         </div>
 
         <div className="mt-12 border-t border-gray-800 pt-8 text-center">
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-white/65">
             © {currentYear} {brand.name}. Wszystkie prawa zastrzeżone.
           </p>
         </div>

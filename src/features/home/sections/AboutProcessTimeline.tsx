@@ -85,7 +85,7 @@ export default function AboutProcessTimeline() {
 
   return (
     <div>
-      <SectionHeader title={processHeading} eyebrow="Krok po kroku" gradient />
+      <SectionHeader title={processHeading} eyebrow="Krok po kroku" />
       <div
         role="tablist"
         aria-label={processHeading}

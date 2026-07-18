@@ -13,15 +13,29 @@ describe('Heading', () => {
     expect(heading).toHaveClass('text-3xl', 'font-bold', 'text-text-primary')
   })
 
-  it('supports custom level and gradient styling', () => {
+  it('separates semantic level from visual variant and tone', () => {
     render(
-      <Heading level={3} gradient className="extra-class">
-        Gradient title
+      <Heading level={3} variant="card" tone="accent" className="extra-class">
+        Card title
       </Heading>,
     )
 
-    const heading = screen.getByRole('heading', { name: 'Gradient title' })
+    const heading = screen.getByRole('heading', { name: 'Card title' })
     expect(heading.tagName).toBe('H3')
-    expect(heading).toHaveClass('text-2xl', 'text-action', 'extra-class')
+    expect(heading).toHaveClass('text-xl', 'text-action', 'extra-class')
+  })
+
+  it('supports the dedicated home hero scale', () => {
+    render(
+      <Heading level={1} variant="hero">
+        Hero title
+      </Heading>,
+    )
+
+    expect(screen.getByRole('heading', { level: 1 })).toHaveClass(
+      'text-5xl',
+      'md:text-7xl',
+      'leading-tight',
+    )
   })
 })
