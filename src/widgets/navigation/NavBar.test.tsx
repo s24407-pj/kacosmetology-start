@@ -18,11 +18,13 @@ vi.mock('@tanstack/react-router', () => ({
   Link: ({
     to,
     hash,
+    activeOptions: _activeOptions,
     children,
     ...props
   }: AnchorHTMLAttributes<HTMLAnchorElement> & {
     to: string
     hash?: string
+    activeOptions?: { includeHash?: boolean }
     children: ReactNode
   }) => (
     <a href={`${to}${hash ? `#${hash}` : ''}`} {...props}>
@@ -51,6 +53,14 @@ describe('NavBar', () => {
     expect(
       screen.getAllByRole('link', { name: 'Oprawa oka' })[0],
     ).toHaveAttribute('href', '/oprawa-oka')
+    expect(screen.getAllByRole('link', { name: 'Opinie' })[0]).toHaveAttribute(
+      'href',
+      '/#opinie',
+    )
+    expect(screen.getAllByRole('link', { name: 'Kontakt' })[0]).toHaveAttribute(
+      'href',
+      '/#kontakt',
+    )
     expect(
       screen.getByRole('link', { name: /Umów wizytę w Booksy/ }),
     ).toHaveAttribute('href', 'https://kacosmetology.booksy.com')

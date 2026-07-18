@@ -22,25 +22,23 @@ export default function CTAButton({ placement = 'navbar' }: CTAButtonProps) {
         onClick={() => trackPlausibleEvent('CTA Booksy Click', { placement })}
         className={cn(
           actionLinkStyles({ size: 'xs' }),
-          'h-10 min-h-0 leading-none',
+          'h-10 min-h-0 gap-0 leading-none',
         )}
       >
-        <Calendar className="w-5 h-5 block shrink-0" />
+        <Calendar className="block h-5 w-5 shrink-0" />
 
-        {/* Etykieta: animujemy szerokość + opacity, bez wpływu na wysokość */}
         <span
           className={cn(
-            'overflow-hidden whitespace-nowrap leading-none',
-            // nie używamy "gap", tylko własny margines, który też animujemy
-            'transition-[width,opacity,margin] duration-300 ease-in-out',
+            'grid transition-[grid-template-columns,opacity,margin] duration-300 ease-in-out',
             scrolled
-              ? 'w-0 opacity-0 ml-0'
-              : // 8ch ≈ szerokość napisu "Umów się" – możesz dopasować
-                'w-[8ch] opacity-100 ml-2',
+              ? 'ml-0 grid-cols-[0fr] opacity-0'
+              : 'ml-2 grid-cols-[1fr] opacity-100',
           )}
           aria-hidden={scrolled}
         >
-          Umów się
+          <span className="min-w-0 overflow-hidden whitespace-nowrap leading-none">
+            Umów się
+          </span>
         </span>
       </a>
     </div>

@@ -143,6 +143,64 @@ test('booking actions lead directly to Booksy and the legacy route redirects', a
   expect(response.headers().location).toBe('https://kacosmetology.booksy.com')
 })
 
+test('desktop navigation exposes home sections and keeps its CTA aligned', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, 'Desktop navigation behavior')
+  await page.setViewportSize({ width: 1180, height: 720 })
+  await ready(page, '/')
+
+  const navigation = page.getByRole('navigation', {
+    name: 'Główna nawigacja',
+  })
+  const cta = navigation.getByRole('link', {
+    name: /Umów wizytę w Booksy/,
+  })
+  const ctaLabel = cta.getByText('Umów się')
+
+  await expect(ctaLabel).toBeVisible()
+  expect(
+    await ctaLabel.evaluate(
+      (label) => label.scrollWidth <= label.clientWidth + 1,
+    ),
+  ).toBe(true)
+
+  await navigation.getByRole('link', { name: 'Opinie' }).click()
+  await expect(page).toHaveURL(/\/#opinie$/)
+  await expect(page.locator('#opinie')).toBeVisible()
+  await expect(navigation.locator('a[aria-current="page"]')).toHaveCount(1)
+  await expect(
+    navigation.getByRole('link', { name: 'Opinie' }),
+  ).toHaveAttribute('aria-current', 'page')
+
+  await navigation.getByRole('link', { name: 'Kontakt' }).click()
+  await expect(page).toHaveURL(/\/#kontakt$/)
+  await expect(page.locator('#kontakt')).toBeVisible()
+  await expect(navigation.locator('a[aria-current="page"]')).toHaveCount(1)
+  await expect(
+    navigation.getByRole('link', { name: 'Kontakt' }),
+  ).toHaveAttribute('aria-current', 'page')
+  await expect(ctaLabel).toBeHidden()
+
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true)
+
+  const centerOffset = await cta.evaluate((link) => {
+    const icon = link.querySelector('svg')
+    if (!icon) return Number.POSITIVE_INFINITY
+    const linkRect = link.getBoundingClientRect()
+    const iconRect = icon.getBoundingClientRect()
+    return Math.abs(
+      iconRect.left + iconRect.width / 2 - (linkRect.left + linkRect.width / 2),
+    )
+  })
+  expect(centerOffset).toBeLessThanOrEqual(1)
+})
+
 test('gallery owns effect and cabinet sections', async ({ page }) => {
   await ready(page, '/galeria#efekty')
   await expect(page.locator('#efekty')).toBeVisible()

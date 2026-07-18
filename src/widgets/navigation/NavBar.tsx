@@ -11,11 +11,7 @@ import PromotionBanner from '@widgets/actions/PromotionBanner'
 import { Menu, X } from 'lucide-react'
 import { useEffect, useLayoutEffect, useRef } from 'react'
 
-const desktopItems = MAIN_NAV_ITEMS.filter((item) =>
-  ['kosmetologia', 'oprawa-oka', 'trychologia', 'o-mnie', 'galeria'].includes(
-    item.id,
-  ),
-)
+const desktopItems = MAIN_NAV_ITEMS.filter((item) => item.id !== 'start')
 
 export default function NavBar() {
   const { scrolled, isMenuOpen, setIsMenuOpen } = useUI()
@@ -101,6 +97,7 @@ export default function NavBar() {
 
             <Link
               to="/"
+              activeOptions={{ includeHash: true }}
               aria-label="Ka.Cosmetology — strona główna"
               onClick={() => track('home', 'logo')}
               className="justify-self-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40"
@@ -115,6 +112,7 @@ export default function NavBar() {
                   <Link
                     to={item.to}
                     hash={item.hash}
+                    activeOptions={{ includeHash: true }}
                     aria-current={isActive(item) ? 'page' : undefined}
                     onClick={() => track(item.id, 'desktop')}
                     className="inline-flex min-h-11 items-center rounded-md px-2 font-medium text-text-secondary transition-colors hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 aria-[current=page]:text-action"
@@ -151,6 +149,7 @@ export default function NavBar() {
                 <Link
                   to={item.to}
                   hash={item.hash}
+                  activeOptions={{ includeHash: true }}
                   aria-current={isActive(item) ? 'page' : undefined}
                   onClick={() => {
                     track(item.id, 'mobile-menu')
