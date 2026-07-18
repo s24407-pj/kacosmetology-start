@@ -1,7 +1,8 @@
 # KA Cosmetology
 
-Server-rendered single-page website for a cosmetology salon in Poland. Built
-with TanStack Start, React 19, Vite, Tailwind CSS 4, and Nitro.
+Server-rendered, route-oriented website for a cosmetology salon in Poland. Built
+with TanStack Start, React 19, Vite, Tailwind CSS 4, and Nitro. Kosmetologia,
+oprawa oka and trychologia share one brand and canonical business-data model.
 
 ## Prerequisites
 
@@ -48,11 +49,12 @@ assets aggressively; SSR HTML should remain uncached or use a short TTL.
 
 ## Architecture
 
-TanStack Start renders the `/` route on the server. Navigation inside the page
-continues to use the existing section hashes and scroll behavior. Static salon
+TanStack Start renders `/`, `/kosmetologia`, `/oprawa-oka`, `/trychologia`,
+`/galeria`, and dynamic service details on the server. The compatibility route
+`/rezerwacja` redirects directly to the canonical Booksy profile. Static salon
 content remains in `src/data/`; there is no general business API or data-service
-layer. One narrow server function in `src/routes/index.tsx` establishes the
-shared SSR/hydration render-time snapshot.
+layer. One narrow server function in the root route establishes the shared
+SSR/hydration render-time snapshot.
 
 Business identity and salon-location facts have one canonical owner in
 `src/data/business.ts`. After changing them, run

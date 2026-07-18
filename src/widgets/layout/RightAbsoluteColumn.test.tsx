@@ -37,7 +37,6 @@ describe('RightAbsoluteColumn', () => {
       setIsMenuOpen: vi.fn(),
       scrolled: false,
       showScrollToTop: false,
-      showStickyBookCTA: false,
     })
   })
 
@@ -55,6 +54,17 @@ describe('RightAbsoluteColumn', () => {
       platform: 'instagram',
       placement: 'right_column',
     })
+  })
+
+  it('stays visible above the bottom navigation on mobile', () => {
+    const { container } = render(<RightAbsoluteColumn />)
+
+    expect(container.querySelector('aside')).toHaveClass(
+      'flex',
+      'bottom-20',
+      'min-[810px]:bottom-8',
+    )
+    expect(container.querySelector('aside')).not.toHaveClass('hidden')
   })
 
   it('renders Facebook links with correct href and tracking', async () => {
@@ -81,7 +91,6 @@ describe('RightAbsoluteColumn', () => {
       setIsMenuOpen: vi.fn(),
       scrolled: true,
       showScrollToTop: true,
-      showStickyBookCTA: false,
     })
 
     render(<RightAbsoluteColumn />)

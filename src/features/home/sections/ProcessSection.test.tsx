@@ -13,10 +13,8 @@ describe('ProcessSection', () => {
         media: query,
         addEventListener: vi.fn(),
         removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
       })) as typeof window.matchMedia,
     })
-
     vi.stubGlobal(
       'IntersectionObserver',
       class {
@@ -32,18 +30,17 @@ describe('ProcessSection', () => {
     vi.unstubAllGlobals()
   })
 
-  it('renders inside a section with id wspolpraca', () => {
+  it('renders the original four-step process and anchor', () => {
     const { container } = render(<ProcessSection />)
-    expect(container.querySelector('section#wspolpraca')).toBeInTheDocument()
-  })
-
-  it('renders AboutProcessTimeline inside the section wrapper', () => {
-    render(<ProcessSection />)
+    expect(container.querySelector('#wspolpraca')).toBeInTheDocument()
     expect(
-      screen.getByRole('heading', {
-        name: ABOUT_SECTION.processHeading,
-        level: 2,
-      }),
+      screen.getByRole('heading', { name: ABOUT_SECTION.processHeading }),
     ).toBeInTheDocument()
+    expect(screen.getAllByRole('tab')).toHaveLength(4)
+    for (const step of ABOUT_SECTION.processSteps) {
+      expect(
+        screen.getAllByRole('heading', { name: step.title }).length,
+      ).toBeGreaterThan(0)
+    }
   })
 })

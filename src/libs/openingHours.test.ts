@@ -403,41 +403,42 @@ describe('validated weekly opening schedule', () => {
     ).toThrow('monday')
   })
 
-  it.each([
-    '9:00',
-    '24:00',
-    '09:60',
-    'not-a-time',
-  ])('rejects non-canonical clock text %s', (opens) => {
-    expect(() =>
-      assertValidOpeningSchedule({
-        ...uncheckedSchedule(),
-        days: {
-          ...uncheckedSchedule().days,
-          monday: {
-            status: 'open',
-            slots: [{ opens, closes: '17:00' }],
+  it.each(['9:00', '24:00', '09:60', 'not-a-time'])(
+    'rejects non-canonical clock text %s',
+    (opens) => {
+      expect(() =>
+        assertValidOpeningSchedule({
+          ...uncheckedSchedule(),
+          days: {
+            ...uncheckedSchedule().days,
+            monday: {
+              status: 'open',
+              slots: [{ opens, closes: '17:00' }],
+            },
           },
-        },
-      }),
-    ).toThrow('monday slot 0')
-  })
+        }),
+      ).toThrow('monday slot 0')
+    },
+  )
 
   it.each([
     ['17:00', '17:00'],
     ['18:00', '17:00'],
     ['22:00', '02:00'],
-  ])('rejects zero, reverse, and cross-midnight slot %s-%s', (opens, closes) => {
-    expect(() =>
-      assertValidOpeningSchedule({
-        ...uncheckedSchedule(),
-        days: {
-          ...uncheckedSchedule().days,
-          monday: { status: 'open', slots: [{ opens, closes }] },
-        },
-      }),
-    ).toThrow('monday slot 0')
-  })
+  ])(
+    'rejects zero, reverse, and cross-midnight slot %s-%s',
+    (opens, closes) => {
+      expect(() =>
+        assertValidOpeningSchedule({
+          ...uncheckedSchedule(),
+          days: {
+            ...uncheckedSchedule().days,
+            monday: { status: 'open', slots: [{ opens, closes }] },
+          },
+        }),
+      ).toThrow('monday slot 0')
+    },
+  )
 
   it('rejects unsorted and overlapping slots but allows adjacent slots', () => {
     const withMondaySlots = (slots: { opens: string; closes: string }[]) => ({

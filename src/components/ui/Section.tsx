@@ -5,7 +5,8 @@ interface SectionProps {
   id?: string
   className?: string
   containerClassName?: string
-  background?: 'white' | 'gradient' | 'gray' | 'contact' | 'mesh'
+  background?: 'white' | 'gradient' | 'gray' | 'contact' | 'mesh' | 'accent'
+  spacing?: 'regular' | 'compact'
   decorated?: boolean | 'top' | 'bottom'
   children: ReactNode
 }
@@ -15,6 +16,7 @@ export function Section({
   className,
   containerClassName,
   background = 'white',
+  spacing = 'regular',
   decorated = false,
   children,
 }: SectionProps) {
@@ -26,6 +28,11 @@ export function Section({
     contact:
       'bg-[linear-gradient(180deg,var(--color-surface)_0%,var(--color-surface-muted)_68%,var(--color-surface-muted)_100%)]',
     mesh: 'bg-surface-muted',
+    accent: 'bg-action',
+  }
+  const spacingClasses = {
+    regular: 'py-16 sm:py-20',
+    compact: 'py-14 sm:py-16',
   }
   const showTopSeparator = decorated === true || decorated === 'top'
   const showBottomSeparator = decorated === true || decorated === 'bottom'
@@ -34,8 +41,9 @@ export function Section({
     <section
       id={id}
       className={cn(
-        'relative overflow-hidden py-16 scroll-mt-24 sm:py-20',
+        'relative overflow-hidden scroll-mt-48 min-[1180px]:scroll-mt-36',
         bgClasses[background],
+        spacingClasses[spacing],
         className,
       )}
     >

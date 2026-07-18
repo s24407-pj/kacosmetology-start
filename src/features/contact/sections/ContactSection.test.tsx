@@ -171,8 +171,18 @@ describe('ContactSection', () => {
       ),
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('link', { name: /umów wizytę przez booksy/i }),
+      screen.getByRole('link', { name: /umów wizytę w booksy/i }),
     ).toHaveAttribute('href', primarySalonLocation.bookingUrl)
+  })
+
+  it('explains how to order a voucher', () => {
+    render(<ContactSection />)
+
+    expect(
+      screen.getByText(
+        'Voucher możesz zamówić stacjonarnie lub telefonicznie.',
+      ),
+    ).toBeInTheDocument()
   })
 
   it('renders Instagram link with tracking', async () => {
@@ -211,12 +221,12 @@ describe('ContactSection', () => {
     })
   })
 
-  it('renders Booksy CTA button with tracking', async () => {
+  it('renders external Booksy CTA with tracking', async () => {
     const user = userEvent.setup()
     render(<ContactSection />)
 
     const booksyButton = screen.getByRole('link', {
-      name: /umów wizytę przez booksy/i,
+      name: /umów wizytę w booksy/i,
     })
     expect(booksyButton).toHaveAttribute(
       'href',
@@ -256,7 +266,7 @@ describe('ContactSection', () => {
     ]
     const openingHoursCard = screen
       .getByText('Godziny otwarcia')
-      .closest('div.rounded-lg')
+      .closest('div.animate-on-scroll')
     expect(openingHoursCard).toBeInTheDocument()
 
     const renderedRows = Array.from(

@@ -14,6 +14,10 @@ export function webpFallbackSrc(src: string, width = 720): string {
 
 export const IMAGE_SIZES = {
   hero: '(min-width: 810px) calc((min(100vw - 3rem, 80rem) - 3rem) / 2), min(100vw - 2rem, 28rem)',
+  specializationHero:
+    '(min-width: 1024px) min(40vw, 28rem), calc(100vw - 2rem)',
+  specializationCard:
+    '(min-width: 1024px) calc((min(100vw - 4rem, 72rem) - 2rem) / 3), calc(100vw - 2rem)',
   aboutPortrait:
     '(min-width: 810px) calc((min(100vw - 3rem, 72rem) - 3rem) / 2), min(100vw - 2rem, 72rem)',
   processPoster:

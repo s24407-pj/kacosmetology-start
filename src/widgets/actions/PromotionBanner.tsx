@@ -1,3 +1,4 @@
+import { actionLinkStyles, iconActionStyles } from '@components/ui'
 import { useRenderTime } from '@context/RenderTimeProvider'
 import { primarySalonLocation } from '@data/business'
 import {
@@ -74,13 +75,19 @@ export default function PromotionBanner() {
                   href={primarySalonLocation.bookingUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`${promotion.ctaLabel} w Booksy (otwiera nową kartę)`}
                   onClick={() =>
                     trackPlausibleEvent('CTA Booksy Click', {
                       placement: 'promotion-banner',
                       promotionId: promotion.id,
                     })
                   }
-                  className="inline-flex min-h-8 items-center justify-center rounded-md bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-action transition-colors duration-200 hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-action sm:min-h-9 sm:text-sm"
+                  className={actionLinkStyles({
+                    variant: 'inverse',
+                    size: 'xs',
+                    className:
+                      'min-h-8 py-1.5 text-[11px] uppercase tracking-wide focus-visible:ring-white/70 focus-visible:ring-offset-action sm:min-h-9 sm:text-sm',
+                  })}
                 >
                   {promotion.ctaLabel}
                 </a>
@@ -92,7 +99,12 @@ export default function PromotionBanner() {
       <button
         type="button"
         onClick={handleDismiss}
-        className="absolute right-2 top-2 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center cursor-pointer rounded-md text-white transition-colors duration-200 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-action sm:right-4 group"
+        className={iconActionStyles({
+          tone: 'inverse',
+          size: 'sm',
+          className:
+            'group absolute right-2 top-2 h-8 w-8 cursor-pointer focus-visible:ring-white/70 focus-visible:ring-offset-action sm:right-4 sm:h-9 sm:w-9',
+        })}
         aria-label="Zamknij baner promocji"
       >
         <svg className="absolute inset-0 h-full w-full -rotate-90 pointer-events-none p-1">

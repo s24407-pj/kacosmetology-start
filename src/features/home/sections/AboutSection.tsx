@@ -1,7 +1,7 @@
-import { Section, SectionHeader } from '@components/ui'
+import { Section, SectionHeader, surfaceCardStyles } from '@components/ui'
 import { ABOUT_SECTION } from '@data/about'
 import { platformStats } from '@data/platformStats'
-import { services } from '@data/services'
+import { stationaryServiceCount } from '@data/specializations'
 import { useCountUp } from '@hooks/useCountUp'
 import { pluralizeOpinie } from '@libs/pluralize'
 import {
@@ -25,7 +25,11 @@ const stats: Array<{
     label: `${pluralizeOpinie(totalReviews)} klientek`,
   },
   { value: 5, suffix: '.0', label: 'średnia ocen' },
-  { value: services.length, suffix: '+', label: 'zabiegów w ofercie' },
+  {
+    value: stationaryServiceCount,
+    suffix: '',
+    label: 'zabiegi w ofercie',
+  },
 ]
 
 function StatItem({
@@ -57,12 +61,7 @@ function StatItem({
 export default function AboutSection() {
   return (
     <Section id="o-mnie" background="white" decorated>
-      <SectionHeader
-        title="O mnie"
-        eyebrow="Poznajmy się"
-        gradient
-        className="mb-12"
-      />
+      <SectionHeader title="O mnie" eyebrow="Poznajmy się" className="mb-12" />
 
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 items-center gap-10 min-[810px]:grid-cols-2">
@@ -81,7 +80,11 @@ export default function AboutSection() {
           </div>
 
           <div className="relative order-2 min-[810px]:order-1 animate-on-scroll stagger-1">
-            <div className="relative overflow-hidden rounded-lg border border-border-default bg-surface shadow-subtle">
+            <div
+              className={surfaceCardStyles({
+                className: 'relative overflow-hidden',
+              })}
+            >
               <div className="aspect-4/5 bg-surface-strong">
                 <img
                   src={webpFallbackSrc(ABOUT_SECTION.image.src)}
@@ -97,9 +100,11 @@ export default function AboutSection() {
           </div>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-8 rounded-lg border border-border-default bg-surface px-6 py-8 shadow-subtle animate-on-scroll stagger-3 sm:grid-cols-3">
+        <div className="mt-14 grid grid-cols-1 divide-y divide-border-default border-y border-border-default py-2 animate-on-scroll stagger-3 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           {stats.map((stat) => (
-            <StatItem key={stat.label} {...stat} />
+            <div key={stat.label} className="px-4 py-6 sm:px-6">
+              <StatItem {...stat} />
+            </div>
           ))}
         </div>
       </div>

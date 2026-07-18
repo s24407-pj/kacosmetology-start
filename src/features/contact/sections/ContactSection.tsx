@@ -1,12 +1,18 @@
 import type { ContactLinkType } from '@app-types/types'
 import FacebookSVG from '@components/icons/FacebookSVG'
 import InstagramSVG from '@components/icons/InstagramSVG'
-import { Section, SectionHeader } from '@components/ui'
+import {
+  Heading,
+  Section,
+  SectionHeader,
+  surfaceCardStyles,
+} from '@components/ui'
 import { useRenderTime } from '@context/RenderTimeProvider'
 import { brand, primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import { createContactLinks, getContactHref } from '@libs/contactLinks'
 import { getOpeningHoursView } from '@libs/openingHours'
+import BooksyLink from '@widgets/actions/BooksyLink'
 import { Clock, Heart, Mail, MapPin, Phone } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -37,15 +43,19 @@ export default function ContactSection() {
         title="Kontakt"
         eyebrow="Zapraszam"
         subtitle="Skontaktuj się ze mną, aby umówić wizytę."
-        gradient
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
         <div className="space-y-8 animate-on-scroll">
-          <div className="rounded-lg border border-border-default bg-surface p-6 shadow-subtle sm:p-8">
-            <h3 className="mb-6 font-display text-2xl font-bold text-text-primary">
+          <div
+            id="voucher"
+            className={surfaceCardStyles({
+              className: 'scroll-mt-48 p-6 sm:p-8',
+            })}
+          >
+            <Heading level={3} variant="card" className="mb-6">
               Informacje kontaktowe
-            </h3>
+            </Heading>
             <div className="space-y-5">
               {contactLinks.map((link) => {
                 const Icon = CONTACT_LINK_ICONS[link.type]
@@ -90,32 +100,32 @@ export default function ContactSection() {
                 </address>
               </div>
             </div>
+            <p className="mt-6 border-t border-border-default pt-5 text-sm leading-relaxed text-text-secondary">
+              Voucher możesz zamówić stacjonarnie lub telefonicznie.
+            </p>
           </div>
 
           <div className="text-center">
-            <a
-              href={primarySalonLocation.bookingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-12 items-center rounded-md bg-action px-6 py-3 font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 focus-visible:ring-offset-2"
-              onClick={() =>
-                trackPlausibleEvent('CTA Booksy Click', {
-                  placement: CONTACT_SECTION_PLACEMENT,
-                })
-              }
+            <BooksyLink
+              placement={CONTACT_SECTION_PLACEMENT}
+              showExternalIcon={false}
             >
-              <Heart className="mr-2 h-5 w-5" />
+              <Heart className="h-5 w-5" aria-hidden="true" />
               Umów wizytę przez Booksy
-            </a>
+            </BooksyLink>
           </div>
         </div>
 
-        <div className="rounded-lg border border-border-default bg-surface p-6 shadow-subtle animate-on-scroll stagger-1 sm:p-8">
+        <div
+          className={surfaceCardStyles({
+            className: 'p-6 animate-on-scroll stagger-1 sm:p-8',
+          })}
+        >
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <h3 className="flex items-center font-display text-2xl font-bold text-text-primary">
+            <Heading level={3} variant="card" className="flex items-center">
               <Clock className="mr-3 h-6 w-6 text-action" />
               Godziny otwarcia
-            </h3>
+            </Heading>
           </div>
           <OpeningHoursList />
         </div>

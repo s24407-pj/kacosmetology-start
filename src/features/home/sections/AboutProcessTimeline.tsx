@@ -80,13 +80,12 @@ export default function AboutProcessTimeline() {
 
   const handleVideoEnded = useCallback(() => {
     if (reducedMotion || !isAutoPlayRef.current) return
-    setActiveIndex((prev) => (prev + 1) % processSteps.length)
+    setActiveIndex((current) => (current + 1) % processSteps.length)
   }, [processSteps.length, reducedMotion])
 
   return (
     <div>
-      <SectionHeader title={processHeading} eyebrow="Krok po kroku" gradient />
-
+      <SectionHeader title={processHeading} eyebrow="Krok po kroku" />
       <div
         role="tablist"
         aria-label={processHeading}
@@ -111,7 +110,6 @@ export default function AboutProcessTimeline() {
           </Fragment>
         ))}
       </div>
-
       <ol className="md:hidden">
         {processSteps.map((step, index) => (
           <Fragment key={step.step}>

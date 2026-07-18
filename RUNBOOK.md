@@ -75,14 +75,17 @@ the full gate; these are static business facts bundled into the artifact.
 The repository has no deploy command and cannot identify the live revision.
 After an externally performed deployment, the available manual checks are:
 
-1. Confirm `/` responds and renders the hero and services.
-2. Compare visible contact/location facts with `src/data/business.ts`.
-3. At the intended Warsaw-local date, compare promotion banner, applicable
+1. Confirm `/` responds and renders the hero and all three specialization links.
+2. Confirm `/kosmetologia`, `/oprawa-oka`, `/trychologia`, and `/galeria`
+   respond, then sample one service detail in each specialization. Confirm that
+   `/rezerwacja` redirects to the canonical Booksy profile.
+3. Compare visible contact/location facts with `src/data/business.ts`.
+4. At the intended Warsaw-local date, compare promotion banner, applicable
    service price, deadline, and lowest-price disclosure with the committed
    promotion and history data.
-4. Check `/robots.txt`, `/sitemap.xml`, `/site.webmanifest`, and `/llms.txt`
+5. Check `/robots.txt`, `/sitemap.xml`, `/site.webmanifest`, and `/llms.txt`
    when business/public metadata changed.
-5. Exercise a deferred section such as `#kontakt`; a failed optional section
+6. Exercise a deferred section such as `/galeria#efekty`; a failed optional section
    should show local Polish reload UI without removing the rest of the page.
 
 These checks do not establish release identity or bypass a stale intermediary

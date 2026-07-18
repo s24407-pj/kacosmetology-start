@@ -1,7 +1,8 @@
 # Design
 
-KA Cosmetology is a server-rendered, single-route brochure site. TanStack Start
-loads `/`, Nitro renders it, and React hydrates the same tree. The application
+KA Cosmetology is a server-rendered, route-oriented brochure site. TanStack Start
+loads the brand home, specialization, service-detail, reservation, and gallery
+routes; Nitro renders them and React hydrates the same tree. The application
 has no general business API/data-service layer: authored business data is
 compiled from TypeScript in `src/data/`. The narrow render-time server function
 lives in `src/routes/index.tsx`.
@@ -23,7 +24,8 @@ make these boundaries visible.
 
 Canonical ownership matters because most changes cross several rendered views:
 
-- `services.ts` owns stable `ServiceId`, catalog names, prices, and categories.
+- `services.ts` owns stable `ServiceId`, catalog names, prices, public slugs,
+  specialization assignment, publication state, and related-service IDs.
 - `servicePriceHistory.ts` owns the immutable, `ServiceId`-keyed price ledger;
   `priceHistory.ts` performs the pure rolling-window calculation.
 - `promotion.ts` owns campaigns, applicability, active selection, and
@@ -34,10 +36,19 @@ Canonical ownership matters because most changes cross several rendered views:
   opening schedules. UI, JSON-LD, analytics domain, and committed public files
   are projections, not competing sources. Evidence: F-008, F-014,
   `src/data/business.test.ts`, `src/libs/openingHours.test.ts`.
-- `navigation.ts` owns labels and section IDs; `useSectionNavigation` owns the
-  scroll command, `HomePage` owns deferred mounting, and `UIProvider` observes
-  active sections. This distribution separates data, command, mounting, and
-  observation rather than creating multiple navigation policies.
+- `navigation.ts` owns top-level route labels and destinations. TanStack Router
+  owns current-route state; `useLegacyHashRedirect` is an input-only bridge for
+  historical home hashes.
+
+## Route architecture
+
+`/` is a compact brand landing and deliberately does not import the service
+catalog, price history, or gallery implementation. `/kosmetologia`,
+`/oprawa-oka`, and `/trychologia` filter one canonical catalog. Their `$slug`
+routes split loaders from components and reject wrong-specialization and
+online-only details. Booking actions link directly to the canonical Booksy
+profile; `/rezerwacja` remains only as an external compatibility redirect.
+`/galeria` owns effects and cabinet images with local lazy recovery.
 
 ## Public interfaces and data flow
 

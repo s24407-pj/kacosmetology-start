@@ -99,10 +99,9 @@ describe('Footer', () => {
         `Profesjonalna kosmetologia i trychologia w ${primarySalonLocation.localityLocative}.`,
       ),
     ).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Umów się' })).toHaveAttribute(
-      'href',
-      primarySalonLocation.bookingUrl,
-    )
+    expect(
+      screen.getByRole('link', { name: /Przejdź do rezerwacji/ }),
+    ).toHaveAttribute('href', primarySalonLocation.bookingUrl)
   })
 
   it('displays copyright information', () => {
