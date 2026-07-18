@@ -4,8 +4,9 @@ import crimsonLatinExt400 from '@fontsource/crimson-text/latin-ext-400.css?url'
 import playfairLatin700 from '@fontsource/playfair-display/latin-700.css?url'
 import playfairLatinExt700 from '@fontsource/playfair-display/latin-ext-700.css?url'
 import { toBeautySalonJsonLd } from '@libs/businessMetadata'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import { createRootRoute, HeadContent, Scripts } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import appCss from '../app/styles/index.css?url'
 
 const structuredData = toBeautySalonJsonLd({
@@ -116,7 +117,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body>
         {children}
         {import.meta.env.DEV ? (
-          <TanStackRouterDevtools position="bottom-right" />
+          <TanStackDevtools
+            plugins={[
+              {
+                name: 'TanStack Router',
+                render: <TanStackRouterDevtoolsPanel />,
+              },
+            ]}
+          />
         ) : null}
         <Scripts />
       </body>
