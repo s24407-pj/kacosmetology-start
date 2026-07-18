@@ -1,4 +1,6 @@
 import '@testing-library/jest-dom/vitest'
+import { opinions } from '@data/opinions'
+import { platformStats } from '@data/platformStats'
 import { cleanup, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import OpinionsSection from './OpinionsSection'
@@ -44,28 +46,24 @@ describe('OpinionsSection', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders opinion cards', () => {
+  it('renders all opinion cards', () => {
     const { container } = render(<OpinionsSection />)
     const cards = container.querySelectorAll('article')
-    expect(cards.length).toBeGreaterThan(0)
+    expect(cards).toHaveLength(opinions.length)
   })
 
-  it('displays opinion content with quotes', () => {
+  it('displays every opinion, author and source detail', () => {
     render(<OpinionsSection />)
-    const quotes = screen.getAllByText(/„/)
-    expect(quotes.length).toBeGreaterThan(0)
-  })
-
-  it('displays author names in opinions', () => {
-    const { container } = render(<OpinionsSection />)
-    const authorElements = container.querySelectorAll('footer p')
-    expect(authorElements.length).toBeGreaterThan(0)
-  })
-
-  it('renders quote icons in cards', () => {
-    const { container } = render(<OpinionsSection />)
-    const quoteIcons = container.querySelectorAll('svg[aria-hidden="true"]')
-    expect(quoteIcons.length).toBeGreaterThan(0)
+    for (const opinion of opinions) {
+      expect(screen.getByText(`„${opinion.content}”`)).toBeInTheDocument()
+      expect(screen.getByText(opinion.author)).toBeInTheDocument()
+      if (opinion.service) {
+        expect(screen.getByText(opinion.service)).toBeInTheDocument()
+      }
+      if (opinion.source) {
+        expect(screen.getByText(opinion.source)).toBeInTheDocument()
+      }
+    }
   })
 
   it('renders Booksy stats card', () => {
@@ -81,8 +79,24 @@ describe('OpinionsSection', () => {
   })
 
   it('renders two platform stat cards', () => {
+    const { container } = render(<OpinionsSection />)
+    const statCards = platformStats.map((stat) =>
+      screen.getByText(stat.name).closest('.shadow-subtle'),
+    )
+    expect(statCards).toHaveLength(2)
+    expect(statCards.every(Boolean)).toBe(true)
+    expect(
+      container.querySelectorAll('[aria-label="Ocena: 5 gwiazdek"]'),
+    ).toHaveLength(platformStats.length + opinions.length)
+  })
+
+  it('renders the thank-you signature with a decorative heart', () => {
     render(<OpinionsSection />)
-    expect(screen.getByText('Booksy')).toBeInTheDocument()
-    expect(screen.getByText('Google Maps')).toBeInTheDocument()
+    const signature = screen.getByText('Dziękuję').parentElement
+    const heart = signature?.querySelector('svg')
+
+    expect(signature).toHaveClass('animate-on-scroll')
+    expect(heart).toHaveAttribute('aria-hidden', 'true')
+    expect(heart?.querySelector('.opinions-heart-path')).toBeInTheDocument()
   })
 })

@@ -9,7 +9,7 @@ function PlatformStat({ name, count }: { name: string; count: number }) {
   const [countRef, countDisplay] = useCountUp(count, 1400)
 
   return (
-    <div className="flex flex-col items-center gap-2 px-5 py-7 text-center animate-on-scroll stagger-2 sm:px-8">
+    <div className="flex flex-col items-center gap-2 rounded-lg bg-surface px-5 py-8 text-center shadow-subtle animate-on-scroll stagger-2 sm:px-8">
       <span className="text-sm font-semibold uppercase tracking-widest text-text-muted">
         {name}
       </span>
@@ -46,24 +46,24 @@ function PlatformStat({ name, count }: { name: string; count: number }) {
 
 export default function OpinionsSection() {
   return (
-    <Section id="opinie" background="gray" decorated>
+    <Section id="opinie" background="gray">
       <SectionHeader
         eyebrow="Zaufały mi klientki"
         title="Opinie"
         subtitle="Wasze słowa są najlepszą rekomendacją mojej pracy."
       />
 
-      <div className="mx-auto mb-14 grid max-w-3xl grid-cols-1 divide-y divide-border-default border-y border-border-default sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+      <div className="mx-auto mb-14 grid max-w-3xl grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
         {platformStats.map((stat) => (
           <PlatformStat key={stat.name} {...stat} />
         ))}
       </div>
 
-      <div className="grid border-y border-border-default lg:grid-cols-3 lg:divide-x lg:divide-border-default">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {opinions.map((opinion, index) => (
           <article
             key={opinion.author + index.toString()}
-            className="flex min-h-full flex-col justify-between border-b border-border-default px-2 py-8 animate-on-scroll last:border-b-0 sm:px-6 lg:border-b-0 lg:px-8"
+            className="flex min-h-full flex-col justify-between rounded-lg bg-surface p-6 shadow-subtle animate-on-scroll sm:p-8"
           >
             <div>
               <div
@@ -83,7 +83,7 @@ export default function OpinionsSection() {
                 „{opinion.content}”
               </p>
             </div>
-            <footer className="mt-8 border-t border-action/20 pt-5">
+            <footer className="mt-8 pt-1">
               <p className="font-semibold text-action">{opinion.author}</p>
               {opinion.service ? (
                 <p className="mt-1 text-sm text-text-muted">
@@ -96,6 +96,30 @@ export default function OpinionsSection() {
             </footer>
           </article>
         ))}
+      </div>
+
+      <div className="mt-8 flex justify-end sm:mt-10">
+        <div className="opinions-signature flex items-center gap-3 text-action animate-on-scroll">
+          <span className="font-body text-2xl italic sm:text-3xl">
+            Dziękuję
+          </span>
+          <svg
+            className="h-12 w-14"
+            viewBox="0 0 64 56"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              className="opinions-heart-path"
+              d="M32 50C27 44 8 32 8 18.5C8 10.5 13 6 19.5 6C25 6 29 9.5 32 14C35 9.5 39 6 44.5 6C51 6 56 10.5 56 18.5C56 32 37 44 32 50Z"
+              pathLength="100"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
       </div>
     </Section>
   )
