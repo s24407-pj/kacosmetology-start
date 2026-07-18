@@ -68,7 +68,7 @@ the full gate; these are static business facts bundled into the artifact.
 - **Readiness:** there is no production readiness endpoint. The
   `data-react-client-ready` attribute is Playwright synchronization, not an
   operator health contract. Evidence: F-010, `playwright.config.ts`,
-  `tests/e2e/pages/HomePage.ts`.
+  `tests/e2e/route-architecture.spec.ts`.
 
 ## Deployment verification
 
@@ -86,7 +86,9 @@ After an externally performed deployment, the available manual checks are:
 5. Check `/robots.txt`, `/sitemap.xml`, `/site.webmanifest`, and `/llms.txt`
    when business/public metadata changed.
 6. Exercise a deferred section such as `/galeria#efekty`; a failed optional section
-   should show local Polish reload UI without removing the rest of the page.
+   should show local Polish reload UI without removing the rest of the page. From
+   a specialization route, also follow `Kontakt` and confirm `/#kontakt` scrolls
+   after the lazy home section appears.
 
 These checks do not establish release identity or bypass a stale intermediary
 cache. A verified platform-specific procedure is still required for that.
@@ -116,7 +118,7 @@ Use the section's `Odśwież stronę` action once. If it fails again, inspect th
 browser network/console for a missing fingerprinted chunk and preserve the rest
 of the page. Repository code cannot purge a CDN or repair an incoherent live
 deployment. Evidence: F-003,
-`tests/e2e/deferred-section-failure.spec.ts`.
+`src/features/home/components/DeferredSectionBoundary.test.tsx`.
 
 ### Analytics warnings
 
