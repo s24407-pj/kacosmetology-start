@@ -31,7 +31,8 @@ has no deploy command. See [RUNBOOK.md](./RUNBOOK.md) for the verified boundary.
 
 ## Architecture
 
-- TanStack Start server-renders the single `/` route through Nitro.
+- TanStack Start server-renders the home, specialization, service-detail,
+  reservation, and gallery routes through Nitro.
 - `src/routes/` owns route loading, document metadata, and composition.
 - `src/app/` owns the shell and providers; React Context owns shared UI state.
 - `src/features/` owns domain sections; `src/widgets/` owns layout-wide UI.
@@ -62,6 +63,8 @@ See [DESIGN.md](./DESIGN.md) for boundaries, rationale, and change traces.
 | Deferred analytics lifecycle | `src/libs/analytics.ts` |
 | Deferred startup scheduling | `src/libs/scheduleDeferredWork.ts` |
 | New domain section | `src/features/<domain>/sections/` |
+| Service public URL and specialization | `src/data/services.ts` |
+| Route metadata composition | `src/libs/routeMetadata.ts` |
 | Reusable UI primitive | `src/components/ui/` |
 | Build/test/tool configuration | repository-root `*.config.*`, `package.json` |
 

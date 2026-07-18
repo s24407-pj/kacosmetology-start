@@ -50,7 +50,7 @@ export default function RightAbsoluteColumn() {
   const { showScrollToTop: show } = useUI()
 
   return (
-    <aside className="flex fixed bottom-20 min-[810px]:bottom-8 right-3 z-40 flex-col items-center gap-2 rounded-lg border border-border-default bg-surface p-2 shadow-subtle">
+    <aside className="fixed bottom-20 right-3 z-40 flex flex-col items-center gap-2 rounded-lg border border-border-default bg-surface p-2 shadow-subtle min-[810px]:bottom-8">
       <SocialLinks placement="right_column" />
       <PhoneButton />
       <div

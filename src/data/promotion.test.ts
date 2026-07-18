@@ -10,7 +10,7 @@ import {
   type PromotionConfig,
   resolveServicePromotion,
 } from './promotion'
-import { services } from './services'
+import { getServiceById, services } from './services'
 
 const testConfigs: PromotionConfig[] = [
   {
@@ -374,14 +374,17 @@ describe('getPromotionScopeDescription', () => {
     }
 
     expect(
-      getPromotionScopeDescription({
-        id: 'svc',
-        discountPercentage: 15,
-        startDate: new Date('2025-02-01'),
-        endDate: new Date('2025-02-28'),
-        applicability: serviceApplicability,
-        ctaLabel: 'Book',
-      }),
+      getPromotionScopeDescription(
+        {
+          id: 'svc',
+          discountPercentage: 15,
+          startDate: new Date('2025-02-01'),
+          endDate: new Date('2025-02-28'),
+          applicability: serviceApplicability,
+          ctaLabel: 'Book',
+        },
+        getServiceById,
+      ),
     ).toBe('pierwsza konsultacja kosmetologiczna z zabiegiem')
   })
 
@@ -397,7 +400,7 @@ describe('getPromotionScopeDescription', () => {
       },
       ctaLabel: 'Book',
     }
-    expect(getPromotionScopeDescription(promotion)).toBe(
+    expect(getPromotionScopeDescription(promotion, getServiceById)).toBe(
       'oczyszczanie wodorowe oraz regulacja brwi',
     )
   })

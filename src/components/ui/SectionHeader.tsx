@@ -21,18 +21,18 @@ export function SectionHeader({
   return (
     <div
       className={cn(
-        'mx-auto mb-12 max-w-3xl text-center animate-on-scroll',
+        'mx-auto mb-10 max-w-3xl text-center animate-on-scroll sm:mb-12',
         className,
       )}
     >
       {eyebrow && (
-        <span className="mb-4 inline-flex items-center gap-2 rounded-md border border-border-default bg-surface px-3 py-1 text-xs font-semibold uppercase tracking-wider text-action">
+        <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-[0.16em] text-action">
           {eyebrow}
         </span>
       )}
       <h2
         className={cn(
-          'text-3xl md:text-5xl font-bold mb-5 font-display text-text-primary',
+          'mb-4 font-display text-3xl font-bold leading-tight text-text-primary sm:text-4xl md:text-5xl',
           gradient && 'text-action',
         )}
       >
@@ -41,9 +41,9 @@ export function SectionHeader({
       {divider && (
         <div
           aria-hidden="true"
-          className="mx-auto mb-6 flex items-center justify-center gap-2"
+          className="mx-auto mb-5 flex items-center justify-center gap-2"
         >
-          <span className="h-px w-16 bg-border-default" />
+          <span className="h-px w-12 bg-action/25" />
         </div>
       )}
       {subtitle && (

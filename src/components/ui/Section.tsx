@@ -34,7 +34,7 @@ export function Section({
     <section
       id={id}
       className={cn(
-        'relative overflow-hidden py-16 scroll-mt-24 sm:py-20',
+        'relative overflow-hidden py-16 scroll-mt-48 sm:py-20 min-[1180px]:scroll-mt-36',
         bgClasses[background],
         className,
       )}

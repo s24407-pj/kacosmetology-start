@@ -92,6 +92,7 @@ export default function Footer() {
               href={primarySalonLocation.bookingUrl}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Przejdź do rezerwacji w Booksy (otwiera nową kartę)"
               className="inline-flex min-h-11 items-center rounded-md bg-action px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-action-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/50"
               onClick={() =>
                 trackPlausibleEvent('CTA Booksy Click', {
@@ -99,7 +100,7 @@ export default function Footer() {
                 })
               }
             >
-              Umów się
+              Przejdź do rezerwacji
             </a>
           </div>
         </div>

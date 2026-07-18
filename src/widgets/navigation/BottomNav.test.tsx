@@ -1,96 +1,58 @@
 import '@testing-library/jest-dom/vitest'
 import { cleanup, render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import type { AnchorHTMLAttributes, ReactNode } from 'react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('@context/UIContext', () => ({
-  useUI: vi.fn(),
+const { useUIMock } = vi.hoisted(() => ({
+  useUIMock: vi.fn(() => ({ isMenuOpen: false })),
 }))
 
-const navigateToSection = vi.fn()
-vi.mock('@hooks/useSectionNavigation', () => ({
-  useSectionNavigation: () => navigateToSection,
+vi.mock('@context/UIContext', () => ({ useUI: useUIMock }))
+vi.mock('@libs/analytics', () => ({ trackPlausibleEvent: vi.fn() }))
+vi.mock('@tanstack/react-router', () => ({
+  useRouterState: ({ select }: { select: (state: unknown) => unknown }) =>
+    select({ location: { pathname: '/galeria', hash: '' } }),
+  Link: ({
+    to,
+    hash,
+    children,
+    ...props
+  }: AnchorHTMLAttributes<HTMLAnchorElement> & {
+    to: string
+    hash?: string
+    children: ReactNode
+  }) => (
+    <a href={`${to}${hash ? `#${hash}` : ''}`} {...props}>
+      {children}
+    </a>
+  ),
 }))
 
-vi.mock('@libs/analytics', () => ({
-  trackPlausibleEvent: vi.fn(),
-}))
-
-import type { UIContextType } from '@app-types/types'
-import { useUI } from '@context/UIContext'
-import { BOTTOM_NAV_ITEMS } from '@data/navigation'
-import { trackPlausibleEvent } from '@libs/analytics'
 import BottomNav from './BottomNav'
-
-const useUIMock = vi.mocked(useUI)
-
-const createContextValue = (overrides: Partial<UIContextType> = {}) => ({
-  activeSection: 'hero',
-  setActiveSection: vi.fn(),
-  isMenuOpen: false,
-  setIsMenuOpen: vi.fn(),
-  scrolled: false,
-  showScrollToTop: false,
-  showStickyBookCTA: false,
-  ...overrides,
-})
 
 describe('BottomNav', () => {
   afterEach(() => {
     cleanup()
+    useUIMock.mockReturnValue({ isMenuOpen: false })
   })
-
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  it('renders all nav items', () => {
-    useUIMock.mockReturnValue(createContextValue())
-
+  it('renders four route links and marks the current route', () => {
     render(<BottomNav />)
-
-    BOTTOM_NAV_ITEMS.forEach(({ label }) => {
-      expect(screen.getByRole('button', { name: label })).toBeInTheDocument()
-    })
-  })
-
-  it('tracks analytics and scrolls to section on click', async () => {
-    useUIMock.mockReturnValue(createContextValue())
-    const user = userEvent.setup()
-
-    render(<BottomNav />)
-
-    await user.click(screen.getByRole('button', { name: 'Zabiegi' }))
-
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Navigation Link Click', {
-      target: 'zabiegi',
-      context: 'bottom-nav',
-    })
-    expect(navigateToSection).toHaveBeenCalledWith('zabiegi')
-  })
-
-  it('marks the active section button with aria-current', () => {
-    useUIMock.mockReturnValue(createContextValue({ activeSection: 'kontakt' }))
-
-    render(<BottomNav />)
-
-    expect(screen.getByRole('button', { name: 'Kontakt' })).toHaveAttribute(
+    expect(screen.getAllByRole('link')).toHaveLength(4)
+    expect(screen.getByRole('link', { name: /Galeria/ })).toHaveAttribute(
       'aria-current',
       'page',
     )
-    expect(screen.getByRole('button', { name: 'Zabiegi' })).not.toHaveAttribute(
-      'aria-current',
+    expect(screen.getByRole('link', { name: /Kontakt/ })).toHaveAttribute(
+      'href',
+      '/#kontakt',
     )
   })
 
-  it('marks effects button as active when effects section is active', () => {
-    useUIMock.mockReturnValue(createContextValue({ activeSection: 'efekty' }))
-
+  it('stays hidden while the full-screen menu is open', () => {
+    useUIMock.mockReturnValue({ isMenuOpen: true })
     render(<BottomNav />)
-
-    expect(screen.getByRole('button', { name: 'Efekty' })).toHaveAttribute(
-      'aria-current',
-      'page',
-    )
+    expect(
+      screen.queryByRole('navigation', { name: 'Nawigacja mobilna' }),
+    ).not.toBeInTheDocument()
   })
 })

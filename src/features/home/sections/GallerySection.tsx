@@ -11,7 +11,7 @@ import { cn } from '@libs/utils'
 export default function GallerySection() {
   return (
     <Section
-      id="galeria"
+      id="gabinet"
       background="white"
       containerClassName="xl:max-w-[85rem]"
     >

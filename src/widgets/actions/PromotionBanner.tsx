@@ -74,6 +74,7 @@ export default function PromotionBanner() {
                   href={primarySalonLocation.bookingUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`${promotion.ctaLabel} w Booksy (otwiera nową kartę)`}
                   onClick={() =>
                     trackPlausibleEvent('CTA Booksy Click', {
                       placement: 'promotion-banner',

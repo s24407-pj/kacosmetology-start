@@ -9,7 +9,7 @@
     "dev": "vite dev --port 3000",
     "generate-routes": "tsr generate",
     "typecheck": "tsc --noEmit",
-    "build": "pnpm typecheck && pnpm check:public-metadata && vite build",
+    "build": "pnpm typecheck && pnpm check:production-data && pnpm check:public-metadata && vite build",
     "start": "node .output/server/index.mjs",
     "preview": "vite preview",
     "test": "vitest run",
@@ -17,7 +17,7 @@
     "test:e2e": "playwright test",
     "format": "biome format",
     "lint": "biome lint",
-    "check": "biome check && pnpm check:public-metadata",
+    "check": "biome check && pnpm check:production-data && pnpm check:public-metadata",
     "validate": "pnpm run check && pnpm run build && pnpm run test:coverage && pnpm audit --audit-level high && pnpm run test:e2e",
     "format:write": "biome format --write",
     "check:write": "biome check --write",
@@ -25,7 +25,8 @@
     "optimize-vitruvian": "node scripts/optimize-vitruvian.mjs",
     "generate-favicons": "node scripts/generate-favicons.mjs",
     "generate-public-metadata": "node scripts/generate-public-metadata.mjs",
-    "check:public-metadata": "node scripts/generate-public-metadata.mjs --check"
+    "check:public-metadata": "node scripts/generate-public-metadata.mjs --check",
+    "check:production-data": "node scripts/check-production-data.mjs"
   },
   "dependencies": {
     "@fontsource/crimson-text": "^5.2.7",

@@ -1,6 +1,13 @@
-import type { Service, ServiceId } from '@app-types/types'
+import type {
+  PublicService,
+  ServiceArea,
+  ServiceCategory,
+  ServiceId,
+  ServiceSource,
+  ServiceSpecializationId,
+} from '@app-types/types'
 
-export const services: Service[] = [
+const serviceSources: ServiceSource[] = [
   // OPRAWA OKA
   {
     id: 'service-henna-brwi-z-regulacja',
@@ -632,6 +639,131 @@ export const services: Service[] = [
   },
 ]
 
-export function getServiceById(serviceId: ServiceId): Service | undefined {
+type ServicePublicMetadata = Pick<
+  PublicService,
+  | 'area'
+  | 'category'
+  | 'requiresPriorConsultation'
+  | 'featured'
+  | 'relatedServiceIds'
+>
+
+const COSMETOLOGY_CONSULTATION_ID =
+  'service-pierwsza-konsultacja-kosmetologiczna-z-zabiegiem' as const
+const TRICHOLOGY_CONSULTATION_ID =
+  'service-pierwsza-konsultacja-trychologiczna' as const
+
+function getPublicMetadata(source: ServiceSource): ServicePublicMetadata {
+  const isTrichology =
+    source.catalogCategory === 'Trychologia' ||
+    source.id === 'service-konsultacja-trychologiczna-online'
+  const area: ServiceArea = isTrichology ? 'trichology' : 'cosmetology'
+  const category: ServiceCategory =
+    source.catalogCategory === 'Oprawa oka'
+      ? 'eye-styling'
+      : source.catalogCategory === 'Trychologia'
+        ? 'trichology'
+        : source.catalogCategory === 'Online'
+          ? 'online'
+          : 'cosmetology'
+  const requiresPriorConsultation =
+    source.isNext || source.id === 'service-lifting-rzes-farbka'
+  const consultationId = isTrichology
+    ? TRICHOLOGY_CONSULTATION_ID
+    : COSMETOLOGY_CONSULTATION_ID
+  const featuredIds: ServiceId[] = [
+    COSMETOLOGY_CONSULTATION_ID,
+    'service-oczyszczanie-wodorowe',
+    TRICHOLOGY_CONSULTATION_ID,
+    'service-zabieg-trychologiczny-dobrany-indywidualnie',
+  ]
+
+  return {
+    area,
+    category,
+    requiresPriorConsultation,
+    featured: featuredIds.includes(source.id),
+    relatedServiceIds: requiresPriorConsultation
+      ? [consultationId]
+      : source.id === consultationId
+        ? []
+        : [consultationId],
+  }
+}
+
+export const services: PublicService[] = serviceSources.map((source) => {
+  const isOnline = source.catalogCategory === 'Online'
+  return {
+    ...source,
+    ...getPublicMetadata(source),
+    slug: source.id.replace(/^service-/, ''),
+    shortDescription: source.description,
+    isPublished: true,
+    hasDetailPage: !isOnline,
+  }
+})
+
+export function getServiceById(
+  serviceId: ServiceId,
+): PublicService | undefined {
   return services.find((service) => service.id === serviceId)
+}
+
+export function getServicesByArea(area: ServiceArea): PublicService[] {
+  return services.filter((service) => service.area === area)
+}
+
+export function getPublishedServices(): PublicService[] {
+  return services.filter((service) => service.isPublished)
+}
+
+export function getPublicServiceBySlug(
+  area: ServiceArea,
+  slug: string,
+): PublicService | undefined {
+  return services.find(
+    (service) =>
+      service.area === area && service.slug === slug && service.isPublished,
+  )
+}
+
+export function getDetailServiceBySlug(
+  area: ServiceArea,
+  slug: string,
+): PublicService | undefined {
+  const service = getPublicServiceBySlug(area, slug)
+  return service?.hasDetailPage ? service : undefined
+}
+
+export function getDetailServiceBySpecializationSlug(
+  specializationId: ServiceSpecializationId,
+  slug: string,
+): PublicService | undefined {
+  return services.find(
+    (service) =>
+      service.category === specializationId &&
+      service.slug === slug &&
+      service.isPublished &&
+      service.hasDetailPage,
+  )
+}
+
+export function getRelatedServices(service: PublicService): PublicService[] {
+  return service.relatedServiceIds.flatMap((serviceId) => {
+    const related = getServiceById(serviceId)
+    return related?.isPublished ? [related] : []
+  })
+}
+
+export function getPublicServicePath(
+  service: PublicService,
+): string | undefined {
+  if (!service.isPublished || !service.hasDetailPage) return undefined
+  const specializationPath =
+    service.category === 'eye-styling'
+      ? 'oprawa-oka'
+      : service.area === 'cosmetology'
+        ? 'kosmetologia'
+        : 'trychologia'
+  return `/${specializationPath}/${service.slug}`
 }

@@ -44,7 +44,7 @@ describe('GoogleMap', () => {
     const { container } = render(<GoogleMap />)
     const iframe = container.querySelector('iframe')
     expect(iframe).toHaveClass('w-full')
-    expect(iframe).toHaveClass('h-96')
+    expect(iframe).toHaveClass('h-80', 'sm:h-96')
   })
 
   it('displays loading skeleton before iframe loads', () => {

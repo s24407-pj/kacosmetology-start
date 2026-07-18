@@ -17,7 +17,7 @@ export default function CTAButton({ placement = 'navbar' }: CTAButtonProps) {
         href={primarySalonLocation.bookingUrl}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Umów się"
+        aria-label="Umów wizytę w Booksy (otwiera nową kartę)"
         onClick={() => trackPlausibleEvent('CTA Booksy Click', { placement })}
         className={cn(
           // stała wysokość + centrowanie

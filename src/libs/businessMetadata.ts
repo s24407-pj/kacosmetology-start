@@ -1,4 +1,8 @@
-import type { BrandProfile, SalonLocation } from '@app-types/types'
+import type {
+  BrandProfile,
+  PublicService,
+  SalonLocation,
+} from '@app-types/types'
 import { toSchemaOrgOpeningHoursSpecifications } from './openingHours'
 
 type BeautySalonJsonLdInput = {
@@ -46,4 +50,42 @@ export const toBeautySalonJsonLd = ({
     brand.socialMedia.instagram,
     ...(brand.socialMedia.facebook ? [brand.socialMedia.facebook] : []),
   ],
+})
+
+export const toServiceJsonLd = ({
+  brand,
+  service,
+  path,
+}: {
+  brand: BrandProfile
+  service: PublicService
+  path: string
+}) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': new URL(`${path}#service`, brand.siteUrl).href,
+  name: service.name,
+  description: service.shortDescription,
+  url: new URL(path, brand.siteUrl).href,
+  provider: {
+    '@id': new URL('#beautysalon', brand.siteUrl).href,
+    name: brand.name,
+  },
+})
+
+export const toBreadcrumbListJsonLd = ({
+  brand,
+  items,
+}: {
+  brand: BrandProfile
+  items: readonly { name: string; path: string }[]
+}) => ({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: item.name,
+    item: new URL(item.path, brand.siteUrl).href,
+  })),
 })

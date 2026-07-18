@@ -1,10 +1,14 @@
 // Re-export all UI components for easier imports
 
 export { Alert } from './Alert'
+export { Breadcrumbs } from './Breadcrumbs'
 export { BulletListItem } from './BulletListItem'
 export { Button } from './Button'
 export { Heading } from './Heading'
+export { PageHero } from './PageHero'
 export { Section } from './Section'
 export { SectionHeader } from './SectionHeader'
-export { PromotionBannerCard, VoucherCard } from './ServiceCards'
+export { ServiceCard } from './ServiceCard'
+export { ServicePrice } from './ServicePrice'
+export { actionLinkStyles, surfaceCardStyles } from './styles'
 export { Text } from './Text'

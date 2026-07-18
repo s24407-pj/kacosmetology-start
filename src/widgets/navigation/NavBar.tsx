@@ -1,24 +1,26 @@
-import type { MainNavItemId } from '@app-types/types'
 import KaCosmetologyLogo from '@components/icons/KaCosmetologyLogo'
 import KaLogo from '@components/icons/KaLogo'
 import { useUI } from '@context/UIContext'
 import { MAIN_NAV_ITEMS } from '@data/navigation'
-import { useSectionNavigation } from '@hooks/useSectionNavigation'
 import { trackPlausibleEvent } from '@libs/analytics'
-import { cn, scrollToTop } from '@libs/utils'
+import { cn } from '@libs/utils'
+import { Link, useRouterState } from '@tanstack/react-router'
 import CTAButton from '@widgets/actions/CTAButton'
 import PromotionBanner from '@widgets/actions/PromotionBanner'
 import { Menu, X } from 'lucide-react'
-import { type MouseEvent, useEffect, useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 
-const DESKTOP_NAV_CONTEXT = 'desktop'
-const MOBILE_NAV_CONTEXT = 'mobile-menu'
+const desktopItems = MAIN_NAV_ITEMS.filter((item) =>
+  ['kosmetologia', 'oprawa-oka', 'trychologia', 'o-mnie', 'galeria'].includes(
+    item.id,
+  ),
+)
 
 export default function NavBar() {
-  const { scrolled, activeSection, isMenuOpen, setIsMenuOpen } = useUI()
-  const navigateToSection = useSectionNavigation()
+  const { scrolled, isMenuOpen, setIsMenuOpen } = useUI()
+  const location = useRouterState({ select: (state) => state.location })
   const menuButtonRef = useRef<HTMLButtonElement>(null)
-  const firstMobileItemRef = useRef<HTMLButtonElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
     document.body.style.overflow = isMenuOpen ? 'hidden' : ''
@@ -28,168 +30,137 @@ export default function NavBar() {
   }, [isMenuOpen])
 
   useEffect(() => {
-    if (isMenuOpen) {
-      firstMobileItemRef.current?.focus()
-    }
-  }, [isMenuOpen])
-
-  useEffect(() => {
     if (!isMenuOpen) return
-
+    const focusable = Array.from(
+      menuRef.current?.querySelectorAll<HTMLElement>('a, button') ?? [],
+    )
+    focusable[0]?.focus()
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setIsMenuOpen(false)
         menuButtonRef.current?.focus()
+        return
+      }
+      if (event.key !== 'Tab' || focusable.length === 0) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
       }
     }
-
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isMenuOpen, setIsMenuOpen])
 
-  const handleLogoClick = () => {
-    trackPlausibleEvent('Logo Click')
-    scrollToTop()
-  }
+  const track = (target: string, context: string) =>
+    trackPlausibleEvent('Navigation Link Click', { target, context })
 
-  const handleNavClick = (
-    event: MouseEvent<HTMLAnchorElement>,
-    sectionId: MainNavItemId,
-  ) => {
-    event.preventDefault()
-    trackPlausibleEvent('Navigation Link Click', {
-      target: sectionId,
-      context: DESKTOP_NAV_CONTEXT,
-    })
-    void navigateToSection(sectionId)
-  }
-
-  const handleMobileNavClick = (sectionId: MainNavItemId) => {
-    trackPlausibleEvent('Navigation Link Click', {
-      target: sectionId,
-      context: MOBILE_NAV_CONTEXT,
-    })
-    setIsMenuOpen(false)
-    requestAnimationFrame(() => {
-      void navigateToSection(sectionId)
-    })
+  const isActive = (item: (typeof MAIN_NAV_ITEMS)[number]) => {
+    if (item.hash) {
+      return location.pathname === '/' && location.hash === item.hash
+    }
+    if (item.to === '/') return location.pathname === '/' && !location.hash
+    return location.pathname.startsWith(item.to)
   }
 
   return (
     <>
       <nav
         className={cn(
-          'fixed top-0 w-full z-50 border-b border-border-default transition-colors duration-200 sm:text-xl',
-          scrolled ? 'bg-surface shadow-subtle' : 'bg-surface/95',
+          'fixed top-0 z-50 w-full border-b border-border-default bg-surface/95 transition-shadow',
+          scrolled && 'shadow-subtle',
         )}
         aria-label="Główna nawigacja"
       >
         <PromotionBanner />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-3">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center py-3 min-[1180px]:flex min-[1180px]:justify-between">
             <button
               ref={menuButtonRef}
               type="button"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="min-[810px]:hidden w-11 h-11 flex items-center justify-center text-text-primary rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40"
-              aria-label={isMenuOpen ? 'Zamknij menu' : 'Otwórz menu'}
+              className="flex h-11 w-11 items-center justify-center justify-self-start rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 min-[1180px]:hidden"
               aria-expanded={isMenuOpen}
+              aria-controls="mobile-menu"
+              aria-label={isMenuOpen ? 'Zamknij menu' : 'Otwórz menu'}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? (
-                <X className="w-6 h-6" />
+                <X aria-hidden="true" />
               ) : (
-                <Menu className="w-6 h-6" />
+                <Menu aria-hidden="true" />
               )}
             </button>
 
-            <button
-              type="button"
-              onClick={handleLogoClick}
-              className={cn(
-                'absolute left-1/2 -translate-x-1/2 flex items-center rounded-md cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white min-[810px]:relative min-[810px]:left-auto min-[810px]:translate-x-0',
-              )}
-              aria-label="Wróć na początek strony"
+            <Link
+              to="/"
+              aria-label="Ka.Cosmetology — strona główna"
+              onClick={() => track('home', 'logo')}
+              className="justify-self-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40"
             >
-              <KaCosmetologyLogo
-                className={cn(
-                  'hidden min-[810px]:block text-action transition-all duration-300',
-                  scrolled ? 'w-28' : 'w-36',
-                )}
-              />
-              <KaLogo className="block min-[810px]:hidden w-10 text-action" />
-            </button>
+              <KaCosmetologyLogo className="hidden w-32 text-action min-[1180px]:block" />
+              <KaLogo className="w-10 text-action min-[1180px]:hidden" />
+            </Link>
 
-            <ul className="hidden min-[810px]:flex items-center space-x-6 min-[810px]:space-x-8 px-5 whitespace-nowrap">
-              {MAIN_NAV_ITEMS.map((item) => (
+            <ul className="hidden items-center gap-5 min-[1180px]:flex">
+              {desktopItems.map((item) => (
                 <li key={item.id}>
-                  <a
-                    href={`#${item.id}`}
-                    onClick={(event) => handleNavClick(event, item.id)}
-                    className={cn(
-                      'group relative inline-block rounded-sm pb-1 font-medium text-text-secondary transition-colors duration-200 hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white',
-                      activeSection === item.id && 'text-action',
-                    )}
-                    aria-current={
-                      activeSection === item.id ? 'page' : undefined
-                    }
+                  <Link
+                    to={item.to}
+                    hash={item.hash}
+                    aria-current={isActive(item) ? 'page' : undefined}
+                    onClick={() => track(item.id, 'desktop')}
+                    className="inline-flex min-h-11 items-center rounded-md px-2 font-medium text-text-secondary transition-colors hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 aria-[current=page]:text-action"
                   >
                     {item.label}
-                    <span
-                      aria-hidden="true"
-                      className={cn(
-                        'absolute -bottom-0.5 left-0 h-0.5 w-full origin-left bg-action transition-transform duration-200',
-                        activeSection === item.id
-                          ? 'scale-x-100'
-                          : 'scale-x-0 group-hover:scale-x-100',
-                      )}
-                    />
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
 
-            <div className="hidden min-[810px]:block">
-              <CTAButton placement="navbar-desktop" />
-            </div>
-
-            <div className="min-[810px]:hidden text-sm">
-              <CTAButton placement="navbar-mobile" />
+            <div className="justify-self-end">
+              <CTAButton placement="navbar" />
             </div>
           </div>
         </div>
       </nav>
-      {isMenuOpen && (
+
+      {isMenuOpen ? (
         <div
-          className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-surface-muted min-[810px]:hidden"
+          ref={menuRef}
+          id="mobile-menu"
+          className="fixed inset-0 z-40 flex items-center justify-center overflow-y-auto bg-surface-muted px-6 pb-20 pt-44 min-[1180px]:hidden"
           role="dialog"
           aria-modal="true"
           aria-label="Menu nawigacyjne"
         >
-          <ul className="mobile-nav-list flex flex-col items-center gap-8 px-6">
+          <ul className="flex w-full max-w-sm flex-col items-center gap-3 py-8">
             {MAIN_NAV_ITEMS.map((item, index) => (
               <li
                 key={item.id}
-                className="animate-fade-up"
-                style={{ animationDelay: `${index * 0.05}s` }}
+                className="w-full animate-fade-up text-center"
+                style={{ animationDelay: `${index * 0.04}s` }}
               >
-                <button
-                  ref={index === 0 ? firstMobileItemRef : undefined}
-                  type="button"
-                  onClick={() => handleMobileNavClick(item.id)}
-                  className={cn(
-                    'mobile-nav-item-button rounded-md px-3 py-2 font-display text-2xl font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40',
-                    activeSection === item.id
-                      ? 'text-action'
-                      : 'text-text-primary hover:text-action',
-                  )}
+                <Link
+                  to={item.to}
+                  hash={item.hash}
+                  aria-current={isActive(item) ? 'page' : undefined}
+                  onClick={() => {
+                    track(item.id, 'mobile-menu')
+                    setIsMenuOpen(false)
+                  }}
+                  className="inline-flex min-h-12 items-center justify-center rounded-md px-4 font-display text-2xl font-medium text-text-primary transition-colors hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 aria-[current=page]:text-action"
                 >
                   {item.label}
-                </button>
+                </Link>
               </li>
             ))}
           </ul>
         </div>
-      )}
+      ) : null}
     </>
   )
 }

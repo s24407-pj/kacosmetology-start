@@ -26,7 +26,6 @@ const createContextValue = (overrides: Partial<UIContextType> = {}) => ({
   setIsMenuOpen: vi.fn(),
   scrolled: false,
   showScrollToTop: false,
-  showStickyBookCTA: false,
   ...overrides,
 })
 
@@ -65,8 +64,9 @@ describe('CTAButton', () => {
 
     render(<CTAButton placement="footer" />)
 
-    const link = screen.getByRole('link', { name: /Umów się/ })
+    const link = screen.getByRole('link', { name: /Umów wizytę w Booksy/ })
     expect(link).toHaveAttribute('href', primarySalonLocation.bookingUrl)
+    expect(link).toHaveAttribute('target', '_blank')
     await user.click(link)
 
     expect(trackPlausibleEvent).toHaveBeenCalledWith('CTA Booksy Click', {

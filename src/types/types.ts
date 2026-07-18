@@ -7,6 +7,16 @@ export type ServiceCatalogCategory =
   | 'Online'
 
 export type ServiceId = `service-${string}`
+export type ServiceArea = 'cosmetology' | 'trichology'
+export type ServiceSpecializationId =
+  | 'cosmetology'
+  | 'eye-styling'
+  | 'trichology'
+export type ServiceCategory =
+  | 'cosmetology'
+  | 'eye-styling'
+  | 'trichology'
+  | 'online'
 
 export interface PricePoint {
   value: number
@@ -34,6 +44,20 @@ export interface Service {
   recommendedTests?: string[]
   contraindications?: string[] | string
 }
+
+export interface PublicService extends Service {
+  slug: string
+  area: ServiceArea
+  category: ServiceCategory
+  shortDescription: string
+  requiresPriorConsultation: boolean
+  isPublished: boolean
+  hasDetailPage: boolean
+  featured: boolean
+  relatedServiceIds: ServiceId[]
+}
+
+export type ServiceSource = Service
 
 export type SalonLocationId = `salon-${string}`
 export type HttpsUrl = `https://${string}`
@@ -96,18 +120,42 @@ export interface ContactLinkData {
   external?: boolean
 }
 
-export type BottomNavItemId = 'zabiegi' | 'efekty' | 'opinie' | 'kontakt'
+export type PublicRoutePath =
+  | '/'
+  | '/kosmetologia'
+  | '/oprawa-oka'
+  | '/trychologia'
+  | '/galeria'
+  | '/rezerwacja'
+
+export type BottomNavItemId =
+  | 'kosmetologia'
+  | 'trychologia'
+  | 'galeria'
+  | 'kontakt'
 
 export interface BottomNavItemData {
   id: BottomNavItemId
   label: string
+  to: PublicRoutePath
+  hash?: string
 }
 
-export type MainNavItemId = 'hero' | 'o-mnie' | 'galeria' | BottomNavItemId
+export type MainNavItemId =
+  | 'start'
+  | 'kosmetologia'
+  | 'oprawa-oka'
+  | 'trychologia'
+  | 'o-mnie'
+  | 'galeria'
+  | 'opinie'
+  | 'kontakt'
 
 export interface MainNavItemData {
   id: MainNavItemId
   label: string
+  to: PublicRoutePath
+  hash?: string
 }
 
 export interface Opinion {
@@ -160,11 +208,12 @@ export interface AboutSection {
 }
 
 export interface UIContextType {
-  activeSection: string
-  setActiveSection: (id: string) => void
+  /** @deprecated Route state replaces section observation. */
+  activeSection?: string
+  /** @deprecated Route state replaces section observation. */
+  setActiveSection?: (id: string) => void
   isMenuOpen: boolean
   setIsMenuOpen: (open: boolean) => void
   scrolled: boolean
   showScrollToTop: boolean
-  showStickyBookCTA: boolean
 }
