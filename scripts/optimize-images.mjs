@@ -9,6 +9,7 @@ const publicDir = resolve(__dirname, '../public')
 const MOBILE_WIDTHS = [360, 720, 1080]
 const POSTER_WIDTHS = [360, 720]
 const GALLERY_WIDTHS = [360, 720, 1080, 1440]
+const SPECIALIZATION_WIDTHS = [360, 720, 1080]
 
 async function generateVariants(inputPath, outputPrefix, widths, quality = 82) {
   for (const width of widths) {
@@ -30,6 +31,32 @@ await generateVariants(
   MOBILE_WIDTHS,
 )
 
+const specializationFiles = (
+  await readdir(join(publicDir, 'images/specializations'))
+).filter((name) => name.endsWith('.webp') && !/-\d+\.webp$/.test(name))
+
+for (const image of specializationFiles) {
+  const base = image.replace(/\.webp$/, '')
+  await generateVariants(
+    join(publicDir, 'images/specializations', image),
+    join(publicDir, 'images/specializations', base),
+    SPECIALIZATION_WIDTHS,
+  )
+}
+
+const specializationCardFiles = (
+  await readdir(join(publicDir, 'images/specialization-cards'))
+).filter((name) => name.endsWith('.webp') && !/-\d+\.webp$/.test(name))
+
+for (const image of specializationCardFiles) {
+  const base = image.replace(/\.webp$/, '')
+  await generateVariants(
+    join(publicDir, 'images/specialization-cards', image),
+    join(publicDir, 'images/specialization-cards', base),
+    SPECIALIZATION_WIDTHS,
+  )
+}
+
 const posterFiles = (await readdir(join(publicDir, 'movies'))).filter(
   (name) =>
     name.endsWith('-poster.webp') &&
@@ -47,10 +74,7 @@ for (const poster of posterFiles) {
 }
 
 const galleryFiles = (await readdir(join(publicDir, 'images/gallery'))).filter(
-  (name) =>
-    name.endsWith('.webp') &&
-    !name.includes('-360.') &&
-    !name.includes('-720.'),
+  (name) => name.endsWith('.webp') && !/-\d+\.webp$/.test(name),
 )
 
 for (const image of galleryFiles) {
@@ -64,12 +88,7 @@ for (const image of galleryFiles) {
 
 const effectFiles = (
   await readdir(join(publicDir, 'images/gallery/effects'))
-).filter(
-  (name) =>
-    name.endsWith('.webp') &&
-    !name.includes('-360.') &&
-    !name.includes('-720.'),
-)
+).filter((name) => name.endsWith('.webp') && !/-\d+\.webp$/.test(name))
 
 for (const image of effectFiles) {
   const base = image.replace(/\.webp$/, '')

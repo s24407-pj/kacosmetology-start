@@ -1,129 +1,70 @@
-import ServicesSection from '@features/services/sections/ServicesSection'
+import { brand, primarySalonLocation } from '@data/business'
+import { useLegacyHashRedirect } from '@hooks/useLegacyHashRedirect'
 import { useScrollDepthTracking } from '@hooks/useScrollDepthTracking'
-import { useRouterState } from '@tanstack/react-router'
-import { lazy, useEffect, useState } from 'react'
+import { toBeautySalonJsonLd } from '@libs/businessMetadata'
+import { lazy, Suspense } from 'react'
 import { DeferredSectionBoundary } from '../components/DeferredSectionBoundary'
 import AboutSection from '../sections/AboutSection'
 import HeroSection from '../sections/HeroSection'
 import ProcessSection from '../sections/ProcessSection'
 import QuoteSection from '../sections/QuoteSection'
+import SpecializationsSection from '../sections/SpecializationsSection'
 
-const EffectsGallerySection = lazy(
-  () => import('../sections/EffectsGallerySection'),
-)
-const GallerySection = lazy(() => import('../sections/GallerySection'))
 const OpinionsSection = lazy(() => import('../sections/OpinionsSection'))
 const ContactSection = lazy(
   () => import('@features/contact/sections/ContactSection'),
 )
 const GoogleMap = lazy(() => import('@features/contact/sections/GoogleMap'))
 
-const DEFERRED_SECTION_IDS = ['efekty', 'galeria', 'opinie', 'kontakt'] as const
+const structuredData = toBeautySalonJsonLd({
+  brand,
+  location: primarySalonLocation,
+  priceRange: '30-550 PLN',
+})
 
-function useDeferredSections() {
-  const hash = useRouterState({
-    select: (state) => state.location.hash,
-  })
-  const [shouldMount, setShouldMount] = useState(false)
-
-  useEffect(() => {
-    if (DEFERRED_SECTION_IDS.some((sectionId) => hash === sectionId)) {
-      setShouldMount(true)
-    }
-  }, [hash])
-
-  useEffect(() => {
-    if (shouldMount) {
-      return
-    }
-    let timeoutId: number | undefined
-    let idleCallbackId: number | undefined
-
-    const mountSections = () => setShouldMount(true)
-    const scheduleMount = () => {
-      if (window.requestIdleCallback) {
-        idleCallbackId = window.requestIdleCallback(mountSections, {
-          timeout: 1500,
-        })
-        return
-      }
-
-      timeoutId = window.setTimeout(mountSections, 1)
-    }
-
-    if (document.readyState === 'complete') {
-      scheduleMount()
-    } else {
-      window.addEventListener('load', scheduleMount, { once: true })
-    }
-
-    return () => {
-      window.removeEventListener('load', scheduleMount)
-
-      if (idleCallbackId !== undefined && window.cancelIdleCallback) {
-        window.cancelIdleCallback(idleCallbackId)
-      }
-
-      if (timeoutId !== undefined) {
-        window.clearTimeout(timeoutId)
-      }
-    }
-  }, [shouldMount])
-
-  return shouldMount
-}
-
-const HomePage = () => {
+export default function HomePage() {
   useScrollDepthTracking()
-  const shouldMountDeferredSections = useDeferredSections()
-
+  useLegacyHashRedirect()
   return (
     <>
+      <script
+        type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is serialized from canonical, repository-controlled data.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <HeroSection />
+      <SpecializationsSection />
       <AboutSection />
       <ProcessSection />
       <QuoteSection />
-      <ServicesSection />
-      {shouldMountDeferredSections && (
-        <>
-          <DeferredSectionBoundary
-            sectionId="efekty"
-            sectionLabel="Efekty zabiegów"
-            background="gray"
-          >
-            <EffectsGallerySection />
-          </DeferredSectionBoundary>
-          <DeferredSectionBoundary
-            sectionId="galeria"
-            sectionLabel="Galeria"
-            background="white"
-          >
-            <GallerySection />
-          </DeferredSectionBoundary>
-          <DeferredSectionBoundary
-            sectionId="opinie"
-            sectionLabel="Opinie"
-            background="gray"
-          >
-            <OpinionsSection />
-          </DeferredSectionBoundary>
-          <DeferredSectionBoundary
-            sectionId="kontakt"
-            sectionLabel="Kontakt"
-            background="contact"
-          >
-            <ContactSection />
-          </DeferredSectionBoundary>
-          <DeferredSectionBoundary
-            sectionLabel="Mapa dojazdu"
-            background="gray"
-          >
-            <GoogleMap />
-          </DeferredSectionBoundary>
-        </>
-      )}
+      <Suspense fallback={null}>
+        <DeferredSectionBoundary
+          sectionId="opinie"
+          sectionLabel="Opinie"
+          background="gray"
+        >
+          <OpinionsSection />
+        </DeferredSectionBoundary>
+        <DeferredSectionBoundary
+          sectionId="kontakt"
+          sectionLabel="Kontakt"
+          background="contact"
+        >
+          <ContactSection />
+        </DeferredSectionBoundary>
+        <DeferredSectionBoundary
+          sectionLabel="Mapa dojazdu"
+          background="gray"
+          loadingFallback={
+            <div
+              className="min-h-96 bg-surface-muted"
+              aria-label="Ładowanie mapy dojazdu"
+            />
+          }
+        >
+          <GoogleMap />
+        </DeferredSectionBoundary>
+      </Suspense>
     </>
   )
 }
-
-export default HomePage

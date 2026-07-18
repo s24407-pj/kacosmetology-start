@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import { businessProfile } from '@data/business'
 import { afterEach, describe, expect, it } from 'vitest'
 import {
+  getSitemapPaths,
   PUBLIC_METADATA_PATHS,
   renderLlmsTxt,
   renderPublicMetadata,
@@ -80,6 +81,15 @@ describe('public metadata renderers', () => {
       name: businessProfile.brand.name,
       short_name: businessProfile.brand.appShortName,
     })
+  })
+
+  it('publishes the five primary routes and 24 stationary service details', () => {
+    expect(getSitemapPaths()).toHaveLength(29)
+    expect(getSitemapPaths()).toContain('/oprawa-oka/henna-brwi-z-regulacja')
+    expect(getSitemapPaths()).not.toContain('/rezerwacja')
+    expect(getSitemapPaths()).not.toContain(
+      '/trychologia/konsultacja-trychologiczna-online',
+    )
   })
 
   it('derives origins and escapes XML and Markdown input', () => {

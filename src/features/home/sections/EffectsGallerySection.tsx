@@ -1,4 +1,10 @@
-import { Section, SectionHeader } from '@components/ui'
+import {
+  Heading,
+  iconActionStyles,
+  Section,
+  SectionHeader,
+  surfaceCardStyles,
+} from '@components/ui'
 import { effectsItems } from '@data/effects'
 import {
   IMAGE_SIZES,
@@ -49,14 +55,15 @@ export default function EffectsGallerySection() {
       <SectionHeader
         title="Efekty zabiegów"
         eyebrow="Przed i po"
-        gradient
         className="mb-10 sm:mb-14"
       />
 
       <div className="relative mx-auto max-w-lg">
         <div className="relative">
           <div
-            className="relative overflow-hidden rounded-lg border border-border-default bg-surface-strong shadow-subtle"
+            className={surfaceCardStyles({
+              className: 'relative overflow-hidden bg-surface-strong',
+            })}
             onMouseEnter={() => setIsAutoPlay(false)}
             onMouseLeave={() => setIsAutoPlay(true)}
           >
@@ -79,7 +86,11 @@ export default function EffectsGallerySection() {
             <button
               type="button"
               onClick={goToPrevious}
-              className="absolute left-4 top-1/2 z-20 min-h-11 min-w-11 -translate-y-1/2 rounded-md bg-surface/90 p-2 text-text-primary transition-colors duration-200 hover:bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-action"
+              className={iconActionStyles({
+                tone: 'overlay',
+                size: 'lg',
+                className: 'absolute left-4 top-1/2 z-20 -translate-y-1/2',
+              })}
               aria-label="Poprzedni efekt"
             >
               <ChevronLeft className="w-6 h-6" />
@@ -88,7 +99,11 @@ export default function EffectsGallerySection() {
             <button
               type="button"
               onClick={goToNext}
-              className="absolute right-4 top-1/2 z-20 min-h-11 min-w-11 -translate-y-1/2 rounded-md bg-surface/90 p-2 text-text-primary transition-colors duration-200 hover:bg-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-action"
+              className={iconActionStyles({
+                tone: 'overlay',
+                size: 'lg',
+                className: 'absolute right-4 top-1/2 z-20 -translate-y-1/2',
+              })}
               aria-label="Następny efekt"
             >
               <ChevronRight className="w-6 h-6" />
@@ -98,9 +113,9 @@ export default function EffectsGallerySection() {
               className="absolute bottom-0 left-0 right-0 bg-black/65 p-6 text-white z-10 pointer-events-none"
               aria-live="polite"
             >
-              <h3 className="text-xl sm:text-2xl font-semibold mb-1 font-display">
+              <Heading level={3} variant="card" tone="inverse">
                 {effectsItems[currentIndex].title}
-              </h3>
+              </Heading>
             </div>
           </div>
         </div>

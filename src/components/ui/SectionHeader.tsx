@@ -1,11 +1,14 @@
 import { cn } from '@libs/utils'
 import type { ReactNode } from 'react'
+import { Eyebrow } from './Eyebrow'
+import { Heading } from './Heading'
 
 interface SectionHeaderProps {
   title: string | ReactNode
   subtitle?: string
   eyebrow?: string
-  gradient?: boolean
+  tone?: 'default' | 'accent' | 'inverse'
+  align?: 'left' | 'center'
   divider?: boolean
   className?: string
 }
@@ -14,40 +17,56 @@ export function SectionHeader({
   title,
   subtitle,
   eyebrow,
-  gradient = false,
-  divider = true,
+  tone = 'default',
+  align = 'center',
+  divider = false,
   className,
 }: SectionHeaderProps) {
+  const centered = align === 'center'
+
   return (
     <div
       className={cn(
-        'mx-auto mb-12 max-w-3xl text-center animate-on-scroll',
+        'mb-10 max-w-3xl animate-on-scroll sm:mb-12',
+        centered && 'mx-auto text-center',
         className,
       )}
     >
       {eyebrow && (
-        <span className="mb-4 inline-flex items-center gap-2 rounded-md border border-border-default bg-surface px-3 py-1 text-xs font-semibold uppercase tracking-wider text-action">
+        <Eyebrow
+          tone={tone === 'inverse' ? 'inverse' : 'accent'}
+          className="mb-3"
+        >
           {eyebrow}
-        </span>
+        </Eyebrow>
       )}
-      <h2
-        className={cn(
-          'text-3xl md:text-5xl font-bold mb-5 font-display text-text-primary',
-          gradient && 'text-action',
-        )}
-      >
+      <Heading level={2} variant="section" tone={tone} className="mb-4">
         {title}
-      </h2>
+      </Heading>
       {divider && (
         <div
           aria-hidden="true"
-          className="mx-auto mb-6 flex items-center justify-center gap-2"
+          className={cn(
+            'mb-5 flex items-center gap-2',
+            centered && 'justify-center',
+          )}
         >
-          <span className="h-px w-16 bg-border-default" />
+          <span
+            className={cn(
+              'h-px w-12',
+              tone === 'inverse' ? 'bg-white/30' : 'bg-action/25',
+            )}
+          />
         </div>
       )}
       {subtitle && (
-        <p className="text-lg text-text-secondary max-w-3xl mx-auto animate-on-scroll stagger-1 font-body md:text-xl">
+        <p
+          className={cn(
+            'max-w-3xl font-body text-lg leading-relaxed animate-on-scroll stagger-1 md:text-xl',
+            tone === 'inverse' ? 'text-white/80' : 'text-text-secondary',
+            centered && 'mx-auto',
+          )}
+        >
           {subtitle}
         </p>
       )}

@@ -3,7 +3,6 @@ import type {
   ServiceCatalogCategory,
   ServiceId,
 } from '@app-types/types'
-import { getServiceById } from '@data/services'
 
 interface PromotionApplicabilityAll {
   type: 'all'
@@ -366,6 +365,7 @@ export function resolveServicePromotion(
 
 export function getPromotionScopeDescription(
   promotion: ActivePromotion,
+  getServiceById?: (serviceId: ServiceId) => Service | undefined,
 ): string {
   if (promotion.applicability.type === 'all') {
     return promotion.applicability.description
@@ -396,7 +396,7 @@ export function getPromotionScopeDescription(
   }
 
   const resolvedServices = promotion.applicability.serviceIds.map((serviceId) =>
-    getServiceById(serviceId),
+    getServiceById?.(serviceId),
   )
   if (
     resolvedServices.length === 0 ||

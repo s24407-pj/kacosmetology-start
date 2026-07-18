@@ -78,8 +78,9 @@ describe('PromotionBanner', () => {
       view.getByText('Promocja! - całe spa tylko dziś.'),
     ).toBeInTheDocument()
 
-    const ctaLink = view.getByRole('link', { name: 'Zarezerwuj termin' })
+    const ctaLink = view.getByRole('link', { name: /Zarezerwuj termin/ })
     expect(ctaLink).toHaveAttribute('href', primarySalonLocation.bookingUrl)
+    expect(ctaLink).toHaveAttribute('target', '_blank')
   })
 
   it('tracks CTA clicks', async () => {
@@ -91,7 +92,7 @@ describe('PromotionBanner', () => {
     const view: RenderResult = render(<PromotionBanner />)
 
     const user: UserEvent = userEvent.setup()
-    await user.click(view.getByRole('link', { name: 'Zarezerwuj termin' }))
+    await user.click(view.getByRole('link', { name: /Zarezerwuj termin/ }))
 
     expect(trackPlausibleEventMock).toHaveBeenCalledWith('CTA Booksy Click', {
       placement: 'promotion-banner',
@@ -153,8 +154,8 @@ describe('PromotionBanner', () => {
     ).toBeInTheDocument()
 
     const user = userEvent.setup()
-    await user.click(view.getByRole('link', { name: 'Zarezerwuj pierwszy' }))
-    await user.click(view.getByRole('link', { name: 'Zarezerwuj drugi' }))
+    await user.click(view.getByRole('link', { name: /Zarezerwuj pierwszy/ }))
+    await user.click(view.getByRole('link', { name: /Zarezerwuj drugi/ }))
 
     expect(trackPlausibleEventMock).toHaveBeenNthCalledWith(
       1,

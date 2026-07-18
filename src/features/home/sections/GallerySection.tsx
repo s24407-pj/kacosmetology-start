@@ -1,4 +1,4 @@
-import { Section, SectionHeader } from '@components/ui'
+import { Section, SectionHeader, surfaceCardStyles } from '@components/ui'
 import { type GalleryItem, galleryItems } from '@data/gallery'
 import {
   GALLERY_WIDTHS,
@@ -11,7 +11,7 @@ import { cn } from '@libs/utils'
 export default function GallerySection() {
   return (
     <Section
-      id="galeria"
+      id="gabinet"
       background="white"
       containerClassName="xl:max-w-[85rem]"
     >
@@ -19,7 +19,6 @@ export default function GallerySection() {
         title="Galeria"
         eyebrow="Gabinet"
         subtitle="Zobacz wnętrze profesjonalnego gabinetu."
-        gradient
         className="mb-10 sm:mb-14"
       />
 
@@ -31,7 +30,10 @@ export default function GallerySection() {
           <figure
             key={item.id}
             className={cn(
-              'group relative self-start overflow-hidden rounded-lg border border-border-default bg-surface shadow-subtle transition-colors duration-200 hover:border-action/40',
+              surfaceCardStyles({
+                interactive: true,
+                className: 'group relative self-start overflow-hidden',
+              }),
               item.className ?? '',
             )}
           >

@@ -11,7 +11,7 @@ const vitruvianManSrc = '/images/vitruvian-man.webp'
 
 export default function QuoteSection() {
   return (
-    <Section background="white" className="bg-action py-14 sm:py-16">
+    <Section background="accent" spacing="compact">
       <figure className="relative mx-auto max-w-4xl text-center animate-on-scroll">
         <div
           aria-hidden="true"

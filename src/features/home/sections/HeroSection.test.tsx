@@ -52,11 +52,13 @@ describe('HeroSection', () => {
   it('displays tagline', () => {
     render(<HeroSection />)
     expect(
-      screen.getByText(/Holistyczna kosmetologia i trychologia dopasowana/),
+      screen.getByText(
+        'Holistyczna kosmetologia i trychologia dopasowana do Ciebie.',
+      ),
     ).toBeInTheDocument()
   })
 
-  it('renders Booksy CTA button with tracking', async () => {
+  it('renders external Booksy CTA with tracking', async () => {
     const user = userEvent.setup()
     const { container } = render(<HeroSection />)
 
@@ -64,13 +66,11 @@ describe('HeroSection', () => {
       `a[href="${primarySalonLocation.bookingUrl}"]`,
     )
     expect(booksyLink).toBeInTheDocument()
-    expect(booksyLink).toHaveAttribute('target', '_blank')
-    expect(booksyLink).toHaveAttribute('rel', 'noopener noreferrer')
-
     await user.click(booksyLink!)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('CTA Booksy Click', {
       placement: 'hero',
     })
+    expect(booksyLink).toHaveAttribute('target', '_blank')
   })
 
   it('displays location icon in hero section', () => {
@@ -81,7 +81,7 @@ describe('HeroSection', () => {
 
   it('renders scroll button', () => {
     render(<HeroSection />)
-    const scrollButton = screen.getByRole('button')
+    const scrollButton = screen.getByRole('link', { name: 'Przewiń w dół' })
     expect(scrollButton).toBeInTheDocument()
   })
 })

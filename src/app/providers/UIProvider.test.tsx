@@ -9,22 +9,13 @@ import { UIProvider } from './UIProvider'
 type IOCallback = IntersectionObserverCallback
 
 const Consumer = () => {
-  const {
-    scrolled,
-    showScrollToTop,
-    showStickyBookCTA,
-    isMenuOpen,
-    setIsMenuOpen,
-    activeSection,
-  } = useUI()
+  const { scrolled, showScrollToTop, isMenuOpen, setIsMenuOpen } = useUI()
 
   return (
     <div>
       <div data-testid="scrolled">{String(scrolled)}</div>
       <div data-testid="scroll-top">{String(showScrollToTop)}</div>
-      <div data-testid="sticky-cta">{String(showStickyBookCTA)}</div>
       <div data-testid="menu">{String(isMenuOpen)}</div>
-      <div data-testid="section">{activeSection}</div>
       <button type="button" onClick={() => setIsMenuOpen(true)}>
         open-menu
       </button>
@@ -96,55 +87,30 @@ describe('UIProvider', () => {
     expect(screen.getByTestId('menu')).toHaveTextContent('true')
   })
 
-  it('derives showStickyBookCTA from scroll position', () => {
+  it('animates newly intersecting elements', () => {
     render(
       <UIProvider>
         <Consumer />
       </UIProvider>,
     )
 
-    // Initially at top → CTA should be hidden
-    expect(screen.getByTestId('sticky-cta')).toHaveTextContent('false')
+    const animationCallback = callbacks[0]
+    const target = document.createElement('div')
+    target.classList.add('opacity-0', 'translate-y-8')
 
     act(() => {
-      Object.defineProperty(window, 'scrollY', { value: 350, writable: true })
-      window.dispatchEvent(new Event('scroll'))
-    })
-
-    // After scrolling past threshold → CTA should be visible
-    expect(screen.getByTestId('sticky-cta')).toHaveTextContent('true')
-
-    act(() => {
-      Object.defineProperty(window, 'scrollY', { value: 0, writable: true })
-      window.dispatchEvent(new Event('scroll'))
-    })
-
-    // Back at top → CTA should be hidden again
-    expect(screen.getByTestId('sticky-cta')).toHaveTextContent('false')
-  })
-
-  it('updates activeSection when observed entries intersect', () => {
-    render(
-      <UIProvider>
-        <Consumer />
-      </UIProvider>,
-    )
-
-    const sectionCallback = callbacks[0]
-    expect(sectionCallback).toBeDefined()
-
-    act(() => {
-      sectionCallback?.(
+      animationCallback?.(
         [
           {
             isIntersecting: true,
-            target: { id: 'o-mnie' },
-          } as IntersectionObserverEntry,
+            target,
+          } as unknown as IntersectionObserverEntry,
         ],
         {} as IntersectionObserver,
       )
     })
 
-    expect(screen.getByTestId('section')).toHaveTextContent('o-mnie')
+    expect(target).toHaveClass('animate-fade-up')
+    expect(target).not.toHaveClass('opacity-0')
   })
 })

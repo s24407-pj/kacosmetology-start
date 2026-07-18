@@ -1,71 +1,32 @@
-import App from '@app/App'
-import { RenderTimeProvider } from '@context/RenderTimeProvider'
-import {
-  PLAYWRIGHT_REFERENCE_TIME_QUERY_KEY,
-  resolveRenderTimeSnapshot,
-} from '@libs/renderTime'
-import { scheduleDeferredWork } from '@libs/scheduleDeferredWork'
+import HomePage from '@features/home/page/HomePage'
+import { createRouteHead } from '@libs/routeMetadata'
 import { createFileRoute } from '@tanstack/react-router'
-import { createServerFn } from '@tanstack/react-start'
-import { useEffect } from 'react'
-
-interface HomeSearch {
-  [key: string]: unknown
-  [PLAYWRIGHT_REFERENCE_TIME_QUERY_KEY]?: string
-}
-
-function validateHomeSearch(search: unknown): HomeSearch {
-  const values =
-    typeof search === 'object' && search !== null
-      ? (search as Record<string, unknown>)
-      : {}
-  const requestedReferenceTime =
-    typeof values[PLAYWRIGHT_REFERENCE_TIME_QUERY_KEY] === 'string'
-      ? values[PLAYWRIGHT_REFERENCE_TIME_QUERY_KEY]
-      : undefined
-
-  return {
-    ...values,
-    [PLAYWRIGHT_REFERENCE_TIME_QUERY_KEY]: requestedReferenceTime,
-  }
-}
-
-const getRenderTimeSnapshot = createServerFn({ method: 'GET' })
-  .validator((requestedReferenceTime: string | undefined) => {
-    return requestedReferenceTime
-  })
-  .handler(({ data: requestedReferenceTime }) => {
-    return resolveRenderTimeSnapshot({
-      now: new Date(),
-      requestedReferenceTime,
-      allowReferenceTime: process.env.PLAYWRIGHT_TEST_MODE === '1',
-    })
-  })
 
 export const Route = createFileRoute('/')({
-  validateSearch: validateHomeSearch,
-  loaderDeps: ({ search }) => ({
-    requestedReferenceTime:
-      search[PLAYWRIGHT_REFERENCE_TIME_QUERY_KEY] ?? undefined,
-  }),
-  loader: async ({ deps }) => ({
-    renderTimeSnapshot: await getRenderTimeSnapshot({
-      data: deps.requestedReferenceTime,
-    }),
-  }),
-  component: Home,
+  head: () => {
+    const head = createRouteHead({
+      path: '/',
+      title: 'Kosmetolog i trycholog w Starogardzie Gdańskim',
+      description:
+        'Indywidualna kosmetologia i trychologia w Ka.Cosmetology. Poznaj specjalizacje i umów wizytę.',
+    })
+    return {
+      ...head,
+      links: [
+        ...head.links,
+        {
+          rel: 'preload',
+          as: 'image',
+          type: 'image/webp',
+          href: '/images/hero-360.webp',
+          fetchPriority: 'high',
+          imageSrcSet:
+            '/images/hero-360.webp 360w, /images/hero-720.webp 720w, /images/hero-1080.webp 1080w',
+          imageSizes:
+            '(min-width: 810px) calc((min(100vw - 3rem, 80rem) - 3rem) / 2), min(100vw - 2rem, 28rem)',
+        },
+      ],
+    }
+  },
+  component: HomePage,
 })
-
-function Home() {
-  const { renderTimeSnapshot } = Route.useLoaderData()
-
-  useEffect(() => {
-    return scheduleDeferredWork()
-  }, [])
-
-  return (
-    <RenderTimeProvider snapshot={renderTimeSnapshot}>
-      <App />
-    </RenderTimeProvider>
-  )
-}

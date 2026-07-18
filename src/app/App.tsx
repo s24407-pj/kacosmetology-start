@@ -1,14 +1,15 @@
-import HomePage from '@features/home/page/HomePage'
+import { scheduleDeferredWork } from '@libs/scheduleDeferredWork'
+import { Outlet } from '@tanstack/react-router'
+import { useEffect } from 'react'
 import Layout from './layout/Layout'
-import { UIProvider } from './providers/UIProvider'
 
 function App() {
+  useEffect(() => scheduleDeferredWork(), [])
+
   return (
-    <UIProvider>
-      <Layout>
-        <HomePage />
-      </Layout>
-    </UIProvider>
+    <Layout>
+      <Outlet />
+    </Layout>
   )
 }
 

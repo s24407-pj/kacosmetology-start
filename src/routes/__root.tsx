@@ -1,24 +1,56 @@
-import { brand, primarySalonLocation } from '@data/business'
+import App from '@app/App'
+import { NotFoundPage } from '@app/page/NotFoundPage'
+import { RenderTimeProvider } from '@context/RenderTimeProvider'
+import { brand } from '@data/business'
 import crimsonLatin400 from '@fontsource/crimson-text/latin-400.css?url'
 import crimsonLatinExt400 from '@fontsource/crimson-text/latin-ext-400.css?url'
 import playfairLatin700 from '@fontsource/playfair-display/latin-700.css?url'
 import playfairLatinExt700 from '@fontsource/playfair-display/latin-ext-700.css?url'
-import { toBeautySalonJsonLd } from '@libs/businessMetadata'
+import {
+  PLAYWRIGHT_REFERENCE_TIME_QUERY_KEY,
+  resolveRenderTimeSnapshot,
+} from '@libs/renderTime'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { createRootRoute, HeadContent, Scripts } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+import { createServerFn } from '@tanstack/react-start'
 import appCss from '../app/styles/index.css?url'
 
-const structuredData = toBeautySalonJsonLd({
-  brand,
-  location: primarySalonLocation,
-  priceRange: '30-550 PLN',
-})
-
-const canonicalUrl = new URL('/', brand.siteUrl).href
 const logoUrl = new URL(brand.logo.imagePath, brand.siteUrl).href
 
+interface RootSearch {
+  [PLAYWRIGHT_REFERENCE_TIME_QUERY_KEY]?: string
+}
+
+const getRenderTimeSnapshot = createServerFn({ method: 'GET' })
+  .validator(
+    (requestedReferenceTime: string | undefined) => requestedReferenceTime,
+  )
+  .handler(({ data: requestedReferenceTime }) =>
+    resolveRenderTimeSnapshot({
+      now: new Date(),
+      requestedReferenceTime,
+      allowReferenceTime: process.env.PLAYWRIGHT_TEST_MODE === '1',
+    }),
+  )
+
 export const Route = createRootRoute({
+  validateSearch: (search: Record<string, unknown>): RootSearch => {
+    const value = search[PLAYWRIGHT_REFERENCE_TIME_QUERY_KEY]
+    return typeof value === 'string'
+      ? { [PLAYWRIGHT_REFERENCE_TIME_QUERY_KEY]: value }
+      : {}
+  },
+  loaderDeps: ({ search }) => ({
+    requestedReferenceTime: search[PLAYWRIGHT_REFERENCE_TIME_QUERY_KEY],
+  }),
+  loader: async ({ deps }) => ({
+    renderTimeSnapshot: await getRenderTimeSnapshot({
+      data: deps.requestedReferenceTime,
+    }),
+  }),
+  component: RootApplication,
+  notFoundComponent: NotFoundPage,
   head: () => ({
     meta: [
       { charSet: 'utf-8' },
@@ -26,14 +58,7 @@ export const Route = createRootRoute({
         name: 'viewport',
         content: 'width=device-width, initial-scale=1.0',
       },
-      {
-        title: `${brand.practitionerName} | Kosmetolog | Trycholog | ${primarySalonLocation.address.locality}`,
-      },
-      {
-        name: 'description',
-        content:
-          'Indywidualne terapie oparte na holistycznym podejściu – kosmetologia, trychologia i więcej. Praca z przyczyną, nie tylko z problemem. Zapisz się na konsultację.',
-      },
+      { title: brand.name },
       { name: 'author', content: brand.name },
       { name: 'robots', content: 'index, follow' },
       { name: 'apple-mobile-web-app-title', content: brand.name },
@@ -41,16 +66,6 @@ export const Route = createRootRoute({
       { property: 'og:site_name', content: brand.name },
       { property: 'og:type', content: 'website' },
       { property: 'og:locale', content: 'pl_PL' },
-      {
-        property: 'og:title',
-        content: `${brand.practitionerName} | Kosmetolog i Trycholog w ${primarySalonLocation.localityLocative}`,
-      },
-      {
-        property: 'og:description',
-        content:
-          'Indywidualne terapie oparte na holistycznym podejściu – kosmetologia, trychologia i więcej. Praca z przyczyną, nie tylko z problemem. Zapisz się na konsultację.',
-      },
-      { property: 'og:url', content: canonicalUrl },
       {
         property: 'og:image',
         content: logoUrl,
@@ -66,7 +81,6 @@ export const Route = createRootRoute({
       { rel: 'stylesheet', href: playfairLatinExt700 },
       { rel: 'stylesheet', href: crimsonLatin400 },
       { rel: 'stylesheet', href: crimsonLatinExt400 },
-      { rel: 'canonical', href: canonicalUrl },
       { rel: 'icon', href: '/favicon.ico', sizes: '48x48' },
       {
         rel: 'icon',
@@ -87,32 +101,25 @@ export const Route = createRootRoute({
         href: '/apple-touch-icon.png',
       },
       { rel: 'manifest', href: '/site.webmanifest' },
-      {
-        rel: 'preload',
-        as: 'image',
-        type: 'image/webp',
-        href: '/images/hero-360.webp',
-        fetchPriority: 'high',
-        imageSrcSet:
-          '/images/hero-360.webp 360w, /images/hero-720.webp 720w, /images/hero-1080.webp 1080w',
-        imageSizes:
-          '(min-width: 810px) calc((min(100vw - 3rem, 80rem) - 3rem) / 2), min(100vw - 2rem, 28rem)',
-      },
     ],
   }),
   shellComponent: RootDocument,
 })
+
+function RootApplication() {
+  const { renderTimeSnapshot } = Route.useLoaderData()
+  return (
+    <RenderTimeProvider snapshot={renderTimeSnapshot}>
+      <App />
+    </RenderTimeProvider>
+  )
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pl">
       <head>
         <HeadContent />
-        <script
-          type="application/ld+json"
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: Static, controlled JSON-LD.
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
       </head>
       <body>
         {children}

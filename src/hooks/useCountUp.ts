@@ -17,7 +17,7 @@ export function useCountUp(
   const [value, setValue] = useState(() =>
     prefersReducedMotion()
       ? finalValue
-      : '0' + (decimals > 0 ? '.' + '0'.repeat(decimals) : ''),
+      : `0${decimals > 0 ? `.${'0'.repeat(decimals)}` : ''}`,
   )
   const started = useRef(false)
 

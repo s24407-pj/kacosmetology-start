@@ -12,7 +12,7 @@ describe('GallerySection', () => {
   it('renders the section with correct id', () => {
     render(<GallerySection />)
 
-    expect(document.getElementById('galeria')).toBeInTheDocument()
+    expect(document.getElementById('gabinet')).toBeInTheDocument()
     expect(screen.getByLabelText('Galeria zdjęć')).toBeInTheDocument()
   })
 

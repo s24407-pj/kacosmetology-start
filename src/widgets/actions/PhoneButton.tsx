@@ -1,3 +1,4 @@
+import { iconActionStyles } from '@components/ui'
 import { useRenderTime } from '@context/RenderTimeProvider'
 import { primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
@@ -16,7 +17,7 @@ export default function PhoneButton() {
     <a
       href={`tel:${phoneNumber}`}
       onClick={() => trackPlausibleEvent('Call CTA Click')}
-      className="relative text-text-secondary hover:text-action transition-colors p-2 hover:bg-surface-muted rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+      className={iconActionStyles({ className: 'relative' })}
       aria-label={`Zadzwoń pod numer ${primarySalonLocation.phone}${salonOpen ? ', gabinet jest teraz otwarty' : ''}`}
       title={`Zadzwoń pod numer ${primarySalonLocation.phone}`}
     >
