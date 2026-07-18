@@ -9,6 +9,131 @@ const ready = async (page: import('@playwright/test').Page, path: string) => {
   )
 }
 
+test('desktop routes expose their complete metadata contract', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, 'Desktop metadata contract')
+
+  const routes = [
+    {
+      path: '/',
+      canonical: 'https://kacosmetology.pl/',
+      title: 'Kosmetolog i trycholog w Starogardzie Gdańskim | Ka.Cosmetology',
+      description:
+        'Indywidualna kosmetologia i trychologia w Ka.Cosmetology. Poznaj specjalizacje i umów wizytę.',
+    },
+    {
+      path: '/galeria',
+      canonical: 'https://kacosmetology.pl/galeria',
+      title: 'Galeria | Ka.Cosmetology',
+      description:
+        'Efekty zabiegów i wnętrze gabinetu Ka.Cosmetology w Starogardzie Gdańskim.',
+    },
+    {
+      path: '/kosmetologia',
+      canonical: 'https://kacosmetology.pl/kosmetologia',
+      title: 'Kosmetologia | Ka.Cosmetology',
+      description:
+        'Indywidualne terapie skóry i zabiegi kosmetologiczne w Starogardzie Gdańskim.',
+    },
+    {
+      path: '/oprawa-oka',
+      canonical: 'https://kacosmetology.pl/oprawa-oka',
+      title: 'Oprawa oka | Ka.Cosmetology',
+      description:
+        'Stylizacja brwi i rzęs dopasowana do urody i oczekiwanego efektu w Starogardzie Gdańskim.',
+    },
+    {
+      path: '/trychologia',
+      canonical: 'https://kacosmetology.pl/trychologia',
+      title: 'Trychologia | Ka.Cosmetology',
+      description:
+        'Konsultacje trychologiczne, badanie skóry głowy i indywidualny plan postępowania.',
+    },
+    {
+      path: '/kosmetologia/oczyszczanie-wodorowe',
+      canonical: 'https://kacosmetology.pl/kosmetologia/oczyszczanie-wodorowe',
+      title: 'Oczyszczanie wodorowe | Ka.Cosmetology',
+      description:
+        'Nowoczesna, wieloetapowa terapia oczyszczająca z aktywnym wodorem: dogłębne oczyszczenie, neutralizacja wolnych rodników, dotlenienie i rozjaśnienie skóry.',
+    },
+    {
+      path: '/oprawa-oka/laminacja-brwi-regulacja-bez-koloryzacji',
+      canonical:
+        'https://kacosmetology.pl/oprawa-oka/laminacja-brwi-regulacja-bez-koloryzacji',
+      title: 'Laminacja brwi + regulacja (bez koloryzacji) | Ka.Cosmetology',
+      description: 'Utrwalenie kształtu brwi bez zmiany ich koloru.',
+    },
+    {
+      path: '/trychologia/zabieg-trychologiczny-dobrany-indywidualnie',
+      canonical:
+        'https://kacosmetology.pl/trychologia/zabieg-trychologiczny-dobrany-indywidualnie',
+      title: 'Zabieg trychologiczny dobrany indywidualnie | Ka.Cosmetology',
+      description:
+        'Zabieg dobierany indywidualnie na podstawie konsultacji – może obejmować oczyszczanie, peeling, terapie przeciwłojotokowe, przeciwzapalne, nawilżające, wzmacniające cebulki lub stymulujące porost.',
+    },
+  ] as const
+
+  for (const route of routes) {
+    await ready(page, route.path)
+    await expect(page).toHaveTitle(route.title)
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      route.canonical,
+    )
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      'content',
+      route.description,
+    )
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+      'content',
+      route.title,
+    )
+    await expect(
+      page.locator('meta[property="og:description"]'),
+    ).toHaveAttribute('content', route.description)
+    await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+      'content',
+      route.canonical,
+    )
+
+    await expect(page.locator('html')).toHaveAttribute('lang', 'pl')
+    await expect(page.locator('meta[name="author"]')).toHaveAttribute(
+      'content',
+      'Ka.Cosmetology',
+    )
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+      'content',
+      'index, follow',
+    )
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute(
+      'content',
+      '#722F37',
+    )
+    await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute(
+      'content',
+      'Ka.Cosmetology',
+    )
+    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
+      'content',
+      'website',
+    )
+    await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute(
+      'content',
+      'pl_PL',
+    )
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      'content',
+      'https://kacosmetology.pl/images/logo.webp',
+    )
+    await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute(
+      'content',
+      'Logotyp Ka.Cosmetology – monogram w odcieniach burgundu',
+    )
+  }
+})
+
 test('home is compact and leads to all three specializations', async ({
   page,
 }) => {
@@ -199,6 +324,23 @@ test('desktop navigation exposes home sections and keeps its CTA aligned', async
     )
   })
   expect(centerOffset).toBeLessThanOrEqual(1)
+})
+
+test('navigation retries deferred home hash scrolling from another route', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, 'Desktop navigation behavior')
+  await page.setViewportSize({ width: 1180, height: 720 })
+  await ready(page, '/kosmetologia')
+
+  await page
+    .getByRole('navigation', { name: 'Główna nawigacja' })
+    .getByRole('link', { name: 'Kontakt' })
+    .click()
+
+  await expect(page).toHaveURL(/\/#kontakt$/)
+  await expect(page.locator('#kontakt')).toBeInViewport()
 })
 
 test('gallery owns effect and cabinet sections', async ({ page }) => {

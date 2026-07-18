@@ -5,7 +5,7 @@ loads the brand home, specialization, service-detail, reservation, and gallery
 routes; Nitro renders them and React hydrates the same tree. The application
 has no general business API/data-service layer: authored business data is
 compiled from TypeScript in `src/data/`. The narrow render-time server function
-lives in `src/routes/index.tsx`.
+lives in `src/routes/__root.tsx`.
 
 ## Boundaries and dependency direction
 
@@ -37,8 +37,10 @@ Canonical ownership matters because most changes cross several rendered views:
   are projections, not competing sources. Evidence: F-008, F-014,
   `src/data/business.test.ts`, `src/libs/openingHours.test.ts`.
 - `navigation.ts` owns top-level route labels and destinations. TanStack Router
-  owns current-route state; `useLegacyHashRedirect` is an input-only bridge for
-  historical home hashes.
+  owns current-route state; `HomePage` retries scrolling when a lazy home hash
+  target mounts, and `useLegacyHashRedirect` is an input-only bridge for
+  historical home hashes. Evidence: `src/features/home/page/HomePage.test.tsx`,
+  `tests/e2e/route-architecture.spec.ts`.
 
 ## Route architecture
 
@@ -69,7 +71,8 @@ Services reference promotions and history by `ServiceId`. Current promotion
 resolution and immutable historical facts deliberately remain separate: a new
 campaign cannot rewrite what a past customer price was. UI consumes both and
 renders the disclosure. Evidence: F-001, F-002, F-004, F-005,
-`src/features/services/components/ExpandableServiceCard.test.tsx`.
+`src/libs/servicePricing.test.ts`, `src/components/ui/ServicePrice.test.tsx`,
+`src/components/ui/ServiceCard.test.tsx`.
 
 ## State, errors, and background work
 
@@ -81,6 +84,7 @@ Eager home content renders normally. Below-fold sections mount after load/idle
 or direct hash demand, and each is wrapped in its own
 `DeferredSectionBoundary`. A rejected lazy chunk therefore replaces only that
 section with Polish recovery UI; reload remains user-triggered. Evidence: F-003,
+`src/features/home/page/HomePage.test.tsx`,
 `src/features/home/components/DeferredSectionBoundary.test.tsx`.
 
 `scheduleDeferredWork` owns when optional work starts: analytics after load and
@@ -104,15 +108,10 @@ fire-and-forget. Evidence: F-012, `src/libs/analytics.test.ts`.
   production singleton and permits deterministic lifecycle tests without global
   reset hooks or duplicate state machines. Evidence: F-012,
   `src/libs/analytics.test.ts`.
-- Looks wrong at first glance; intentional because Mobile Safari skips only the
-  synthetic reload-recovery assertion. WebKit retains the injected rejected
-  module; isolation and accessibility still run, while Chromium proves reload
-  recovery. Evidence: F-003,
-  `tests/e2e/deferred-section-failure.spec.ts`.
 - The E2E client-ready document attribute is a test synchronization contract,
   set after React effects install interactive behavior. It is not product state.
   Evidence: F-010, `src/app/providers/RenderTimeProvider.test.tsx`,
-  `tests/e2e/pages/HomePage.ts`.
+  `tests/e2e/route-architecture.spec.ts`.
 
 ## Change guide
 

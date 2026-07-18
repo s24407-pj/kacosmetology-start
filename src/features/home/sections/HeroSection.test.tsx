@@ -7,10 +7,6 @@ vi.mock('@libs/analytics', () => ({
   trackPlausibleEvent: vi.fn(),
 }))
 
-vi.mock('@hooks/useSectionNavigation', () => ({
-  useSectionNavigation: () => vi.fn(),
-}))
-
 import { brand, primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import HeroSection from './HeroSection'
