@@ -1,5 +1,4 @@
 import { brand, primarySalonLocation } from '@data/business'
-import { useLegacyHashRedirect } from '@hooks/useLegacyHashRedirect'
 import { useReducedMotion } from '@hooks/useReducedMotion'
 import { useScrollDepthTracking } from '@hooks/useScrollDepthTracking'
 import { toBeautySalonJsonLd } from '@libs/businessMetadata'
@@ -113,7 +112,6 @@ const structuredData = toBeautySalonJsonLd({
 
 export default function HomePage() {
   useScrollDepthTracking()
-  useLegacyHashRedirect()
   const shouldMountDeferredSections = useDeferredSections()
   return (
     <>

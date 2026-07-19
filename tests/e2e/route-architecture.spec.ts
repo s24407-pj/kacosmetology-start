@@ -337,15 +337,6 @@ test('gallery owns effect and cabinet sections', async ({ page }) => {
   await expect(page.locator('#gabinet')).toBeVisible()
 })
 
-test('legacy home hashes redirect to their new canonical destinations', async ({
-  page,
-}) => {
-  await ready(page, '/#efekty')
-  await expect(page).toHaveURL(/\/galeria#efekty$/)
-  await ready(page, '/#services-vouchery')
-  await expect(page).toHaveURL(/\/#voucher$/)
-})
-
 test('uses CSS-first reveals on representative public routes', async ({
   page,
 }) => {

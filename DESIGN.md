@@ -38,8 +38,7 @@ Canonical ownership matters because most changes cross several rendered views:
   `src/data/business.test.ts`, `src/libs/openingHours.test.ts`.
 - `navigation.ts` owns top-level route labels and destinations. TanStack Router
   owns current-route state; `HomePage` retries scrolling when a lazy home hash
-  target mounts, and `useLegacyHashRedirect` is an input-only bridge for
-  historical home hashes. Evidence: `src/features/home/page/HomePage.test.tsx`,
+  target mounts. Evidence: `src/features/home/page/HomePage.test.tsx`,
   `tests/e2e/route-architecture.spec.ts`.
 
 ## Route architecture
