@@ -5,6 +5,7 @@ import { Heading } from './Heading'
 import { Text } from './Text'
 
 type PageHeroProps = {
+  className?: string
   title: ReactNode
   eyebrow?: string
   description?: ReactNode
@@ -17,6 +18,7 @@ type PageHeroProps = {
 }
 
 export function PageHero({
+  className,
   title,
   eyebrow,
   description,
@@ -29,7 +31,12 @@ export function PageHero({
 }: PageHeroProps) {
   const centered = align === 'center'
   return (
-    <section className="relative overflow-hidden border-b border-border-default bg-surface-muted px-4 pb-14 pt-52 sm:px-6 sm:pb-16 min-[810px]:pt-40">
+    <section
+      className={cn(
+        'relative overflow-hidden border-b border-border-default bg-surface-muted px-4 pb-14 pt-52 sm:px-6 sm:pb-16 min-[810px]:pt-40',
+        className,
+      )}
+    >
       <div
         className={cn(
           'mx-auto',

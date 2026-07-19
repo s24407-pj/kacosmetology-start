@@ -5,6 +5,7 @@ export function NotFoundPage() {
   return (
     <PageHero
       align="center"
+      className="flex-1"
       maxWidth="medium"
       eyebrow="Błąd 404"
       title="Nie znaleziono strony"
