@@ -355,7 +355,7 @@ test('uses CSS-first reveals on representative public routes', async ({
 })
 
 test.describe('reduced motion', () => {
-  test.use({ reducedMotion: 'reduce' })
+  test.use({ contextOptions: { reducedMotion: 'reduce' } })
 
   test('removes decorative motion while keeping home content available', async ({
     page,
