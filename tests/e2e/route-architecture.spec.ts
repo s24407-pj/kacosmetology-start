@@ -1,9 +1,9 @@
 import AxeBuilder from '@axe-core/playwright'
 import { brand } from '@data/business'
 import { getPublicServicePath, services } from '@data/services'
-import { expect, test } from '@playwright/test'
+import { expect, type Page, test } from '@playwright/test'
 
-const ready = async (page: import('@playwright/test').Page, path: string) => {
+const ready = async (page: Page, path: string) => {
   await page.goto(path)
   await expect(page.locator('html')).toHaveAttribute(
     'data-react-client-ready',
@@ -56,69 +56,69 @@ const metadataRoutes = [
   }),
 ]
 
-test('desktop public pages expose the metadata contract', async ({
-  page,
-  isMobile,
-}) => {
-  test.skip(isMobile, 'Desktop metadata contract')
-
+test.describe('desktop public metadata', () => {
   for (const route of metadataRoutes) {
-    const canonical = new URL(route.path, brand.siteUrl).href
-    await ready(page, route.path)
-    await expect(page).toHaveTitle(route.title)
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
-      'href',
-      canonical,
-    )
-    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
-      'content',
-      route.description,
-    )
-    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
-      'content',
-      route.title,
-    )
-    await expect(
-      page.locator('meta[property="og:description"]'),
-    ).toHaveAttribute('content', route.description)
-    await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
-      'content',
-      canonical,
-    )
+    test(`${route.path} exposes the metadata contract`, async ({
+      page,
+      isMobile,
+    }) => {
+      test.skip(isMobile, 'Desktop metadata contract')
 
-    await expect(page.locator('html')).toHaveAttribute('lang', 'pl')
-    await expect(page.locator('meta[name="author"]')).toHaveAttribute(
-      'content',
-      brand.name,
-    )
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-      'content',
-      'index, follow',
-    )
-    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute(
-      'content',
-      '#722F37',
-    )
-    await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute(
-      'content',
-      brand.name,
-    )
-    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
-      'content',
-      'website',
-    )
-    await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute(
-      'content',
-      'pl_PL',
-    )
-    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
-      'content',
-      new URL(brand.logo.imagePath, brand.siteUrl).href,
-    )
-    await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute(
-      'content',
-      brand.logo.imageAlt,
-    )
+      const canonical = new URL(route.path, brand.siteUrl).href
+      await ready(page, route.path)
+      await expect(page).toHaveTitle(route.title)
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+        'href',
+        canonical,
+      )
+      await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+        'content',
+        route.description,
+      )
+      await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+        'content',
+        route.title,
+      )
+      await expect(
+        page.locator('meta[property="og:description"]'),
+      ).toHaveAttribute('content', route.description)
+      await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+        'content',
+        canonical,
+      )
+
+      await expect(page.locator('html')).toHaveAttribute('lang', 'pl')
+      await expect(page.locator('meta[name="author"]')).toHaveAttribute(
+        'content',
+        brand.name,
+      )
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+        'content',
+        'index, follow',
+      )
+      await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute(
+        'content',
+        '#722F37',
+      )
+      await expect(
+        page.locator('meta[property="og:site_name"]'),
+      ).toHaveAttribute('content', brand.name)
+      await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
+        'content',
+        'website',
+      )
+      await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute(
+        'content',
+        'pl_PL',
+      )
+      await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+        'content',
+        new URL(brand.logo.imagePath, brand.siteUrl).href,
+      )
+      await expect(
+        page.locator('meta[property="og:image:alt"]'),
+      ).toHaveAttribute('content', brand.logo.imageAlt)
+    })
   }
 })
 
@@ -157,8 +157,10 @@ test('home preserves the four-step process and lazy Google map', async ({
     'Zalecenia',
     'Dalsza praca ze skórą',
   ]) {
-    const headings = page.getByRole('heading', { name: step })
-    await expect(isMobile ? headings.last() : headings.first()).toBeVisible()
+    const heading = page
+      .getByRole('heading', { name: step })
+      .filter({ visible: true })
+    await expect(heading).toBeVisible()
   }
   if (!isMobile) {
     await expect(
@@ -181,8 +183,21 @@ test('landing and detail routes preserve specialization boundaries', async ({
   await expect(
     page.getByRole('img', { name: /zabiegu kosmetologicznego/i }),
   ).toBeVisible()
-  await page.getByRole('link', { name: 'Poznaj szczegóły' }).first().click()
-  await expect(page).toHaveURL(/\/kosmetologia\/[a-z0-9-]+$/)
+  const hydrogenCleaningCard = page.locator('article').filter({
+    has: page.getByRole('heading', {
+      level: 3,
+      name: 'Oczyszczanie wodorowe',
+    }),
+  })
+  const hydrogenCleaningDetails = hydrogenCleaningCard.getByRole('link', {
+    name: 'Poznaj szczegóły',
+  })
+  await expect(hydrogenCleaningDetails).toHaveAttribute(
+    'href',
+    '/kosmetologia/oczyszczanie-wodorowe',
+  )
+  await hydrogenCleaningDetails.click()
+  await expect(page).toHaveURL('/kosmetologia/oczyszczanie-wodorowe')
   await expect(page.getByRole('navigation', { name: 'Okruszki' })).toBeVisible()
 
   await ready(page, '/oprawa-oka')
@@ -198,8 +213,21 @@ test('landing and detail routes preserve specialization boundaries', async ({
       exact: true,
     }),
   ).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
-  await page.getByRole('link', { name: 'Poznaj szczegóły' }).first().click()
-  await expect(page).toHaveURL(/\/oprawa-oka\/[a-z0-9-]+$/)
+  const eyebrowRegulationCard = page.locator('article').filter({
+    has: page.getByRole('heading', {
+      level: 3,
+      name: 'Regulacja brwi',
+    }),
+  })
+  const eyebrowRegulationDetails = eyebrowRegulationCard.getByRole('link', {
+    name: 'Poznaj szczegóły',
+  })
+  await expect(eyebrowRegulationDetails).toHaveAttribute(
+    'href',
+    '/oprawa-oka/regulacja-brwi',
+  )
+  await eyebrowRegulationDetails.click()
+  await expect(page).toHaveURL('/oprawa-oka/regulacja-brwi')
   await expect(page.getByRole('navigation', { name: 'Okruszki' })).toBeVisible()
 
   await ready(page, '/trychologia/oczyszczanie-wodorowe')
@@ -212,14 +240,14 @@ test('landing and detail routes preserve specialization boundaries', async ({
   ).toBeVisible()
 })
 
-test('specialization pages explain a distinct path without horizontal overflow', async ({
-  page,
-}) => {
-  for (const [path, title] of [
-    ['/kosmetologia', 'Od potrzeby skóry do przemyślanego planu'],
-    ['/trychologia', 'Konsultacja, zanim wybierzesz zabieg'],
-    ['/oprawa-oka', 'Zacznij od efektu, nie od nazwy zabiegu'],
-  ] as const) {
+for (const [path, title] of [
+  ['/kosmetologia', 'Od potrzeby skóry do przemyślanego planu'],
+  ['/trychologia', 'Konsultacja, zanim wybierzesz zabieg'],
+  ['/oprawa-oka', 'Zacznij od efektu, nie od nazwy zabiegu'],
+] as const) {
+  test(`${path} explains its distinct path without horizontal overflow`, async ({
+    page,
+  }) => {
     await ready(page, path)
     await expect(
       page.getByRole('heading', { level: 2, name: title }),
@@ -229,25 +257,24 @@ test('specialization pages explain a distinct path without horizontal overflow',
         () => document.documentElement.scrollWidth <= window.innerWidth,
       ),
     ).toBe(true)
-  }
-
-  const regulation = page.getByRole('link', {
-    name: 'Regulacja brwi',
-    exact: true,
   })
-  await expect(regulation).toHaveAttribute('href', '/oprawa-oka/regulacja-brwi')
-  await regulation.click()
-  await expect(page).toHaveURL(/\/oprawa-oka\/regulacja-brwi$/)
-})
+}
 
 test('booking actions lead directly to Booksy and the legacy route redirects', async ({
   page,
   request,
 }) => {
   await ready(page, '/')
-  const booksy = page.locator('a[href="https://kacosmetology.booksy.com"]')
-  await expect(booksy.first()).toBeVisible()
-  await expect(booksy.first()).toHaveAttribute('target', '_blank')
+  const booksy = page.locator('#hero').getByRole('link', {
+    name: 'Umów wizytę w Booksy (otwiera nową kartę)',
+    exact: true,
+  })
+  await expect(booksy).toBeVisible()
+  await expect(booksy).toHaveAttribute(
+    'href',
+    'https://kacosmetology.booksy.com',
+  )
+  await expect(booksy).toHaveAttribute('target', '_blank')
   await expect(page.locator('a[href^="/rezerwacja"]')).toHaveCount(0)
 
   const response = await request.get('/rezerwacja', { maxRedirects: 0 })
@@ -337,22 +364,41 @@ test('gallery owns effect and cabinet sections', async ({ page }) => {
   await expect(page.locator('#gabinet')).toBeVisible()
 })
 
-test('uses CSS-first reveals on representative public routes', async ({
-  page,
-}) => {
-  for (const path of [
-    '/',
-    '/kosmetologia',
-    '/kosmetologia/oczyszczanie-wodorowe',
-    '/galeria',
-  ]) {
-    await ready(page, path)
-    const reveal = page.locator('[data-reveal-on-scroll]').first()
+const revealRoutes = [
+  {
+    path: '/',
+    section: '#hero',
+    heading: 'Katarzyna Suwalska',
+  },
+  { path: '/kosmetologia', heading: 'Kosmetologia' },
+  {
+    path: '/kosmetologia/oczyszczanie-wodorowe',
+    heading: 'Oczyszczanie wodorowe',
+  },
+  { path: '/galeria', heading: 'Galeria' },
+] as const
+
+for (const route of revealRoutes) {
+  test(`${route.path} uses CSS-first reveals`, async ({ page }) => {
+    await ready(page, route.path)
+    const section =
+      'section' in route
+        ? page.locator(route.section)
+        : page.locator('section').filter({
+            has: page.getByRole('heading', {
+              level: 1,
+              name: route.heading,
+            }),
+          })
+    const reveal = section.locator('[data-reveal-on-scroll]').filter({
+      has: page.getByRole('heading', { level: 1, name: route.heading }),
+    })
+    await expect(reveal).toHaveCount(1)
     await reveal.scrollIntoViewIfNeeded()
     await expect(reveal).toHaveClass(/is-revealed/)
     await expect(reveal).not.toHaveCSS('transition-duration', '0s')
-  }
-})
+  })
+}
 
 test.describe('reduced motion', () => {
   test.use({ contextOptions: { reducedMotion: 'reduce' } })
@@ -368,30 +414,46 @@ test.describe('reduced motion', () => {
       'none',
     )
 
-    const portrait = page.locator('[data-reveal-on-scroll]').first()
-    await portrait.scrollIntoViewIfNeeded()
-    await expect(portrait).not.toHaveClass(/reveal-pending/)
-    await expect(portrait).toHaveCSS('opacity', '1')
+    const reveals = page.locator('[data-reveal-on-scroll]')
+    await expect(reveals).not.toHaveCount(0)
+    await expect
+      .poll(async () =>
+        reveals.evaluateAll((elements) =>
+          elements.every(
+            (element) =>
+              !element.classList.contains('reveal-pending') &&
+              getComputedStyle(element).opacity === '1',
+          ),
+        ),
+      )
+      .toBe(true)
 
     await ready(page, '/galeria')
-    const galleryImage = page.locator('#gabinet img').first()
-    await expect(galleryImage).toHaveCSS('transition-duration', '0s')
+    const galleryImages = page.locator('#gabinet img')
+    await expect(galleryImages).not.toHaveCount(0)
+    await expect
+      .poll(async () =>
+        galleryImages.evaluateAll((images) =>
+          images.every(
+            (image) => getComputedStyle(image).transitionDuration === '0s',
+          ),
+        ),
+      )
+      .toBe(true)
   })
 })
 
-test('route classes have no serious accessibility violations', async ({
-  page,
-}) => {
-  for (const path of [
-    '/',
-    '/kosmetologia',
-    '/kosmetologia/oczyszczanie-wodorowe',
-    '/oprawa-oka',
-    '/oprawa-oka/laminacja-brwi-regulacja-bez-koloryzacji',
-    '/trychologia',
-    '/trychologia/zabieg-trychologiczny-dobrany-indywidualnie',
-    '/galeria',
-  ]) {
+for (const path of [
+  '/',
+  '/kosmetologia',
+  '/kosmetologia/oczyszczanie-wodorowe',
+  '/oprawa-oka',
+  '/oprawa-oka/laminacja-brwi-regulacja-bez-koloryzacji',
+  '/trychologia',
+  '/trychologia/zabieg-trychologiczny-dobrany-indywidualnie',
+  '/galeria',
+]) {
+  test(`${path} has no serious accessibility violations`, async ({ page }) => {
     await ready(page, path)
     await page.addStyleTag({
       content:
@@ -405,8 +467,8 @@ test('route classes have no serious accessibility violations', async ({
         ({ impact }) => impact === 'serious' || impact === 'critical',
       ),
     ).toEqual([])
-  }
-})
+  })
+}
 
 test('mobile menu traps focus, closes with Escape and restores the trigger', async ({
   page,
