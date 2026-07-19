@@ -2,10 +2,6 @@ import App from '@app/App'
 import { NotFoundPage } from '@app/page/NotFoundPage'
 import { RenderTimeProvider } from '@context/RenderTimeProvider'
 import { brand } from '@data/business'
-import crimsonLatin400 from '@fontsource/crimson-text/latin-400.css?url'
-import crimsonLatinExt400 from '@fontsource/crimson-text/latin-ext-400.css?url'
-import playfairLatin700 from '@fontsource/playfair-display/latin-700.css?url'
-import playfairLatinExt700 from '@fontsource/playfair-display/latin-ext-700.css?url'
 import {
   PLAYWRIGHT_REFERENCE_TIME_QUERY_KEY,
   resolveRenderTimeSnapshot,
@@ -77,10 +73,6 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
-      { rel: 'stylesheet', href: playfairLatin700 },
-      { rel: 'stylesheet', href: playfairLatinExt700 },
-      { rel: 'stylesheet', href: crimsonLatin400 },
-      { rel: 'stylesheet', href: crimsonLatinExt400 },
       { rel: 'icon', href: '/favicon.ico', sizes: '48x48' },
       {
         rel: 'icon',
