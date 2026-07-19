@@ -4,7 +4,7 @@ import { iconActionStyles } from '@components/ui'
 import { useUI } from '@context/UIContext'
 import { MAIN_NAV_ITEMS } from '@data/navigation'
 import { trackPlausibleEvent } from '@libs/analytics'
-import { cn } from '@libs/utils'
+import { cn, scrollToTop } from '@libs/utils'
 import { Link, useRouterState } from '@tanstack/react-router'
 import CTAButton from '@widgets/actions/CTAButton'
 import PromotionBanner from '@widgets/actions/PromotionBanner'
@@ -56,6 +56,11 @@ export default function NavBar() {
   const track = (target: string, context: string) =>
     trackPlausibleEvent('Navigation Link Click', { target, context })
 
+  const handleLogoClick = () => {
+    track('home', 'logo')
+    if (location.pathname === '/') scrollToTop()
+  }
+
   const isActive = (item: (typeof MAIN_NAV_ITEMS)[number]) => {
     if (item.hash) {
       return location.pathname === '/' && location.hash === item.hash
@@ -99,7 +104,7 @@ export default function NavBar() {
               to="/"
               activeOptions={{ includeHash: true }}
               aria-label="Ka.Cosmetology — strona główna"
-              onClick={() => track('home', 'logo')}
+              onClick={handleLogoClick}
               className="justify-self-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40"
             >
               <KaCosmetologyLogo className="hidden w-32 text-action min-[1180px]:block" />

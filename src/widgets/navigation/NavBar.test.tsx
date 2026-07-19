@@ -12,6 +12,10 @@ vi.mock('@context/UIContext', () => ({
 }))
 vi.mock('@widgets/actions/PromotionBanner', () => ({ default: () => null }))
 vi.mock('@libs/analytics', () => ({ trackPlausibleEvent: vi.fn() }))
+vi.mock('@libs/utils', () => ({
+  cn: (...classes: unknown[]) => classes.filter(Boolean).join(' '),
+  scrollToTop: vi.fn(),
+}))
 vi.mock('@tanstack/react-router', () => ({
   useRouterState: ({ select }: { select: (state: unknown) => unknown }) =>
     select({ location: { pathname: '/', hash: '' } }),
@@ -33,6 +37,7 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }))
 
+import { scrollToTop } from '@libs/utils'
 import NavBar from './NavBar'
 
 describe('NavBar', () => {
@@ -64,6 +69,17 @@ describe('NavBar', () => {
     expect(
       screen.getByRole('link', { name: /Umów wizytę w Booksy/ }),
     ).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
+  })
+
+  it('scrolls to the top when the logo is clicked on the home page', async () => {
+    const user = userEvent.setup()
+    render(<NavBar />)
+
+    await user.click(
+      screen.getByRole('link', { name: 'Ka.Cosmetology — strona główna' }),
+    )
+
+    expect(scrollToTop).toHaveBeenCalledOnce()
   })
 
   it('opens the accessible mobile menu', async () => {
