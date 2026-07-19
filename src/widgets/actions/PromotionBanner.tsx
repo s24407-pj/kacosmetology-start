@@ -8,25 +8,13 @@ import {
 } from '@data/promotion'
 import { trackPlausibleEvent } from '@libs/analytics'
 import { Percent, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
-
-const AUTO_DISMISS_DURATION = 8000
+import { useState } from 'react'
 
 export default function PromotionBanner() {
   const renderTime = useRenderTime()
   const activePromotions = getAllActivePromotions(renderTime)
   const hasActivePromotions = activePromotions.length > 0
   const [isDismissed, setIsDismissed] = useState(false)
-
-  useEffect(() => {
-    if (!hasActivePromotions || isDismissed) return
-
-    const timer = setTimeout(() => {
-      setIsDismissed(true)
-    }, AUTO_DISMISS_DURATION)
-
-    return () => clearTimeout(timer)
-  }, [hasActivePromotions, isDismissed])
 
   if (!hasActivePromotions || isDismissed) {
     return null
@@ -107,33 +95,7 @@ export default function PromotionBanner() {
         })}
         aria-label="Zamknij baner promocji"
       >
-        <svg className="absolute inset-0 h-full w-full -rotate-90 pointer-events-none p-1">
-          <circle
-            cx="50%"
-            cy="50%"
-            r="44%"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            className="opacity-30"
-          />
-          <circle
-            cx="50%"
-            cy="50%"
-            r="44%"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeDasharray="100"
-            pathLength="100"
-            className="motion-safe:animate-shrink-spinner"
-            style={{ animationDuration: `${AUTO_DISMISS_DURATION}ms` }}
-          />
-        </svg>
-        <X
-          className="relative z-10 h-3.5 w-3.5 sm:h-4 sm:w-4"
-          aria-hidden="true"
-        />
+        <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
       </button>
     </div>
   )

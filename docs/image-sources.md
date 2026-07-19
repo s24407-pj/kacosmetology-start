@@ -8,8 +8,8 @@ stored WebP variants. The photos are free to use under the
 
 | Specialization | Photographer | Source |
 | --- | --- | --- |
-| Cosmetology | cottonbro studio | [Woman during a beauty procedure, photo 7581075](https://www.pexels.com/photo/woman-on-a-beauty-procedure-7581075/) |
-| Eye styling | Chloe Amaya | [Warm close-up of an eye, eyebrow and eyelashes, photo 4079216](https://www.pexels.com/photo/womans-face-in-close-up-4079216/) |
+| Cosmetology | Anna Shvets | [Beautician massaging client face during spa procedures, photo 5069493](https://www.pexels.com/photo/crop-beautician-massaging-client-face-with-lotion-during-spa-procedures-5069493/) |
+| Eye styling | ehsan ahmadnejad | [Macro view of an eye, photo 9882535](https://www.pexels.com/photo/sight-eyesight-eye-macro-9882535/) |
 | Trichology | Beyzanur K. | [Applying serum at the hair part, photo 28994390](https://www.pexels.com/photo/applying-hair-serum-with-precision-dropper-28994390/) |
 
 The source files and their 360, 720, and 1080 px variants live separately
@@ -18,14 +18,13 @@ from landing-page photography in `public/images/specialization-cards/`.
 ## Specialization landing pages
 
 Stock photographs used in specialization landing-page heroes are stored locally
-and optimized to WebP. They are free to use under the
-[Unsplash License](https://unsplash.com/license).
+and optimized to WebP.
 
-| Specialization | Photographer | Source |
-| --- | --- | --- |
-| Cosmetology | kimia kazemi | [Facial treatment with brush applying white cream to face](https://unsplash.com/photos/Xxs9WvkUPLo) |
-| Trichology | Anna Blake | [Woman receiving a head massage on a pillow](https://unsplash.com/photos/qyUR9meb4bU) |
-| Eye styling | Amanda Dalbjörn | [Close-up photo of a person's eye](https://unsplash.com/photos/fvInY-Gh7sc) |
+| Specialization | Photographer | Source | License |
+| --- | --- | --- | --- |
+| Cosmetology | Gustavo Fring | [Facial mask treatment, photo 3985360](https://www.pexels.com/photo/zdrowy-kobiety-bez-twarzy-rozmyty-3985360/) | [Pexels](https://www.pexels.com/license/) |
+| Trichology | RDNE Stock project | [Hands washing wet hair, photo 7755473](https://www.pexels.com/photo/rece-kobieta-mokry-wlosy-7755473/) | [Pexels](https://www.pexels.com/license/) |
+| Eye styling | Amanda Dalbjörn | [Close-up photo of a person's eye](https://unsplash.com/photos/fvInY-Gh7sc) | [Unsplash](https://unsplash.com/license) |
 
 The photographs are illustrative. They do not present Ka.Cosmetology treatment
 results or identify the practitioner or clients of the salon.

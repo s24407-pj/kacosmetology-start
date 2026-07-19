@@ -49,6 +49,7 @@ describe('UIProvider', () => {
 
   afterEach(() => {
     cleanup()
+    document.documentElement.removeAttribute('data-reveals-armed')
     vi.resetAllMocks()
     vi.unstubAllGlobals()
     callbacks = []
@@ -111,8 +112,8 @@ describe('UIProvider', () => {
       )
     })
 
-    expect(target).toHaveClass('is-revealed')
-    expect(target).not.toHaveClass('reveal-pending')
+    expect(document.documentElement).toHaveAttribute('data-reveals-armed')
+    expect(target).toHaveAttribute('data-revealed')
   })
 
   it('tracks scrolling without creating an entrance observer when reduced motion is preferred', () => {
@@ -132,6 +133,7 @@ describe('UIProvider', () => {
     )
 
     expect(callbacks).toHaveLength(0)
+    expect(document.documentElement).not.toHaveAttribute('data-reveals-armed')
 
     act(() => {
       Object.defineProperty(window, 'scrollY', { value: 350, writable: true })

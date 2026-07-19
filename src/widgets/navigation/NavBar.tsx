@@ -164,7 +164,7 @@ export default function NavBar() {
                     track(item.id, 'mobile-menu')
                     setIsMenuOpen(false)
                   }}
-                  className="inline-flex min-h-12 items-center justify-center rounded-md px-4 font-display text-2xl font-medium text-text-primary transition-[transform,color] duration-300 ease-out hover:scale-105 hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 motion-reduce:transform-none motion-reduce:transition-none aria-[current=page]:text-action"
+                  className="inline-flex min-h-12 items-center justify-center rounded-md px-4 font-display text-2xl font-medium text-text-primary transition-colors duration-300 ease-out hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 motion-reduce:transition-none aria-[current=page]:text-action"
                 >
                   {item.label}
                 </Link>

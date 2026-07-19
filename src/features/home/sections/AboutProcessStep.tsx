@@ -91,11 +91,7 @@ export default function AboutProcessStep({
   const active = isActive ?? true
   return (
     <article
-      role={isAccordion ? 'tab' : undefined}
-      aria-selected={isAccordion ? active : undefined}
-      aria-label={
-        isAccordion ? `${step.title}: ${step.description}` : undefined
-      }
+      aria-current={isAccordion && active ? 'step' : undefined}
       tabIndex={isAccordion ? 0 : undefined}
       onMouseEnter={onActivate}
       onFocus={onActivate}

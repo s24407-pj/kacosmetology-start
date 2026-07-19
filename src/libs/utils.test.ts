@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { formatDuration, scrollToTop } from './utils'
+import { formatDuration, scrollToId, scrollToTop } from './utils'
 
 describe('formatDuration', () => {
   it('returns minutes for durations under an hour', () => {
@@ -22,6 +22,11 @@ describe('formatDuration', () => {
 describe('scroll helpers', () => {
   afterEach(() => {
     vi.restoreAllMocks()
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      configurable: true,
+      value: vi.fn().mockReturnValue({ matches: false }),
+    })
   })
 
   it('smoothly scrolls to the top of the page', () => {
@@ -37,6 +42,7 @@ describe('scroll helpers', () => {
   it('uses an instant scroll when reduced motion is preferred', () => {
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
+      configurable: true,
       value: vi.fn().mockReturnValue({ matches: true }),
     })
     const scrollToSpy = vi
@@ -46,5 +52,30 @@ describe('scroll helpers', () => {
     scrollToTop()
 
     expect(scrollToSpy).toHaveBeenCalledWith({ top: 0, behavior: 'auto' })
+  })
+
+  it('smoothly scrolls to a section by id', () => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      configurable: true,
+      value: vi.fn().mockReturnValue({ matches: false }),
+    })
+    const target = document.createElement('div')
+    target.id = 'o-mnie'
+    const scrollIntoView = vi.fn()
+    target.scrollIntoView = scrollIntoView
+    document.body.append(target)
+
+    expect(scrollToId('o-mnie')).toBe(true)
+    expect(scrollIntoView).toHaveBeenCalledWith({
+      behavior: 'smooth',
+      block: 'start',
+    })
+
+    target.remove()
+  })
+
+  it('returns false when the section id is missing', () => {
+    expect(scrollToId('missing-section')).toBe(false)
   })
 })

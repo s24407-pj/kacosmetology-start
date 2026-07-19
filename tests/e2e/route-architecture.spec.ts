@@ -164,7 +164,7 @@ test('home preserves the four-step process and lazy Google map', async ({
   }
   if (!isMobile) {
     await expect(
-      page.getByRole('tablist', { name: 'Jak wygląda współpraca' }),
+      page.getByRole('group', { name: 'Jak wygląda współpraca' }),
     ).toBeVisible()
   }
   const map = page.getByTitle(/Lokalizacja gabinetu/)
@@ -181,7 +181,9 @@ test('landing and detail routes preserve specialization boundaries', async ({
     page.getByRole('heading', { level: 1, name: 'Kosmetologia' }),
   ).toBeVisible()
   await expect(
-    page.getByRole('img', { name: /zabiegu kosmetologicznego/i }),
+    page.getByRole('img', {
+      name: /zabieg pielęgnacyjny twarzy z aplikacją maski/i,
+    }),
   ).toBeVisible()
   const hydrogenCleaningCard = page.locator('article').filter({
     has: page.getByRole('heading', {
@@ -365,11 +367,6 @@ test('gallery owns effect and cabinet sections', async ({ page }) => {
 })
 
 const revealRoutes = [
-  {
-    path: '/',
-    section: '#hero',
-    heading: 'Katarzyna Suwalska',
-  },
   { path: '/kosmetologia', heading: 'Kosmetologia' },
   {
     path: '/kosmetologia/oczyszczanie-wodorowe',
@@ -378,24 +375,46 @@ const revealRoutes = [
   { path: '/galeria', heading: 'Galeria' },
 ] as const
 
+test('home keeps LCP hero visible without reveal gating', async ({ page }) => {
+  await ready(page, '/')
+
+  const hero = page.locator('#hero')
+  const heading = hero.getByRole('heading', {
+    level: 1,
+    name: 'Katarzyna Suwalska',
+  })
+  const image = hero.getByRole('img', { name: 'Katarzyna Suwalska' })
+
+  await expect(heading).toBeVisible()
+  await expect(image).toBeVisible()
+  await expect(
+    heading.locator('xpath=ancestor::*[@data-reveal-on-scroll]'),
+  ).toHaveCount(0)
+  await expect(
+    image.locator('xpath=ancestor::*[@data-reveal-on-scroll]'),
+  ).toHaveCount(0)
+
+  const aboutReveal = page.locator('#o-mnie [data-reveal-on-scroll]').first()
+  await aboutReveal.scrollIntoViewIfNeeded()
+  await expect(aboutReveal).toHaveAttribute('data-revealed')
+  await expect(aboutReveal).not.toHaveCSS('transition-duration', '0s')
+})
+
 for (const route of revealRoutes) {
   test(`${route.path} uses CSS-first reveals`, async ({ page }) => {
     await ready(page, route.path)
-    const section =
-      'section' in route
-        ? page.locator(route.section)
-        : page.locator('section').filter({
-            has: page.getByRole('heading', {
-              level: 1,
-              name: route.heading,
-            }),
-          })
+    const section = page.locator('section').filter({
+      has: page.getByRole('heading', {
+        level: 1,
+        name: route.heading,
+      }),
+    })
     const reveal = section.locator('[data-reveal-on-scroll]').filter({
       has: page.getByRole('heading', { level: 1, name: route.heading }),
     })
     await expect(reveal).toHaveCount(1)
     await reveal.scrollIntoViewIfNeeded()
-    await expect(reveal).toHaveClass(/is-revealed/)
+    await expect(reveal).toHaveAttribute('data-revealed')
     await expect(reveal).not.toHaveCSS('transition-duration', '0s')
   })
 }
@@ -421,7 +440,8 @@ test.describe('reduced motion', () => {
         reveals.evaluateAll((elements) =>
           elements.every(
             (element) =>
-              !element.classList.contains('reveal-pending') &&
+              !element.hasAttribute('data-revealed') &&
+              !document.documentElement.hasAttribute('data-reveals-armed') &&
               getComputedStyle(element).opacity === '1',
           ),
         ),

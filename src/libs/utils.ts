@@ -13,6 +13,17 @@ export function scrollToTop() {
   })
 }
 
+export function scrollToId(id: string) {
+  const target = document.getElementById(id)
+  if (!target) return false
+
+  target.scrollIntoView({
+    behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+    block: 'start',
+  })
+  return true
+}
+
 export function formatDuration(minutes: number): string {
   if (minutes < 60) return `${minutes} min`
 

@@ -29,7 +29,7 @@ export function actionLinkStyles({
   }
 
   return cn(
-    'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-[transform,background-color,color,box-shadow] duration-300 ease-out hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transform-none motion-reduce:transition-none',
+    'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-[background-color,color,box-shadow] duration-300 ease-out motion-reduce:transition-none',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 focus-visible:ring-offset-2',
     variants[variant],
     sizes[size],
@@ -39,11 +39,9 @@ export function actionLinkStyles({
 
 export function surfaceCardStyles({
   variant = 'raised',
-  interactive = false,
   className,
 }: {
   variant?: 'flat' | 'outlined' | 'raised'
-  interactive?: boolean
   className?: string
 } = {}) {
   const variants = {
@@ -52,12 +50,7 @@ export function surfaceCardStyles({
     raised: 'rounded-lg bg-surface shadow-subtle',
   }
 
-  return cn(
-    variants[variant],
-    interactive &&
-      'transition-[transform,background-color,box-shadow] duration-400 ease-out hover:-translate-y-1 hover:bg-surface-muted/40 hover:shadow-raised focus-within:-translate-y-1 focus-within:shadow-raised motion-reduce:transform-none motion-reduce:transition-none',
-    className,
-  )
+  return cn(variants[variant], className)
 }
 
 export function iconActionStyles({
@@ -81,7 +74,7 @@ export function iconActionStyles({
   }
 
   return cn(
-    'inline-flex shrink-0 items-center justify-center rounded-md transition-[transform,background-color,color,box-shadow] duration-300 ease-out hover:scale-105 active:scale-95 motion-reduce:transform-none motion-reduce:transition-none',
+    'inline-flex shrink-0 items-center justify-center rounded-md transition-[background-color,color,box-shadow] duration-300 ease-out motion-reduce:transition-none',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 focus-visible:ring-offset-2',
     tones[tone],
     sizes[size],
