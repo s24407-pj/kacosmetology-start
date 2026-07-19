@@ -120,9 +120,13 @@ export default function NavBar() {
                     activeOptions={{ includeHash: true }}
                     aria-current={isActive(item) ? 'page' : undefined}
                     onClick={() => track(item.id, 'desktop')}
-                    className="inline-flex min-h-11 items-center rounded-md px-2 font-medium text-text-secondary transition-colors duration-300 ease-out hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 aria-[current=page]:text-action"
+                    className="group relative inline-flex min-h-11 items-center rounded-md px-2 font-medium text-text-secondary transition-colors duration-300 ease-out hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 aria-[current=page]:text-action"
                   >
                     {item.label}
+                    <span
+                      aria-hidden="true"
+                      className="absolute bottom-1 left-2 right-2 h-px origin-left scale-x-0 bg-action transition-transform duration-200 ease-out group-hover:scale-x-100 group-aria-[current=page]:scale-x-100 motion-reduce:transition-none"
+                    />
                   </Link>
                 </li>
               ))}

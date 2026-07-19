@@ -20,6 +20,7 @@ export default defineConfig({
   plugins: [tailwindcss(), viteReact()],
   test: {
     environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.test.ts?(x)'],
     exclude: ['tests/e2e/**/*'],
     coverage: {

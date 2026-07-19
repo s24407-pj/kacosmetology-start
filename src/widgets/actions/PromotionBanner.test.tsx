@@ -23,6 +23,7 @@ import {
   getPromotionScopeDescription,
 } from '@data/promotion'
 import { trackPlausibleEvent } from '@libs/analytics'
+import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import PromotionBanner from './PromotionBanner'
 
 const getAllActivePromotionsMock = vi.mocked(getAllActivePromotions)
@@ -92,7 +93,10 @@ describe('PromotionBanner', () => {
     const view: RenderResult = render(<PromotionBanner />)
 
     const user: UserEvent = userEvent.setup()
-    await user.click(view.getByRole('link', { name: /Zarezerwuj termin/ }))
+    await clickAnalyticsLink(
+      user,
+      view.getByRole('link', { name: /Zarezerwuj termin/ }),
+    )
 
     expect(trackPlausibleEventMock).toHaveBeenCalledWith('CTA Booksy Click', {
       placement: 'promotion-banner',
@@ -154,8 +158,14 @@ describe('PromotionBanner', () => {
     ).toBeInTheDocument()
 
     const user = userEvent.setup()
-    await user.click(view.getByRole('link', { name: /Zarezerwuj pierwszy/ }))
-    await user.click(view.getByRole('link', { name: /Zarezerwuj drugi/ }))
+    await clickAnalyticsLink(
+      user,
+      view.getByRole('link', { name: /Zarezerwuj pierwszy/ }),
+    )
+    await clickAnalyticsLink(
+      user,
+      view.getByRole('link', { name: /Zarezerwuj drugi/ }),
+    )
 
     expect(trackPlausibleEventMock).toHaveBeenNthCalledWith(
       1,

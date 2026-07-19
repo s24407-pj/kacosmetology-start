@@ -23,6 +23,7 @@ vi.mock('@libs/analytics', () => ({
 import { primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import { isSalonOpenNow } from '@libs/openingHours'
+import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import PhoneButton from './PhoneButton'
 
 const isSalonOpenNowMock = vi.mocked(isSalonOpenNow)
@@ -54,7 +55,7 @@ describe('PhoneButton', () => {
       referenceTime,
     )
 
-    await user.click(link)
+    await clickAnalyticsLink(user, link)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Call CTA Click')
   })
 

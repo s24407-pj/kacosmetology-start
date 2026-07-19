@@ -118,6 +118,9 @@ describe('ServiceDetailPage', () => {
       screen.queryByText('Konsultacja kosmetologiczna online'),
     ).not.toBeInTheDocument()
 
+    relatedLink.addEventListener('click', (event) => event.preventDefault(), {
+      once: true,
+    })
     fireEvent.click(relatedLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Related Service Click', {
       serviceId: 'service-lifting-rzes-farbka',

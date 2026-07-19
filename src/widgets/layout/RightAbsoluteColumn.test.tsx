@@ -19,6 +19,7 @@ vi.mock('@libs/openingHours', async (importOriginal) => ({
 import { useUI } from '@context/UIContext'
 import { brand } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
+import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import RightAbsoluteColumn from './RightAbsoluteColumn'
 
 const useUIMock = vi.mocked(useUI)
@@ -49,7 +50,7 @@ describe('RightAbsoluteColumn', () => {
     expect(instagramLink).toHaveAttribute('target', '_blank')
     expect(instagramLink).toHaveAttribute('rel', 'noopener noreferrer')
 
-    await user.click(instagramLink)
+    await clickAnalyticsLink(user, instagramLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Social Media Click', {
       platform: 'instagram',
       placement: 'right_column',
@@ -76,7 +77,7 @@ describe('RightAbsoluteColumn', () => {
     expect(facebookLink).toHaveAttribute('target', '_blank')
     expect(facebookLink).toHaveAttribute('rel', 'noopener noreferrer')
 
-    await user.click(facebookLink)
+    await clickAnalyticsLink(user, facebookLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Social Media Click', {
       platform: 'facebook',
       placement: 'right_column',

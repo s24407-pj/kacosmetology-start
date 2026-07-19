@@ -68,9 +68,13 @@ describe('SpecializationsSection', () => {
   it('preserves specialization click analytics', () => {
     render(<SpecializationsSection />)
 
-    fireEvent.click(
-      screen.getByRole('link', { name: 'Poznaj ofertę — Oprawa oka' }),
-    )
+    const link = screen.getByRole('link', {
+      name: 'Poznaj ofertę — Oprawa oka',
+    })
+    link.addEventListener('click', (event) => event.preventDefault(), {
+      once: true,
+    })
+    fireEvent.click(link)
 
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Specialization Click', {
       area: 'cosmetology',

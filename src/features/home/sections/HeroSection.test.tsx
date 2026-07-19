@@ -9,6 +9,7 @@ vi.mock('@libs/analytics', () => ({
 
 import { brand, primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
+import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import HeroSection from './HeroSection'
 
 describe('HeroSection', () => {
@@ -69,7 +70,7 @@ describe('HeroSection', () => {
       `a[href="${primarySalonLocation.bookingUrl}"]`,
     )
     expect(booksyLink).toBeInTheDocument()
-    await user.click(booksyLink!)
+    await clickAnalyticsLink(user, booksyLink!)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('CTA Booksy Click', {
       placement: 'hero',
     })

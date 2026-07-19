@@ -23,6 +23,7 @@ vi.mock('@libs/analytics', () => ({
 
 import { trackPlausibleEvent } from '@libs/analytics'
 import { getOpeningHoursView } from '@libs/openingHours'
+import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import ContactSection from './ContactSection'
 
 const mockedGetOpeningHoursView = vi.mocked(getOpeningHoursView)
@@ -115,7 +116,7 @@ describe('ContactSection', () => {
       `tel:${primarySalonLocation.phone.replace(/\s+/g, '')}`,
     )
 
-    await user.click(phoneLink)
+    await clickAnalyticsLink(user, phoneLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
       channel: 'phone',
       placement: 'contact-section',
@@ -129,7 +130,7 @@ describe('ContactSection', () => {
     const emailLink = screen.getByRole('link', { name: brand.email })
     expect(emailLink).toHaveAttribute('href', `mailto:${brand.email}`)
 
-    await user.click(emailLink)
+    await clickAnalyticsLink(user, emailLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
       channel: 'email',
       placement: 'contact-section',
@@ -195,7 +196,7 @@ describe('ContactSection', () => {
     expect(instagramLink).toHaveAttribute('href', brand.socialMedia.instagram)
     expect(instagramLink).toHaveAttribute('target', '_blank')
 
-    await user.click(instagramLink)
+    await clickAnalyticsLink(user, instagramLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
       channel: 'instagram',
       placement: 'contact-section',
@@ -214,7 +215,7 @@ describe('ContactSection', () => {
     expect(facebookLink).toHaveAttribute('href', brand.socialMedia.facebook)
     expect(facebookLink).toHaveAttribute('target', '_blank')
 
-    await user.click(facebookLink)
+    await clickAnalyticsLink(user, facebookLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
       channel: 'facebook',
       placement: 'contact-section',
@@ -234,7 +235,7 @@ describe('ContactSection', () => {
     )
     expect(booksyButton).toHaveAttribute('target', '_blank')
 
-    await user.click(booksyButton)
+    await clickAnalyticsLink(user, booksyButton)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('CTA Booksy Click', {
       placement: 'contact-section',
     })
