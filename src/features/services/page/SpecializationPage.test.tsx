@@ -34,6 +34,8 @@ describe('SpecializationPage', () => {
       'Kosmetologia',
       'Świadoma opieka nad skórą',
       'Umów konsultację (otwiera nową kartę)',
+      'Zabieg pielęgnacyjny twarzy z aplikacją maski w gabinecie',
+      '/images/specializations/cosmetology-720.webp',
       true,
     ],
     [
@@ -41,6 +43,8 @@ describe('SpecializationPage', () => {
       'Oprawa oka',
       'Naturalnie podkreślone spojrzenie',
       'Umów wizytę (otwiera nową kartę)',
+      'Naturalna oprawa oka z widoczną brwią i rzęsami',
+      '/images/specializations/eye-styling-720.webp',
       false,
     ],
     [
@@ -48,11 +52,13 @@ describe('SpecializationPage', () => {
       'Trychologia',
       'Indywidualna opieka nad skórą głowy',
       'Umów konsultację (otwiera nową kartę)',
+      'Mycie i masaż skóry głowy podczas zabiegu w salonie',
+      '/images/specializations/trichology-720.webp',
       true,
     ],
   ] as const)(
     'renders the selected %s specialization and its service groups',
-    (specializationId, title, eyebrow, heroAction, includesOnline) => {
+    (specializationId, title, eyebrow, heroAction, heroImageAlt, heroImageSrc, includesOnline) => {
       render(<SpecializationPage specializationId={specializationId} />)
 
       expect(
@@ -63,6 +69,13 @@ describe('SpecializationPage', () => {
         'href',
         'https://kacosmetology.booksy.com',
       )
+
+      const heroImage = screen.getByRole('img', { name: heroImageAlt })
+      expect(heroImage).toHaveAttribute('src', heroImageSrc)
+      expect(heroImage).toHaveAttribute('loading', 'eager')
+      expect(heroImage.className).toContain('absolute')
+      expect(heroImage.className).not.toContain('rounded')
+      expect(heroImage.className).not.toContain('shadow')
 
       const specialization = getSpecialization(specializationId)
       expect(specialization).toBeDefined()

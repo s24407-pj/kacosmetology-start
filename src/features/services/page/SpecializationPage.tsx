@@ -1,23 +1,16 @@
 import type { ServiceSpecializationId } from '@app-types/types'
 import {
   Heading,
-  PageHero,
   Section,
   SectionHeader,
   ServiceCard,
-  surfaceCardStyles,
   Text,
 } from '@components/ui'
 import { getServicesByArea } from '@data/services'
 import { getSpecialization } from '@data/specializations'
-import {
-  IMAGE_SIZES,
-  MOBILE_WIDTHS,
-  webpFallbackSrc,
-  webpSrcSet,
-} from '@libs/responsiveImage'
 import BooksyLink from '@widgets/actions/BooksyLink'
 import { SpecializationEditorialSection } from '../sections/SpecializationEditorialSection'
+import { SpecializationHero } from '../sections/SpecializationHero'
 
 const content = {
   cosmetology: {
@@ -29,7 +22,7 @@ const content = {
     heroAction: 'Umów konsultację',
     image: {
       src: '/images/specializations/cosmetology.webp',
-      alt: 'Aplikacja preparatu pielęgnacyjnego podczas zabiegu kosmetologicznego',
+      alt: 'Zabieg pielęgnacyjny twarzy z aplikacją maski w gabinecie',
     },
   },
   'eye-styling': {
@@ -53,7 +46,7 @@ const content = {
     heroAction: 'Umów konsultację',
     image: {
       src: '/images/specializations/trichology.webp',
-      alt: 'Delikatna praca przy skórze głowy podczas zabiegu',
+      alt: 'Mycie i masaż skóry głowy podczas zabiegu w salonie',
     },
   },
 } as const
@@ -80,10 +73,12 @@ export function SpecializationPage({
 
   return (
     <>
-      <PageHero
+      <SpecializationHero
+        specializationId={specializationId}
         eyebrow={copy.eyebrow}
         title={specialization.name}
         description={copy.intro}
+        image={copy.image}
         actions={
           <BooksyLink
             placement="specialization-hero"
@@ -91,21 +86,6 @@ export function SpecializationPage({
           >
             {copy.heroAction}
           </BooksyLink>
-        }
-        media={
-          <img
-            src={webpFallbackSrc(copy.image.src)}
-            srcSet={webpSrcSet(copy.image.src, MOBILE_WIDTHS)}
-            sizes={IMAGE_SIZES.specializationHero}
-            alt={copy.image.alt}
-            width={1080}
-            height={810}
-            loading="eager"
-            className={surfaceCardStyles({
-              className:
-                'aspect-[4/3] w-full object-cover object-center shadow-raised',
-            })}
-          />
         }
       />
       <SpecializationEditorialSection specializationId={specializationId} />

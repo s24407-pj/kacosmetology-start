@@ -18,14 +18,13 @@ from landing-page photography in `public/images/specialization-cards/`.
 ## Specialization landing pages
 
 Stock photographs used in specialization landing-page heroes are stored locally
-and optimized to WebP. They are free to use under the
-[Unsplash License](https://unsplash.com/license).
+and optimized to WebP.
 
-| Specialization | Photographer | Source |
-| --- | --- | --- |
-| Cosmetology | kimia kazemi | [Facial treatment with brush applying white cream to face](https://unsplash.com/photos/Xxs9WvkUPLo) |
-| Trichology | Anna Blake | [Woman receiving a head massage on a pillow](https://unsplash.com/photos/qyUR9meb4bU) |
-| Eye styling | Amanda Dalbjörn | [Close-up photo of a person's eye](https://unsplash.com/photos/fvInY-Gh7sc) |
+| Specialization | Photographer | Source | License |
+| --- | --- | --- | --- |
+| Cosmetology | Gustavo Fring | [Facial mask treatment, photo 3985360](https://www.pexels.com/photo/zdrowy-kobiety-bez-twarzy-rozmyty-3985360/) | [Pexels](https://www.pexels.com/license/) |
+| Trichology | RDNE Stock project | [Hands washing wet hair, photo 7755473](https://www.pexels.com/photo/rece-kobieta-mokry-wlosy-7755473/) | [Pexels](https://www.pexels.com/license/) |
+| Eye styling | Amanda Dalbjörn | [Close-up photo of a person's eye](https://unsplash.com/photos/fvInY-Gh7sc) | [Unsplash](https://unsplash.com/license) |
 
 The photographs are illustrative. They do not present Ka.Cosmetology treatment
 results or identify the practitioner or clients of the salon.
