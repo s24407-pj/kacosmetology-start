@@ -32,7 +32,6 @@ export interface PromotionConfig {
   startDate: string
   endDate: string
   applicability: PromotionApplicability
-  ctaLabel: string
 }
 
 export interface ActivePromotion
@@ -56,7 +55,6 @@ export const promotionConfigs: PromotionConfig[] = [
       type: 'all',
       description: 'wszystkie zabiegi',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
   {
     id: 'october-2025-oczyszczanie-wodorowe',
@@ -68,7 +66,6 @@ export const promotionConfigs: PromotionConfig[] = [
       serviceIds: ['service-oczyszczanie-wodorowe'],
       description: 'oczyszczanie wodorowe – z 250 zł na 200 zł',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
   {
     id: 'november-december-2025-konsultacja-kosmetologiczna',
@@ -81,7 +78,6 @@ export const promotionConfigs: PromotionConfig[] = [
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 250 zł',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
   {
     id: 'january-2026-konsultacja-kosmetologiczna',
@@ -94,7 +90,6 @@ export const promotionConfigs: PromotionConfig[] = [
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
   {
     id: 'february-2026-konsultacja-kosmetologiczna',
@@ -107,7 +102,6 @@ export const promotionConfigs: PromotionConfig[] = [
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
   {
     id: 'march-2026-konsultacja-kosmetologiczna',
@@ -120,7 +114,6 @@ export const promotionConfigs: PromotionConfig[] = [
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
   {
     id: 'april-2026-konsultacja-kosmetologiczna',
@@ -133,7 +126,6 @@ export const promotionConfigs: PromotionConfig[] = [
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
   {
     id: 'may-2026-konsultacja-kosmetologiczna',
@@ -146,7 +138,6 @@ export const promotionConfigs: PromotionConfig[] = [
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
   {
     id: 'june-2026-konsultacja-kosmetologiczna',
@@ -159,7 +150,6 @@ export const promotionConfigs: PromotionConfig[] = [
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
   {
     id: 'july-2026-konsultacja-kosmetologiczna',
@@ -172,7 +162,6 @@ export const promotionConfigs: PromotionConfig[] = [
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
   {
     id: 'august-2026-konsultacja-kosmetologiczna',
@@ -185,7 +174,6 @@ export const promotionConfigs: PromotionConfig[] = [
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
   {
     id: 'september-2026-konsultacja-kosmetologiczna',
@@ -198,7 +186,6 @@ export const promotionConfigs: PromotionConfig[] = [
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
   {
     id: 'october-2026-konsultacja-kosmetologiczna',
@@ -211,7 +198,6 @@ export const promotionConfigs: PromotionConfig[] = [
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
   {
     id: 'november-2026-konsultacja-kosmetologiczna',
@@ -224,7 +210,6 @@ export const promotionConfigs: PromotionConfig[] = [
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
   {
     id: 'december-2026-konsultacja-kosmetologiczna',
@@ -237,7 +222,6 @@ export const promotionConfigs: PromotionConfig[] = [
       description:
         'Pierwsza konsultacja kosmetologiczna z zabiegiem – z 350 zł na 300 zł',
     },
-    ctaLabel: 'Zarezerwuj termin',
   },
 ]
 

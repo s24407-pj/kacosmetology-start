@@ -170,6 +170,20 @@ html[data-reveals-armed] [data-reveal-on-scroll][data-revealed] {
   animation: scrollCue 1.8s ease-in-out infinite;
 }
 
+@keyframes promotionBannerMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-promotion-banner-marquee {
+  animation: promotionBannerMarquee linear infinite;
+  width: max-content;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -184,6 +198,7 @@ html[data-reveals-armed] [data-reveal-on-scroll][data-revealed] {
 
   .animate-fade-up,
   .animate-scroll-cue,
+  .animate-promotion-banner-marquee,
   .gallery-slide-enter,
   .mobile-menu-enter,
   .mobile-menu-item-enter {

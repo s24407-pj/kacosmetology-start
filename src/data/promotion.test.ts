@@ -19,7 +19,6 @@ const testConfigs: PromotionConfig[] = [
     startDate: '2025-10-01',
     endDate: '2025-10-31',
     applicability: { type: 'all', description: 'wszystkie zabiegi' },
-    ctaLabel: 'Book',
   },
 ]
 
@@ -181,7 +180,6 @@ describe('resolveServicePromotion', () => {
     startDate: new Date(startDate),
     endDate: new Date('2025-10-31T23:59:59.999Z'),
     applicability,
-    ctaLabel: 'Book',
   })
 
   it('chooses the largest single discount without stacking or order dependence', () => {
@@ -280,7 +278,6 @@ describe('formatPromotionDeadline', () => {
         type: 'all' as const,
         description: 'wszystkie zabiegi',
       },
-      ctaLabel: 'Book',
     }
     const result = formatPromotionDeadline(promotion)
     expect(result).toMatch(/^do /)
@@ -309,7 +306,6 @@ describe('getPromotionScopeDescription', () => {
         type: 'all' as const,
         description: 'wszystkie zabiegi',
       },
-      ctaLabel: 'Book',
     }
     expect(getPromotionScopeDescription(promotion)).toBe('wszystkie zabiegi')
   })
@@ -324,7 +320,6 @@ describe('getPromotionScopeDescription', () => {
         type: 'categories' as const,
         categories: ['Kosmetologia'] as ServiceCatalogCategory[],
       },
-      ctaLabel: 'Book',
     }
     expect(getPromotionScopeDescription(promotion)).toBe(
       'zabiegi z kategorii kosmetologia',
@@ -344,7 +339,6 @@ describe('getPromotionScopeDescription', () => {
         startDate: new Date('2025-01-01'),
         endDate: new Date('2025-01-31'),
         applicability: categoryApplicability,
-        ctaLabel: 'Book',
       }),
     ).toBe('kosmetologia oraz trychologia')
   })
@@ -360,7 +354,6 @@ describe('getPromotionScopeDescription', () => {
         categories: ['Kosmetologia'] as ServiceCatalogCategory[],
         description: 'wybrane zabiegi kosmetologiczne',
       },
-      ctaLabel: 'Book',
     }
     expect(getPromotionScopeDescription(promotion)).toBe(
       'wybrane zabiegi kosmetologiczne',
@@ -381,7 +374,6 @@ describe('getPromotionScopeDescription', () => {
           startDate: new Date('2025-02-01'),
           endDate: new Date('2025-02-28'),
           applicability: serviceApplicability,
-          ctaLabel: 'Book',
         },
         getServiceById,
       ),
@@ -398,7 +390,6 @@ describe('getPromotionScopeDescription', () => {
         type: 'services' as const,
         serviceIds: ['service-oczyszczanie-wodorowe', 'service-regulacja-brwi'],
       },
-      ctaLabel: 'Book',
     }
     expect(getPromotionScopeDescription(promotion, getServiceById)).toBe(
       'oczyszczanie wodorowe oraz regulacja brwi',
@@ -415,7 +406,6 @@ describe('getPromotionScopeDescription', () => {
         type: 'services' as const,
         serviceIds: ['service-nieznany'],
       },
-      ctaLabel: 'Book',
     }
 
     expect(getPromotionScopeDescription(promotion)).toBe('wybrane zabiegi')
@@ -456,7 +446,6 @@ describe('doesPromotionApplyToService', () => {
         startDate: new Date('2025-01-01'),
         endDate: new Date('2025-01-31'),
         applicability: allApplicability,
-        ctaLabel: 'Book',
       }),
     ).toBe(true)
 
@@ -467,7 +456,6 @@ describe('doesPromotionApplyToService', () => {
         startDate: new Date('2025-01-01'),
         endDate: new Date('2025-01-31'),
         applicability: categoryApplicability,
-        ctaLabel: 'Book',
       }),
     ).toBe(true)
 
@@ -478,7 +466,6 @@ describe('doesPromotionApplyToService', () => {
         startDate: new Date('2025-01-01'),
         endDate: new Date('2025-01-31'),
         applicability: servicesApplicability,
-        ctaLabel: 'Book',
       }),
     ).toBe(false)
   })
