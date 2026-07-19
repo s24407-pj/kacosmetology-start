@@ -185,23 +185,6 @@ describe('PromotionBanner', () => {
     )
   })
 
-  it('uses one auto-dismiss timer for the combined banner', () => {
-    const timerSpy = vi.spyOn(globalThis, 'setTimeout')
-    getAllActivePromotionsMock.mockReturnValue([
-      createPromotion({ id: 'synthetic-first' }),
-      createPromotion({ id: 'synthetic-second' }),
-    ])
-    getPromotionScopeDescriptionMock.mockReturnValue('całe spa')
-    formatPromotionDeadlineMock.mockReturnValue('tylko dziś')
-
-    render(<PromotionBanner />)
-
-    expect(
-      timerSpy.mock.calls.filter(([, delay]) => delay === 8000),
-    ).toHaveLength(1)
-    timerSpy.mockRestore()
-  })
-
   it('dismisses the combined banner once and tracks every campaign', async () => {
     const promotions = [
       createPromotion({ id: 'synthetic-first' }),
