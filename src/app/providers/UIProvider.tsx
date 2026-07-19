@@ -22,12 +22,13 @@ export const UIProvider = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     if (reducedMotion) return
 
+    document.documentElement.setAttribute('data-reveals-armed', '')
+
     const animationObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('is-revealed')
-            entry.target.classList.remove('reveal-pending')
+            entry.target.setAttribute('data-revealed', '')
             animationObserver.unobserve(entry.target)
           }
         })
@@ -37,8 +38,7 @@ export const UIProvider = ({ children }: PropsWithChildren) => {
 
     const observeAnimatedElements = () => {
       document.querySelectorAll('[data-reveal-on-scroll]').forEach((el) => {
-        if (el.classList.contains('is-revealed')) return
-        el.classList.add('reveal-pending')
+        if (el.hasAttribute('data-revealed')) return
         animationObserver.observe(el)
       })
     }
@@ -62,6 +62,7 @@ export const UIProvider = ({ children }: PropsWithChildren) => {
     mutationObserver.observe(document.body, { childList: true, subtree: true })
 
     return () => {
+      document.documentElement.removeAttribute('data-reveals-armed')
       animationObserver.disconnect()
       mutationObserver.disconnect()
     }

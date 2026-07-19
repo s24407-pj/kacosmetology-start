@@ -394,7 +394,7 @@ test('home keeps LCP hero visible without reveal gating', async ({ page }) => {
 
   const aboutReveal = page.locator('#o-mnie [data-reveal-on-scroll]').first()
   await aboutReveal.scrollIntoViewIfNeeded()
-  await expect(aboutReveal).toHaveClass(/is-revealed/)
+  await expect(aboutReveal).toHaveAttribute('data-revealed')
   await expect(aboutReveal).not.toHaveCSS('transition-duration', '0s')
 })
 
@@ -412,7 +412,7 @@ for (const route of revealRoutes) {
     })
     await expect(reveal).toHaveCount(1)
     await reveal.scrollIntoViewIfNeeded()
-    await expect(reveal).toHaveClass(/is-revealed/)
+    await expect(reveal).toHaveAttribute('data-revealed')
     await expect(reveal).not.toHaveCSS('transition-duration', '0s')
   })
 }
@@ -438,7 +438,8 @@ test.describe('reduced motion', () => {
         reveals.evaluateAll((elements) =>
           elements.every(
             (element) =>
-              !element.classList.contains('reveal-pending') &&
+              !element.hasAttribute('data-revealed') &&
+              !document.documentElement.hasAttribute('data-reveals-armed') &&
               getComputedStyle(element).opacity === '1',
           ),
         ),
