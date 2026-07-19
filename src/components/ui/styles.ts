@@ -39,11 +39,9 @@ export function actionLinkStyles({
 
 export function surfaceCardStyles({
   variant = 'raised',
-  interactive = false,
   className,
 }: {
   variant?: 'flat' | 'outlined' | 'raised'
-  interactive?: boolean
   className?: string
 } = {}) {
   const variants = {
@@ -52,12 +50,7 @@ export function surfaceCardStyles({
     raised: 'rounded-lg bg-surface shadow-subtle',
   }
 
-  return cn(
-    variants[variant],
-    interactive &&
-      'transition-[transform,background-color,box-shadow] duration-400 ease-out hover:-translate-y-1 hover:bg-surface-muted/40 hover:shadow-raised focus-within:-translate-y-1 focus-within:shadow-raised motion-reduce:transform-none motion-reduce:transition-none',
-    className,
-  )
+  return cn(variants[variant], className)
 }
 
 export function iconActionStyles({
