@@ -181,7 +181,9 @@ test('landing and detail routes preserve specialization boundaries', async ({
     page.getByRole('heading', { level: 1, name: 'Kosmetologia' }),
   ).toBeVisible()
   await expect(
-    page.getByRole('img', { name: /zabiegu kosmetologicznego/i }),
+    page.getByRole('img', {
+      name: /zabieg pielęgnacyjny twarzy z aplikacją maski/i,
+    }),
   ).toBeVisible()
   const hydrogenCleaningCard = page.locator('article').filter({
     has: page.getByRole('heading', {

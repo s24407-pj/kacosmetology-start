@@ -9,10 +9,7 @@ import {
 import { cn } from '@libs/utils'
 import type { ReactNode } from 'react'
 
-const imageLayouts: Record<
-  ServiceSpecializationId,
-  { position: string }
-> = {
+const imageLayouts: Record<ServiceSpecializationId, { position: string }> = {
   cosmetology: {
     position: 'object-[58%_32%]',
   },
