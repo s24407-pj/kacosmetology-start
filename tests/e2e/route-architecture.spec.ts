@@ -164,7 +164,7 @@ test('home preserves the four-step process and lazy Google map', async ({
   }
   if (!isMobile) {
     await expect(
-      page.getByRole('tablist', { name: 'Jak wygląda współpraca' }),
+      page.getByRole('group', { name: 'Jak wygląda współpraca' }),
     ).toBeVisible()
   }
   const map = page.getByTitle(/Lokalizacja gabinetu/)

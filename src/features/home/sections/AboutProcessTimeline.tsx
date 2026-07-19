@@ -71,7 +71,7 @@ export default function AboutProcessTimeline() {
     <div>
       <SectionHeader title={processHeading} eyebrow="Krok po kroku" />
       <div
-        role="tablist"
+        role="group"
         aria-label={processHeading}
         className="hidden md:flex md:items-stretch md:gap-2"
         onMouseLeave={() => setIsAutoPlay(true)}
