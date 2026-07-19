@@ -10,6 +10,7 @@ import {
   webpFallbackSrc,
   webpSrcSet,
 } from '@libs/responsiveImage'
+import { GraduationCap } from 'lucide-react'
 
 const totalReviews = platformStats.reduce((sum, stat) => sum + stat.count, 0)
 
@@ -66,7 +67,7 @@ export default function AboutSection() {
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 items-center gap-10 min-[810px]:grid-cols-2">
           <div className="order-1 min-[810px]:order-2">
-            <div className="relative animate-on-scroll stagger-2">
+            <div className="relative">
               <span
                 className="pointer-events-none absolute -left-2 -top-8 select-none font-display text-7xl leading-none text-action/10"
                 aria-hidden="true"
@@ -79,7 +80,10 @@ export default function AboutSection() {
             </div>
           </div>
 
-          <div className="relative order-2 min-[810px]:order-1 animate-on-scroll stagger-1">
+          <div
+            className="relative order-2 min-[810px]:order-1"
+            data-reveal-on-scroll
+          >
             <div
               className={surfaceCardStyles({
                 className: 'relative overflow-hidden',
@@ -97,10 +101,20 @@ export default function AboutSection() {
                 />
               </div>
             </div>
+
+            <div className="absolute -bottom-4 right-2 hidden items-center gap-2 rounded-md border border-border-default bg-surface px-4 py-2 shadow-subtle sm:flex">
+              <GraduationCap
+                className="h-4 w-4 text-action"
+                aria-hidden="true"
+              />
+              <span className="font-body text-sm font-medium text-text-primary">
+                magister kosmetologii
+              </span>
+            </div>
           </div>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 divide-y divide-border-default border-y border-border-default py-2 animate-on-scroll stagger-3 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        <div className="mt-14 grid grid-cols-1 divide-y divide-border-default border-y border-border-default py-2 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           {stats.map((stat) => (
             <div key={stat.label} className="px-4 py-6 sm:px-6">
               <StatItem {...stat} />

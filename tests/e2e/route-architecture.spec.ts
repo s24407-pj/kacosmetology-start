@@ -358,6 +358,30 @@ test('legacy home hashes redirect to their new canonical destinations', async ({
   await expect(page).toHaveURL(/\/#voucher$/)
 })
 
+test.describe('reduced motion', () => {
+  test.use({ reducedMotion: 'reduce' })
+
+  test('removes decorative motion while keeping home content available', async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await ready(page, '/')
+
+    await expect(page.locator('.animate-scroll-cue')).toHaveCSS(
+      'animation-name',
+      'none',
+    )
+
+    const portrait = page.locator('[data-reveal-on-scroll]').first()
+    await portrait.scrollIntoViewIfNeeded()
+    await expect(portrait).not.toHaveClass(/animate-fade-up/)
+
+    await ready(page, '/galeria')
+    const galleryImage = page.locator('#gabinet img').first()
+    await expect(galleryImage).toHaveCSS('transition-duration', '0s')
+  })
+})
+
 test('route classes have no serious accessibility violations', async ({
   page,
 }) => {

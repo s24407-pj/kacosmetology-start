@@ -95,7 +95,7 @@ describe('OpinionsSection', () => {
     const signature = screen.getByText('Dziękuję').parentElement
     const heart = signature?.querySelector('svg')
 
-    expect(signature).toHaveClass('animate-on-scroll')
+    expect(signature).toHaveAttribute('data-reveal-on-scroll')
     expect(heart).toHaveAttribute('aria-hidden', 'true')
     expect(heart?.querySelector('.opinions-heart-path')).toBeInTheDocument()
   })

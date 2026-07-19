@@ -54,6 +54,12 @@ describe('AboutSection', () => {
     ).toBeInTheDocument()
   })
 
+  it('displays the professional title badge', () => {
+    render(<AboutSection />)
+
+    expect(screen.getByText('magister kosmetologii')).toBeInTheDocument()
+  })
+
   it('displays the showcase image', () => {
     render(<AboutSection />)
 

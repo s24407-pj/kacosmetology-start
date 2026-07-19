@@ -126,7 +126,7 @@ export default function PromotionBanner() {
             strokeWidth="1.5"
             strokeDasharray="100"
             pathLength="100"
-            className="animate-shrink-spinner"
+            className="motion-safe:animate-shrink-spinner"
             style={{ animationDuration: `${AUTO_DISMISS_DURATION}ms` }}
           />
         </svg>

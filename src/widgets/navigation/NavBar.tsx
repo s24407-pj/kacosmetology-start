@@ -140,12 +140,8 @@ export default function NavBar() {
           aria-label="Menu nawigacyjne"
         >
           <ul className="flex w-full max-w-sm flex-col items-center gap-3 py-8">
-            {MAIN_NAV_ITEMS.map((item, index) => (
-              <li
-                key={item.id}
-                className="w-full animate-fade-up text-center"
-                style={{ animationDelay: `${index * 0.04}s` }}
-              >
+            {MAIN_NAV_ITEMS.map((item) => (
+              <li key={item.id} className="w-full text-center">
                 <Link
                   to={item.to}
                   hash={item.hash}

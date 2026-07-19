@@ -8,7 +8,7 @@ import {
   webpSrcSet,
 } from '@libs/responsiveImage'
 import BooksyLink from '@widgets/actions/BooksyLink'
-import { ChevronDown, GraduationCap, Heart, MapPin } from 'lucide-react'
+import { ChevronDown, Heart, MapPin } from 'lucide-react'
 
 export default function HeroSection() {
   return (
@@ -23,13 +23,6 @@ export default function HeroSection() {
               <span className="inline-flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-action" aria-hidden="true" />
                 {primarySalonLocation.address.locality}
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <GraduationCap
-                  className="h-4 w-4 text-action"
-                  aria-hidden="true"
-                />
-                magister kosmetologii
               </span>
             </div>
 
@@ -85,6 +78,12 @@ export default function HeroSection() {
                   fetchPriority="high"
                 />
               </div>
+            </div>
+
+            <div className="absolute -bottom-4 right-2 hidden rounded-md border border-border-default bg-surface px-4 py-2 shadow-subtle sm:block">
+              <span className="font-body text-sm font-medium text-text-primary">
+                Umów się online 24/7
+              </span>
             </div>
           </div>
         </div>

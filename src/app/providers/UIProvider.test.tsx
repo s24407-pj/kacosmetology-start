@@ -87,8 +87,8 @@ describe('UIProvider', () => {
     expect(screen.getByTestId('menu')).toHaveTextContent('true')
   })
 
-  it('animates newly intersecting elements', () => {
-    render(
+  it('animates newly intersecting, intentionally marked elements', () => {
+    const { container } = render(
       <UIProvider>
         <Consumer />
       </UIProvider>,
@@ -96,7 +96,8 @@ describe('UIProvider', () => {
 
     const animationCallback = callbacks[0]
     const target = document.createElement('div')
-    target.classList.add('opacity-0', 'translate-y-8')
+    target.dataset.revealOnScroll = ''
+    container.append(target)
 
     act(() => {
       animationCallback?.(
@@ -111,6 +112,24 @@ describe('UIProvider', () => {
     })
 
     expect(target).toHaveClass('animate-fade-up')
-    expect(target).not.toHaveClass('opacity-0')
+  })
+
+  it('does not create an entrance observer when reduced motion is preferred', () => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockReturnValue({
+        matches: true,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      }),
+    })
+
+    render(
+      <UIProvider>
+        <Consumer />
+      </UIProvider>,
+    )
+
+    expect(callbacks).toHaveLength(0)
   })
 })

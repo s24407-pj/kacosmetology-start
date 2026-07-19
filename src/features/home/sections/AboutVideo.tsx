@@ -1,5 +1,6 @@
 import type { AboutVideo as AboutVideoData } from '@app-types/types'
 import { surfaceCardStyles } from '@components/ui'
+import { useReducedMotion } from '@hooks/useReducedMotion'
 import {
   IMAGE_SIZES,
   POSTER_WIDTHS,
@@ -28,10 +29,7 @@ export default function AboutVideo({
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const isVisibleRef = useRef(false)
-  const [reducedMotion, setReducedMotion] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  })
+  const reducedMotion = useReducedMotion()
   const [isVisible, setIsVisible] = useState(false)
   const [shouldLoad, setShouldLoad] = useState(false)
   const [playingVideoKey, setPlayingVideoKey] = useState<string | null>(null)
@@ -47,13 +45,6 @@ export default function AboutVideo({
   if (active && isVisible && !shouldLoad) {
     setShouldLoad(true)
   }
-
-  useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const onChange = () => setReducedMotion(media.matches)
-    media.addEventListener('change', onChange)
-    return () => media.removeEventListener('change', onChange)
-  }, [])
 
   useEffect(() => {
     if (reducedMotion) return
@@ -159,7 +150,7 @@ export default function AboutVideo({
                 'absolute inset-0 z-10 h-full w-full object-cover object-center',
                 posterVisible ? 'opacity-100' : 'opacity-0',
                 active && !posterVisible
-                  ? 'transition-opacity duration-300'
+                  ? 'motion-safe:transition-opacity motion-safe:duration-300 motion-reduce:transition-none'
                   : 'transition-none',
               )}
               loading="lazy"

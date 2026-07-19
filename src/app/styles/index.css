@@ -49,8 +49,8 @@
 
 @keyframes fadeUp {
   from {
-    opacity: 0.65;
-    transform: translateY(12px);
+    opacity: 0;
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -59,7 +59,7 @@
 }
 
 .animate-fade-up {
-  animation: fadeUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: fadeUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
 @keyframes drawOpinionsHeart {
@@ -92,50 +92,6 @@
   animation: shrinkSpinner 15s linear forwards;
 }
 
-.animate-on-scroll {
-  opacity: 1;
-  transform: none;
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-.animate-scale-in {
-  animation: scaleIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-}
-
-@keyframes floatY {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
-}
-.animate-float {
-  animation: floatY 7s ease-in-out infinite;
-}
-.animate-float-slow {
-  animation: floatY 11s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
 @keyframes scrollCue {
   0% {
     opacity: 0;
@@ -153,43 +109,15 @@
   animation: scrollCue 1.8s ease-in-out infinite;
 }
 
-.stagger-1 {
-  animation-delay: 0.1s;
-}
-.stagger-2 {
-  animation-delay: 0.2s;
-}
-.stagger-3 {
-  animation-delay: 0.3s;
-}
-.stagger-4 {
-  animation-delay: 0.4s;
-}
-.stagger-5 {
-  animation-delay: 0.5s;
-}
-.stagger-6 {
-  animation-delay: 0.6s;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .animate-on-scroll {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
   .animate-fade-up,
-  .animate-scale-in {
+  .animate-scroll-cue,
+  .animate-shrink-spinner {
     animation: none;
   }
   .opinions-signature.animate-fade-up .opinions-heart-path {
     animation: none;
     stroke-dashoffset: 0;
-  }
-  .animate-float,
-  .animate-float-slow,
-  .animate-scroll-cue {
-    animation: none;
   }
 }
 

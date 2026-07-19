@@ -104,4 +104,31 @@ describe('HomePage', () => {
       })
     })
   })
+
+  it('uses instant scrolling for a directly requested section with reduced motion', async () => {
+    currentHash = 'kontakt'
+    const scrollIntoView = vi.fn()
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockReturnValue({
+        matches: true,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      }),
+    })
+    Object.defineProperty(Element.prototype, 'scrollIntoView', {
+      configurable: true,
+      value: scrollIntoView,
+    })
+
+    render(<HomePage />)
+
+    expect(await screen.findByText('Kontakt')).toBeInTheDocument()
+    await vi.waitFor(() => {
+      expect(scrollIntoView).toHaveBeenCalledWith({
+        behavior: 'auto',
+        block: 'start',
+      })
+    })
+  })
 })

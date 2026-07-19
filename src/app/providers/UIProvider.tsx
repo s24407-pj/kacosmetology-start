@@ -1,3 +1,4 @@
+import { useReducedMotion } from '@hooks/useReducedMotion'
 import { type PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { UIContext } from './UIContext'
 
@@ -5,8 +6,11 @@ export const UIProvider = ({ children }: PropsWithChildren) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [showScrollToTop, setShowScrollToTop] = useState(false)
+  const reducedMotion = useReducedMotion()
 
   useEffect(() => {
+    if (reducedMotion) return
+
     const animationObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -20,14 +24,14 @@ export const UIProvider = ({ children }: PropsWithChildren) => {
     )
 
     const observeAnimatedElements = () => {
-      document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+      document.querySelectorAll('[data-reveal-on-scroll]').forEach((el) => {
         animationObserver.observe(el)
       })
     }
 
     observeAnimatedElements()
 
-    // Re-observe when lazy-loaded components add new .animate-on-scroll elements
+    // Re-observe intentionally marked elements from lazy-loaded sections.
     const mutationObserver = new MutationObserver((mutations) => {
       let hasNewNodes = false
       for (const mutation of mutations) {
@@ -55,7 +59,7 @@ export const UIProvider = ({ children }: PropsWithChildren) => {
       mutationObserver.disconnect()
       window.removeEventListener('scroll', handleScroll)
     }
-  }, [])
+  }, [reducedMotion])
 
   const value = useMemo(
     () => ({

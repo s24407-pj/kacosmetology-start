@@ -54,6 +54,13 @@ describe('HeroSection', () => {
     ).toBeInTheDocument()
   })
 
+  it('displays the online booking badge without the professional title', () => {
+    render(<HeroSection />)
+
+    expect(screen.getByText('Umów się online 24/7')).toBeInTheDocument()
+    expect(screen.queryByText('magister kosmetologii')).not.toBeInTheDocument()
+  })
+
   it('renders external Booksy CTA with tracking', async () => {
     const user = userEvent.setup()
     const { container } = render(<HeroSection />)

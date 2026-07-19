@@ -46,7 +46,7 @@ export default function GallerySection() {
                   alt={item.alt ?? item.title}
                   loading="lazy"
                   decoding="async"
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-out motion-safe:group-hover:scale-105"
                 />
               ) : (
                 <Placeholder

@@ -46,7 +46,7 @@ export default function ContactSection() {
       />
 
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-        <div className="space-y-8 animate-on-scroll">
+        <div className="space-y-8">
           <div
             id="voucher"
             className={surfaceCardStyles({
@@ -118,7 +118,7 @@ export default function ContactSection() {
 
         <div
           className={surfaceCardStyles({
-            className: 'p-6 animate-on-scroll stagger-1 sm:p-8',
+            className: 'p-6 sm:p-8',
           })}
         >
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">

@@ -62,7 +62,7 @@ export default function RightAbsoluteColumn() {
       <div
         inert={!show}
         className={cn(
-          'flex justify-center transition-all duration-300 ease-out',
+          'flex justify-center motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out motion-reduce:transition-none',
           show
             ? 'opacity-100 translate-y-0 pointer-events-auto max-h-20'
             : 'opacity-0 translate-y-2 pointer-events-none max-h-0 overflow-hidden',

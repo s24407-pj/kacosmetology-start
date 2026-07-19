@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest'
-import { cleanup, render, screen } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -91,6 +91,26 @@ describe('EffectsGallerySection', () => {
     await user.click(dots[2])
 
     expect(screen.getByText(`3 / ${TOTAL_EFFECTS}`)).toBeInTheDocument()
+  })
+
+  it('disables automatic slide changes with reduced motion while retaining manual navigation', () => {
+    vi.useFakeTimers()
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockReturnValue({
+        matches: true,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      }),
+    })
+    render(<EffectsGallerySection />)
+
+    act(() => vi.advanceTimersByTime(15_000))
+    expect(screen.getByText(`1 / ${TOTAL_EFFECTS}`)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByLabelText('Następny efekt'))
+    expect(screen.getByText(`2 / ${TOTAL_EFFECTS}`)).toBeInTheDocument()
+    vi.useRealTimers()
   })
 
   it('has accessible button labels', () => {

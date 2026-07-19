@@ -9,7 +9,7 @@ function PlatformStat({ name, count }: { name: string; count: number }) {
   const [countRef, countDisplay] = useCountUp(count, 1400)
 
   return (
-    <div className="flex flex-col items-center gap-2 rounded-lg bg-surface px-5 py-8 text-center shadow-subtle animate-on-scroll stagger-2 sm:px-8">
+    <div className="flex flex-col items-center gap-2 rounded-lg bg-surface px-5 py-8 text-center shadow-subtle sm:px-8">
       <span className="text-sm font-semibold uppercase tracking-widest text-text-muted">
         {name}
       </span>
@@ -63,7 +63,7 @@ export default function OpinionsSection() {
         {opinions.map((opinion, index) => (
           <article
             key={opinion.author + index.toString()}
-            className="flex min-h-full flex-col justify-between rounded-lg bg-surface p-6 shadow-subtle animate-on-scroll sm:p-8"
+            className="flex min-h-full flex-col justify-between rounded-lg bg-surface p-6 shadow-subtle sm:p-8"
           >
             <div>
               <div
@@ -99,7 +99,10 @@ export default function OpinionsSection() {
       </div>
 
       <div className="mt-8 flex justify-end sm:mt-10">
-        <div className="opinions-signature flex items-center gap-3 text-action animate-on-scroll">
+        <div
+          className="opinions-signature flex items-center gap-3 text-action"
+          data-reveal-on-scroll
+        >
           <span className="font-body text-2xl italic sm:text-3xl">
             Dziękuję
           </span>

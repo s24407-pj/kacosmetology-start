@@ -1,5 +1,6 @@
 import { brand, primarySalonLocation } from '@data/business'
 import { useLegacyHashRedirect } from '@hooks/useLegacyHashRedirect'
+import { useReducedMotion } from '@hooks/useReducedMotion'
 import { useScrollDepthTracking } from '@hooks/useScrollDepthTracking'
 import { toBeautySalonJsonLd } from '@libs/businessMetadata'
 import { useRouterState } from '@tanstack/react-router'
@@ -24,6 +25,7 @@ function useDeferredSections() {
     select: (state) => state.location.hash,
   })
   const [shouldMount, setShouldMount] = useState(false)
+  const reducedMotion = useReducedMotion()
 
   useEffect(() => {
     if (!DEFERRED_SECTION_IDS.some((sectionId) => hash === sectionId)) {
@@ -47,7 +49,10 @@ function useDeferredSections() {
       if (timeoutId !== undefined) {
         window.clearTimeout(timeoutId)
       }
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      target.scrollIntoView({
+        behavior: reducedMotion ? 'auto' : 'smooth',
+        block: 'start',
+      })
     })
 
     observer.observe(document.body, { childList: true, subtree: true })
@@ -59,7 +64,7 @@ function useDeferredSections() {
         window.clearTimeout(timeoutId)
       }
     }
-  }, [hash])
+  }, [hash, reducedMotion])
 
   useEffect(() => {
     if (shouldMount) {

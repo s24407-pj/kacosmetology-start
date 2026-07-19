@@ -1,12 +1,16 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { prefersReducedMotion } from './reducedMotion'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(...inputs))
 }
 
 export function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  window.scrollTo({
+    top: 0,
+    behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+  })
 }
 
 export function formatDuration(minutes: number): string {

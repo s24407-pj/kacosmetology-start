@@ -49,7 +49,7 @@ describe('GoogleMap', () => {
 
   it('displays loading skeleton before iframe loads', () => {
     const { container } = render(<GoogleMap />)
-    const skeleton = container.querySelector('.animate-pulse')
+    const skeleton = container.querySelector('.motion-safe\\:animate-pulse')
     expect(skeleton).toBeInTheDocument()
   })
 

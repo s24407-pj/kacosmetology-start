@@ -266,7 +266,7 @@ describe('ContactSection', () => {
     ]
     const openingHoursCard = screen
       .getByText('Godziny otwarcia')
-      .closest('div.animate-on-scroll')
+      .closest('div.p-6')
     expect(openingHoursCard).toBeInTheDocument()
 
     const renderedRows = Array.from(
