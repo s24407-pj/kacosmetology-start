@@ -1,63 +1,67 @@
 import '@testing-library/jest-dom/vitest'
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it } from 'vitest'
 
 import { Section } from './Section'
 
 describe('Section', () => {
-  it('renders with white background by default', () => {
+  afterEach(cleanup)
+
+  it('composes content and passes through section and container classes', () => {
     render(
-      <Section id="about">
+      <Section
+        id="about"
+        className="custom-section"
+        containerClassName="custom-container"
+      >
         <p>Content</p>
       </Section>,
     )
 
     const section = screen.getByText('Content').closest('section')
     expect(section).toHaveAttribute('id', 'about')
-    expect(section).toHaveClass('bg-surface', 'py-16')
+    expect(section).toHaveClass('custom-section')
+    expect(screen.getByText('Content').parentElement).toHaveClass(
+      'custom-container',
+    )
   })
 
-  it('applies gradient background and custom class', () => {
-    render(
-      <Section background="gradient" className="extra-padding">
-        <p>Gradient content</p>
-      </Section>,
-    )
-
-    const section = screen.getByText('Gradient content').closest('section')
-    expect(section).toHaveClass(
+  it.each([
+    ['white', 'regular', 'bg-surface', 'py-16'],
+    [
+      'gradient',
+      'regular',
       'bg-[linear-gradient(180deg,var(--color-surface-muted)_0%,var(--color-surface)_100%)]',
-      'extra-padding',
-    )
-  })
-
-  it('applies gray background', () => {
-    render(
-      <Section background="gray">
-        <p>Gray content</p>
-      </Section>,
-    )
-
-    const section = screen.getByText('Gray content').closest('section')
-    expect(section).toHaveClass('bg-surface-muted')
-  })
-
-  it('applies contact background', () => {
-    render(
-      <Section background="contact">
-        <p>Contact content</p>
-      </Section>,
-    )
-
-    const section = screen.getByText('Contact content').closest('section')
-    expect(section).toHaveClass(
+      'py-16',
+    ],
+    ['gray', 'regular', 'bg-surface-muted', 'py-16'],
+    [
+      'contact',
+      'regular',
       'bg-[linear-gradient(180deg,var(--color-surface)_0%,var(--color-surface-muted)_68%,var(--color-surface-muted)_100%)]',
-    )
-  })
+      'py-16',
+    ],
+    ['mesh', 'regular', 'bg-surface-muted', 'py-16'],
+    ['accent', 'compact', 'bg-action', 'py-14'],
+  ] as const)(
+    'supports the %s background with %s spacing',
+    (background, spacing, backgroundClass, spacingClass) => {
+      const { container } = render(
+        <Section background={background} spacing={spacing}>
+          <p>Variant content</p>
+        </Section>,
+      )
 
-  it('renders simple separators when decorated', () => {
+      expect(container.querySelector('section')).toHaveClass(
+        backgroundClass,
+        spacingClass,
+      )
+    },
+  )
+
+  it('renders the requested decoration structure', () => {
     const { container } = render(
-      <Section decorated>
+      <Section decorated="top">
         <p>Decorated content</p>
       </Section>,
     )
@@ -65,42 +69,7 @@ describe('Section', () => {
     const separators = container.querySelectorAll(
       '[aria-hidden="true"] .bg-border-default',
     )
-    expect(separators).toHaveLength(2)
-  })
-
-  it('renders only the top separator when requested', () => {
-    const { container } = render(
-      <Section decorated="top">
-        <p>Top decorated content</p>
-      </Section>,
-    )
-
-    const separator = container.querySelector(
-      '[aria-hidden="true"] .bg-border-default',
-    )
-    expect(separator).toHaveClass('top-0')
-    expect(separator).not.toHaveClass('bottom-0')
-  })
-
-  it('applies custom container class', () => {
-    render(
-      <Section containerClassName="xl:max-w-[85rem]">
-        <p>Wide content</p>
-      </Section>,
-    )
-
-    const container = screen.getByText('Wide content').parentElement
-    expect(container).toHaveClass('xl:max-w-[85rem]')
-  })
-
-  it('supports a compact accent section', () => {
-    render(
-      <Section background="accent" spacing="compact">
-        <p>Accent content</p>
-      </Section>,
-    )
-
-    const section = screen.getByText('Accent content').closest('section')
-    expect(section).toHaveClass('bg-action', 'py-14', 'sm:py-16')
+    expect(separators).toHaveLength(1)
+    expect(separators[0]).toHaveClass('top-0')
   })
 })

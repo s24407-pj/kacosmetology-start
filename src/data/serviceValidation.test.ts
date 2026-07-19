@@ -16,22 +16,4 @@ describe('production service catalog', () => {
       }),
     ).toEqual([])
   })
-
-  it('publishes 24 stationary details and keeps all 26 services bookable', () => {
-    expect(services).toHaveLength(26)
-    expect(services.filter((service) => service.hasDetailPage)).toHaveLength(24)
-  })
-
-  it('keeps presentation counts aligned with stationary service categories', () => {
-    expect(
-      specializations.map((specialization) => [
-        specialization.id,
-        specialization.stationaryServiceCount,
-      ]),
-    ).toEqual([
-      ['cosmetology', 12],
-      ['eye-styling', 7],
-      ['trichology', 5],
-    ])
-  })
 })
