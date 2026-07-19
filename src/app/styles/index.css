@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme {
   --color-primary-100: #f9dada;
   --color-primary-200: #f1b5b5;
@@ -88,7 +92,7 @@
   transform: none;
 }
 
-@keyframes drawOpinionsHeart {
+@keyframes drawHeart {
   from {
     stroke-dashoffset: 100;
   }
@@ -97,13 +101,17 @@
   }
 }
 
-.opinions-heart-path {
+.draw-heart-path {
   stroke-dasharray: 100;
   stroke-dashoffset: 0;
 }
 
-.opinions-signature.is-revealed .opinions-heart-path {
-  animation: drawOpinionsHeart 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.2s both;
+.opinions-signature.is-revealed .draw-heart-path {
+  animation: drawHeart 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.2s both;
+}
+
+.hero-cta-heart .draw-heart-path {
+  animation: drawHeart 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.3s both;
 }
 
 @keyframes shrinkSpinner {
@@ -195,7 +203,8 @@
     transform: none;
     transition: none;
   }
-  .opinions-signature.is-revealed .opinions-heart-path {
+  .opinions-signature.is-revealed .draw-heart-path,
+  .hero-cta-heart .draw-heart-path {
     animation: none;
     stroke-dashoffset: 0;
   }

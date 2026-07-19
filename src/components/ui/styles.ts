@@ -29,7 +29,7 @@ export function actionLinkStyles({
   }
 
   return cn(
-    'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-[transform,background-color,color,box-shadow] duration-300 ease-out hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transform-none motion-reduce:transition-none',
+    'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-[background-color,color,box-shadow] duration-300 ease-out motion-reduce:transition-none',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 focus-visible:ring-offset-2',
     variants[variant],
     sizes[size],
@@ -81,7 +81,7 @@ export function iconActionStyles({
   }
 
   return cn(
-    'inline-flex shrink-0 items-center justify-center rounded-md transition-[transform,background-color,color,box-shadow] duration-300 ease-out hover:scale-105 active:scale-95 motion-reduce:transform-none motion-reduce:transition-none',
+    'inline-flex shrink-0 items-center justify-center rounded-md transition-[background-color,color,box-shadow] duration-300 ease-out motion-reduce:transition-none',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 focus-visible:ring-offset-2',
     tones[tone],
     sizes[size],

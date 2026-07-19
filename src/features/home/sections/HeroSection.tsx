@@ -1,4 +1,9 @@
-import { actionLinkStyles, Heading, surfaceCardStyles } from '@components/ui'
+import {
+  actionLinkStyles,
+  DrawnHeartIcon,
+  Heading,
+  surfaceCardStyles,
+} from '@components/ui'
 import { brand, primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
 import {
@@ -7,8 +12,26 @@ import {
   webpFallbackSrc,
   webpSrcSet,
 } from '@libs/responsiveImage'
+import { scrollToId } from '@libs/utils'
 import BooksyLink from '@widgets/actions/BooksyLink'
-import { ChevronDown, Heart, MapPin } from 'lucide-react'
+import { ChevronDown, MapPin } from 'lucide-react'
+import type { MouseEvent } from 'react'
+
+function scrollToAbout(event: MouseEvent<HTMLAnchorElement>) {
+  if (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey
+  ) {
+    return
+  }
+
+  event.preventDefault()
+  if (scrollToId('o-mnie')) {
+    window.history.pushState(null, '', '#o-mnie')
+  }
+}
 
 export default function HeroSection() {
   return (
@@ -18,11 +41,7 @@ export default function HeroSection() {
     >
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-10 py-6 min-[810px]:grid-cols-[1fr_0.82fr] min-[810px]:gap-16 min-[810px]:py-12">
-          <div
-            className="text-left"
-            data-reveal-on-scroll
-            data-reveal-variant="scale"
-          >
+          <div className="text-left">
             <div className="mb-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-text-secondary">
               <span className="inline-flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-action" aria-hidden="true" />
@@ -42,18 +61,25 @@ export default function HeroSection() {
             </p>
 
             <div className="flex flex-col gap-3 sm:flex-row">
-              <BooksyLink placement="hero" showExternalIcon={false}>
-                <Heart className="mr-2 h-5 w-5" />
+              <BooksyLink
+                placement="hero"
+                showExternalIcon={false}
+                className="gap-1.5"
+              >
+                <span className="hero-cta-heart inline-flex">
+                  <DrawnHeartIcon className="h-5 w-5" strokeWidth={5} />
+                </span>
                 Umów wizytę
               </BooksyLink>
 
               <a
                 href="#o-mnie"
-                onClick={() => {
+                onClick={(event) => {
                   trackPlausibleEvent('Secondary CTA Click', {
                     placement: 'hero',
                     target: 'o-mnie',
                   })
+                  scrollToAbout(event)
                 }}
                 className={actionLinkStyles({
                   variant: 'text',
@@ -65,12 +91,7 @@ export default function HeroSection() {
             </div>
           </div>
 
-          <div
-            className="relative mx-auto w-full max-w-md min-[810px]:max-w-none"
-            data-reveal-on-scroll
-            data-reveal-variant="scale"
-            data-reveal-delay="2"
-          >
+          <div className="relative mx-auto w-full max-w-md min-[810px]:max-w-none">
             <div
               className={surfaceCardStyles({
                 className: 'relative overflow-hidden',
@@ -99,7 +120,8 @@ export default function HeroSection() {
 
         <a
           href="#o-mnie"
-          className="mx-auto hidden w-fit flex-col items-center gap-1 text-text-muted transition-[transform,color] duration-300 ease-out hover:translate-y-1 hover:text-action motion-reduce:transform-none motion-reduce:transition-none min-[810px]:flex"
+          onClick={scrollToAbout}
+          className="mx-auto hidden w-fit flex-col items-center gap-1 text-text-muted transition-colors duration-300 ease-out hover:text-action motion-reduce:transition-none min-[810px]:flex"
           aria-label="Przewiń w dół"
         >
           <span className="font-body text-xs uppercase tracking-wider">

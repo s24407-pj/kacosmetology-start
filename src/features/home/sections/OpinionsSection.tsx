@@ -1,4 +1,4 @@
-import { Section, SectionHeader } from '@components/ui'
+import { DrawnHeartIcon, Section, SectionHeader } from '@components/ui'
 import { opinions } from '@data/opinions'
 import { platformStats } from '@data/platformStats'
 import { useCountUp } from '@hooks/useCountUp'
@@ -76,7 +76,7 @@ export default function OpinionsSection() {
         {opinions.map((opinion, index) => (
           <article
             key={opinion.author + index.toString()}
-            className="flex min-h-full flex-col justify-between rounded-lg bg-surface p-6 shadow-subtle transition-[transform,box-shadow] duration-400 ease-out hover:-translate-y-1 hover:shadow-raised motion-reduce:transform-none motion-reduce:transition-none sm:p-8"
+            className="flex min-h-full flex-col justify-between rounded-lg bg-surface p-6 shadow-subtle sm:p-8"
             data-reveal-on-scroll
             data-reveal-variant="scale"
             data-reveal-delay={index.toString()}
@@ -122,22 +122,7 @@ export default function OpinionsSection() {
           <span className="font-body text-2xl italic sm:text-3xl">
             Dziękuję
           </span>
-          <svg
-            className="h-12 w-14"
-            viewBox="0 0 64 56"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              className="opinions-heart-path"
-              d="M32 50C27 44 8 32 8 18.5C8 10.5 13 6 19.5 6C25 6 29 9.5 32 14C35 9.5 39 6 44.5 6C51 6 56 10.5 56 18.5C56 32 37 44 32 50Z"
-              pathLength="100"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <DrawnHeartIcon className="h-12 w-14" />
         </div>
       </div>
     </Section>

@@ -365,11 +365,6 @@ test('gallery owns effect and cabinet sections', async ({ page }) => {
 })
 
 const revealRoutes = [
-  {
-    path: '/',
-    section: '#hero',
-    heading: 'Katarzyna Suwalska',
-  },
   { path: '/kosmetologia', heading: 'Kosmetologia' },
   {
     path: '/kosmetologia/oczyszczanie-wodorowe',
@@ -378,18 +373,40 @@ const revealRoutes = [
   { path: '/galeria', heading: 'Galeria' },
 ] as const
 
+test('home keeps LCP hero visible without reveal gating', async ({ page }) => {
+  await ready(page, '/')
+
+  const hero = page.locator('#hero')
+  const heading = hero.getByRole('heading', {
+    level: 1,
+    name: 'Katarzyna Suwalska',
+  })
+  const image = hero.getByRole('img', { name: 'Katarzyna Suwalska' })
+
+  await expect(heading).toBeVisible()
+  await expect(image).toBeVisible()
+  await expect(
+    heading.locator('xpath=ancestor::*[@data-reveal-on-scroll]'),
+  ).toHaveCount(0)
+  await expect(
+    image.locator('xpath=ancestor::*[@data-reveal-on-scroll]'),
+  ).toHaveCount(0)
+
+  const aboutReveal = page.locator('#o-mnie [data-reveal-on-scroll]').first()
+  await aboutReveal.scrollIntoViewIfNeeded()
+  await expect(aboutReveal).toHaveClass(/is-revealed/)
+  await expect(aboutReveal).not.toHaveCSS('transition-duration', '0s')
+})
+
 for (const route of revealRoutes) {
   test(`${route.path} uses CSS-first reveals`, async ({ page }) => {
     await ready(page, route.path)
-    const section =
-      'section' in route
-        ? page.locator(route.section)
-        : page.locator('section').filter({
-            has: page.getByRole('heading', {
-              level: 1,
-              name: route.heading,
-            }),
-          })
+    const section = page.locator('section').filter({
+      has: page.getByRole('heading', {
+        level: 1,
+        name: route.heading,
+      }),
+    })
     const reveal = section.locator('[data-reveal-on-scroll]').filter({
       has: page.getByRole('heading', { level: 1, name: route.heading }),
     })

@@ -7,8 +7,18 @@ vi.mock('@libs/analytics', () => ({
   trackPlausibleEvent: vi.fn(),
 }))
 
+vi.mock('@libs/utils', async () => {
+  const actual =
+    await vi.importActual<typeof import('@libs/utils')>('@libs/utils')
+  return {
+    ...actual,
+    scrollToId: vi.fn(() => true),
+  }
+})
+
 import { brand, primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
+import { scrollToId } from '@libs/utils'
 import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import HeroSection from './HeroSection'
 
@@ -22,14 +32,21 @@ describe('HeroSection', () => {
   })
 
   it('exposes the practitioner identity and image alternative text', () => {
-    render(<HeroSection />)
+    const { container } = render(<HeroSection />)
 
+    const heading = screen.getByRole('heading', {
+      level: 1,
+      name: brand.practitionerName,
+    })
+    const image = screen.getByRole('img', { name: brand.practitionerName })
+    const hero = container.querySelector('#hero')
+
+    expect(heading).toBeInTheDocument()
+    expect(image).toBeVisible()
+    expect(hero?.querySelectorAll('[data-reveal-on-scroll]')).toHaveLength(0)
     expect(
-      screen.getByRole('heading', { level: 1, name: brand.practitionerName }),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('img', { name: brand.practitionerName }),
-    ).toBeVisible()
+      hero?.querySelector('.hero-cta-heart .draw-heart-path'),
+    ).not.toBeNull()
   })
 
   it('routes both CTAs and tracks their destinations', async () => {
@@ -50,10 +67,11 @@ describe('HeroSection', () => {
       placement: 'hero',
     })
 
-    await clickAnalyticsLink(user, approachLink)
+    await user.click(approachLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Secondary CTA Click', {
       placement: 'hero',
       target: 'o-mnie',
     })
+    expect(scrollToId).toHaveBeenCalledWith('o-mnie')
   })
 })
