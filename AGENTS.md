@@ -27,7 +27,7 @@ before finishing. Run `pnpm run validate` for multi-file, layout, navigation,
 dependency, performance, or E2E-covered changes.
 
 Deployment is configured externally as a Dokploy Node service; this repository
-has no deploy command. See [RUNBOOK.md](./RUNBOOK.md) for the verified boundary.
+has no deploy command.
 
 ## Architecture
 
@@ -45,7 +45,7 @@ has no deploy command. See [RUNBOOK.md](./RUNBOOK.md) for the verified boundary.
 - Unit tests are co-located; Playwright specs and page objects live in
   `tests/e2e/`.
 
-See [DESIGN.md](./DESIGN.md) for boundaries, rationale, and change traces.
+See [DESIGN.md](./docs/DESIGN.md) for boundaries, rationale, and change traces.
 
 ## Canonical homes
 
@@ -77,29 +77,29 @@ After editing `src/data/business.ts`, run
 - TypeScript uses single quotes, no semicolons, 2-space indentation, and Biome.
 - UI copy, content, and user-facing errors are Polish.
 - Use `ServiceId` for references, history, keys, DOM IDs, and analytics; service
-  names are presentation only. Evidence: F-001, `src/data/services.ts`.
+  names are presentation only. `src/data/services.ts`.
 - Promotion resolution is non-stacking: highest discount, then earlier start,
-  then lexical ID. Validate the complete production config. Evidence: F-005,
+  then lexical ID. Validate the complete production config.
   F-007, `src/data/promotion.test.ts`,
   `src/data/promotionValidation.test.ts`.
 - Historical price rows are explicit immutable facts; never reconstruct or
-  mutate them during render. Evidence: F-002, F-004,
+  mutate them during render.
   `src/data/servicePriceHistory.test.ts`.
 - One render-time snapshot crosses SSR and hydration. Playwright may request a
-  fixed time only when `PLAYWRIGHT_TEST_MODE=1`. Evidence: F-010,
+  fixed time only when `PLAYWRIGHT_TEST_MODE=1`.
   `src/libs/renderTime.test.ts`,
   `src/app/providers/RenderTimeProvider.test.tsx`.
 - Below-fold home sections mount after load/idle or direct-hash demand. Each has
   its own `DeferredSectionBoundary`; preserve section IDs and local recovery.
-  Evidence: F-003, `src/features/home/page/HomePage.test.tsx`.
+  `src/features/home/page/HomePage.test.tsx`.
 - Analytics remains optional and deferred. Its wrapper owns one later-demand
-  import retry and static warnings; callers never add retries. Evidence: F-012,
+  import retry and static warnings; callers never add retries.
   `src/libs/analytics.test.ts`.
 - Deferred fonts load on first scroll or the 4-second fallback; keep that work
   out of the critical path.
 - E2E retries are zero locally. CI permits two diagnostic retries but
   `failOnFlakyTests` makes any recovered retry fail; artifacts are retained for
-  14 days. Evidence: F-015, `playwright.config.ts`, `.github/workflows/ci.yml`.
+  14 days. `playwright.config.ts`, `.github/workflows/ci.yml`.
 
 ## Boundaries
 
@@ -116,5 +116,4 @@ Write an execution plan before multi-module features, schema/interface changes,
 dependency upgrades, migrations, deployment work, or changes with rollback/data
 implications. Small local fixes can follow existing tests and nearby patterns.
 
-Audit evidence and completed fix records live under `audit/`; current known debt
-is listed in [DESIGN.md](./DESIGN.md#known-debt).
+current known debt is listed in [DESIGN.md](./docs/DESIGN.md#known-debt).
