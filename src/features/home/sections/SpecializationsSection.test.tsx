@@ -60,9 +60,9 @@ describe('SpecializationsSection', () => {
     const cosmetologyImage = container.querySelector(
       'img[src="/images/specialization-cards/cosmetology-720.webp"]',
     )
-    expect(cosmetologyImage).toHaveAttribute('width', '1600')
-    expect(cosmetologyImage).toHaveAttribute('height', '1067')
-    expect(cosmetologyImage).toHaveClass('object-[35%_center]')
+    expect(cosmetologyImage).toHaveAttribute('width', '2400')
+    expect(cosmetologyImage).toHaveAttribute('height', '3600')
+    expect(cosmetologyImage).toHaveClass('object-[50%_38%]')
   })
 
   it('preserves specialization click analytics', () => {

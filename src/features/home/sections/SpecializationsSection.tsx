@@ -12,15 +12,15 @@ import { Link } from '@tanstack/react-router'
 const specializationImages = {
   cosmetology: {
     src: '/images/specialization-cards/cosmetology.webp',
-    width: 1600,
-    height: 1067,
-    position: 'object-[35%_center]',
+    width: 2400,
+    height: 3600,
+    position: 'object-[50%_38%]',
   },
   'eye-styling': {
     src: '/images/specialization-cards/eye-styling.webp',
-    width: 1080,
-    height: 1631,
-    position: 'object-[50%_42%] md:object-[50%_20%] lg:object-[50%_42%]',
+    width: 2268,
+    height: 4032,
+    position: 'object-[50%_45%]',
   },
   trichology: {
     src: '/images/specialization-cards/trichology.webp',
