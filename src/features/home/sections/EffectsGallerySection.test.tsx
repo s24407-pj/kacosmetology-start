@@ -93,6 +93,15 @@ describe('EffectsGallerySection', () => {
     expect(screen.getByText(`3 / ${TOTAL_EFFECTS}`)).toBeInTheDocument()
   })
 
+  it('adds a brief visual transition when the active image changes', async () => {
+    const user = userEvent.setup()
+    render(<EffectsGallerySection />)
+
+    await user.click(screen.getByLabelText('Następny efekt'))
+
+    expect(screen.getByRole('img')).toHaveClass('gallery-slide-enter')
+  })
+
   it('disables automatic slide changes with reduced motion while retaining manual navigation', () => {
     vi.useFakeTimers()
     Object.defineProperty(window, 'matchMedia', {

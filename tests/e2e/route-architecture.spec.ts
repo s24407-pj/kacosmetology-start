@@ -358,6 +358,23 @@ test('legacy home hashes redirect to their new canonical destinations', async ({
   await expect(page).toHaveURL(/\/#voucher$/)
 })
 
+test('uses CSS-first reveals on representative public routes', async ({
+  page,
+}) => {
+  for (const path of [
+    '/',
+    '/kosmetologia',
+    '/kosmetologia/oczyszczanie-wodorowe',
+    '/galeria',
+  ]) {
+    await ready(page, path)
+    const reveal = page.locator('[data-reveal-on-scroll]').first()
+    await reveal.scrollIntoViewIfNeeded()
+    await expect(reveal).toHaveClass(/is-revealed/)
+    await expect(reveal).not.toHaveCSS('transition-duration', '0s')
+  }
+})
+
 test.describe('reduced motion', () => {
   test.use({ reducedMotion: 'reduce' })
 
@@ -374,7 +391,8 @@ test.describe('reduced motion', () => {
 
     const portrait = page.locator('[data-reveal-on-scroll]').first()
     await portrait.scrollIntoViewIfNeeded()
-    await expect(portrait).not.toHaveClass(/animate-fade-up/)
+    await expect(portrait).not.toHaveClass(/reveal-pending/)
+    await expect(portrait).toHaveCSS('opacity', '1')
 
     await ready(page, '/galeria')
     const galleryImage = page.locator('#gabinet img').first()

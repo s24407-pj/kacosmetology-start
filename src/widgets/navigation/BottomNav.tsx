@@ -34,7 +34,7 @@ export default function BottomNav() {
                 to={item.to}
                 hash={item.hash}
                 aria-current={active ? 'page' : undefined}
-                className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-md text-[11px] text-text-secondary transition-colors hover:bg-surface-muted hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-action/50 aria-[current=page]:text-action"
+                className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-md text-[11px] text-text-secondary transition-[transform,background-color,color] duration-200 hover:-translate-y-0.5 hover:bg-surface-muted hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-action/50 motion-reduce:transform-none motion-reduce:transition-none aria-[current=page]:text-action"
                 onClick={() =>
                   trackPlausibleEvent('Navigation Link Click', {
                     target: item.id,

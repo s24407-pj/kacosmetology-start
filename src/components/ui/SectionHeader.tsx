@@ -26,6 +26,7 @@ export function SectionHeader({
 
   return (
     <div
+      data-reveal-on-scroll
       className={cn(
         'mb-10 max-w-3xl sm:mb-12',
         centered && 'mx-auto text-center',

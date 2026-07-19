@@ -117,8 +117,12 @@ export function SpecializationPage({
               title="Polecane na początek"
             />
             <div className="grid gap-x-10 md:grid-cols-2">
-              {featured.map((service) => (
-                <ServiceCard key={service.id} service={service} />
+              {featured.map((service, index) => (
+                <ServiceCard
+                  key={service.id}
+                  service={service}
+                  revealDelay={index % 6}
+                />
               ))}
             </div>
           </div>
@@ -132,8 +136,12 @@ export function SpecializationPage({
             subtitle="Po polecanych pierwszych krokach poznaj pozostałe zabiegi dostępne w tym obszarze."
           />
           <div className="grid gap-x-10 md:grid-cols-2">
-            {remainingServices.map((service) => (
-              <ServiceCard key={service.id} service={service} />
+            {remainingServices.map((service, index) => (
+              <ServiceCard
+                key={service.id}
+                service={service}
+                revealDelay={index % 6}
+              />
             ))}
           </div>
           {onlineServices.length ? (
@@ -142,8 +150,12 @@ export function SpecializationPage({
                 Konsultacja online
               </Heading>
               <div className="grid gap-x-10 md:grid-cols-2">
-                {onlineServices.map((service) => (
-                  <ServiceCard key={service.id} service={service} />
+                {onlineServices.map((service, index) => (
+                  <ServiceCard
+                    key={service.id}
+                    service={service}
+                    revealDelay={index % 6}
+                  />
                 ))}
               </div>
             </section>

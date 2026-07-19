@@ -47,19 +47,45 @@
     0 2px 4px rgba(43, 35, 38, 0.08), 0 12px 28px rgba(43, 35, 38, 0.08);
 }
 
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Reveal targets remain visible in server-rendered HTML. The observer adds
+   .reveal-pending only after JavaScript has started, so a failed script never
+   leaves page content hidden. */
+[data-reveal-on-scroll].reveal-pending {
+  opacity: 0;
+  transform: translateY(1.25rem) scale(0.985);
 }
 
-.animate-fade-up {
-  animation: fadeUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+[data-reveal-on-scroll][data-reveal-variant="scale"].reveal-pending {
+  transform: translateY(0.75rem) scale(0.96);
+}
+
+[data-reveal-on-scroll].reveal-pending,
+[data-reveal-on-scroll].is-revealed {
+  transition:
+    opacity 560ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--reveal-delay, 0) * 90ms);
+}
+
+[data-reveal-on-scroll][data-reveal-delay="1"] {
+  --reveal-delay: 1;
+}
+[data-reveal-on-scroll][data-reveal-delay="2"] {
+  --reveal-delay: 2;
+}
+[data-reveal-on-scroll][data-reveal-delay="3"] {
+  --reveal-delay: 3;
+}
+[data-reveal-on-scroll][data-reveal-delay="4"] {
+  --reveal-delay: 4;
+}
+[data-reveal-on-scroll][data-reveal-delay="5"] {
+  --reveal-delay: 5;
+}
+
+[data-reveal-on-scroll].is-revealed {
+  opacity: 1;
+  transform: none;
 }
 
 @keyframes drawOpinionsHeart {
@@ -76,7 +102,7 @@
   stroke-dashoffset: 0;
 }
 
-.opinions-signature.animate-fade-up .opinions-heart-path {
+.opinions-signature.is-revealed .opinions-heart-path {
   animation: drawOpinionsHeart 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.2s both;
 }
 
@@ -90,6 +116,40 @@
 }
 .animate-shrink-spinner {
   animation: shrinkSpinner 15s linear forwards;
+}
+
+@keyframes gallerySlideIn {
+  from {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.gallery-slide-enter {
+  animation: gallerySlideIn 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes mobileMenuEnter {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-menu-enter {
+  animation: mobileMenuEnter 220ms ease-out both;
+}
+
+.mobile-menu-item-enter {
+  animation: mobileMenuEnter 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes scrollCue {
@@ -110,12 +170,32 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  html *,
+  html *::before,
+  html *::after {
+    animation: none;
+    transition: none;
+  }
+
   .animate-fade-up,
   .animate-scroll-cue,
-  .animate-shrink-spinner {
+  .animate-shrink-spinner,
+  .gallery-slide-enter,
+  .mobile-menu-enter,
+  .mobile-menu-item-enter {
     animation: none;
   }
-  .opinions-signature.animate-fade-up .opinions-heart-path {
+  [data-reveal-on-scroll].reveal-pending,
+  [data-reveal-on-scroll].is-revealed {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .opinions-signature.is-revealed .opinions-heart-path {
     animation: none;
     stroke-dashoffset: 0;
   }

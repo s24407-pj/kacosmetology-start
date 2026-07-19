@@ -66,7 +66,7 @@ export default function AboutSection() {
 
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 items-center gap-10 min-[810px]:grid-cols-2">
-          <div className="order-1 min-[810px]:order-2">
+          <div className="order-1 min-[810px]:order-2" data-reveal-on-scroll>
             <div className="relative">
               <span
                 className="pointer-events-none absolute -left-2 -top-8 select-none font-display text-7xl leading-none text-action/10"
@@ -83,6 +83,8 @@ export default function AboutSection() {
           <div
             className="relative order-2 min-[810px]:order-1"
             data-reveal-on-scroll
+            data-reveal-variant="scale"
+            data-reveal-delay="1"
           >
             <div
               className={surfaceCardStyles({
@@ -115,8 +117,13 @@ export default function AboutSection() {
         </div>
 
         <div className="mt-14 grid grid-cols-1 divide-y divide-border-default border-y border-border-default py-2 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-          {stats.map((stat) => (
-            <div key={stat.label} className="px-4 py-6 sm:px-6">
+          {stats.map((stat, index) => (
+            <div
+              key={stat.label}
+              className="px-4 py-6 sm:px-6"
+              data-reveal-on-scroll
+              data-reveal-delay={index.toString()}
+            >
               <StatItem {...stat} />
             </div>
           ))}

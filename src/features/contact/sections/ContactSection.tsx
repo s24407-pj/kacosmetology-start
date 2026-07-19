@@ -52,6 +52,8 @@ export default function ContactSection() {
             className={surfaceCardStyles({
               className: 'scroll-mt-48 p-6 sm:p-8',
             })}
+            data-reveal-on-scroll
+            data-reveal-variant="scale"
           >
             <Heading level={3} variant="card" className="mb-6">
               Informacje kontaktowe
@@ -120,6 +122,9 @@ export default function ContactSection() {
           className={surfaceCardStyles({
             className: 'p-6 sm:p-8',
           })}
+          data-reveal-on-scroll
+          data-reveal-variant="scale"
+          data-reveal-delay="1"
         >
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <Heading level={3} variant="card" className="flex items-center">

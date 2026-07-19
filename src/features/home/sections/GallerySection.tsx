@@ -26,7 +26,7 @@ export default function GallerySection() {
         className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 items-start gap-4 sm:gap-6 lg:gap-8"
         aria-label="Galeria zdjęć"
       >
-        {galleryItems.map((item) => (
+        {galleryItems.map((item, index) => (
           <figure
             key={item.id}
             className={cn(
@@ -36,6 +36,9 @@ export default function GallerySection() {
               }),
               item.className ?? '',
             )}
+            data-reveal-on-scroll
+            data-reveal-variant="scale"
+            data-reveal-delay={index.toString()}
           >
             <div className={cn('overflow-hidden', getAspectClass(item.aspect))}>
               {item.src ? (

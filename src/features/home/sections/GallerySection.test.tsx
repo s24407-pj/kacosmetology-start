@@ -21,6 +21,10 @@ describe('GallerySection', () => {
 
     const images = screen.getAllByRole('img')
     expect(images).toHaveLength(galleryItems.length)
+    expect(images[0].closest('figure')).toHaveAttribute(
+      'data-reveal-variant',
+      'scale',
+    )
   })
 
   it('renders images with correct alt text', () => {

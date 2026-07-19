@@ -61,4 +61,22 @@ describe('ServiceCard', () => {
       screen.queryByRole('link', { name: /Poznaj szczegóły/ }),
     ).not.toBeInTheDocument()
   })
+
+  it('exposes the reveal variant and requested stagger delay', () => {
+    const service = getServiceById('service-oczyszczanie-wodorowe')
+    expect(service).toBeDefined()
+    if (!service) return
+
+    const { container } = render(
+      <ServiceCard service={service} revealDelay={2} />,
+    )
+    expect(container.querySelector('article')).toHaveAttribute(
+      'data-reveal-variant',
+      'scale',
+    )
+    expect(container.querySelector('article')).toHaveAttribute(
+      'data-reveal-delay',
+      '2',
+    )
+  })
 })

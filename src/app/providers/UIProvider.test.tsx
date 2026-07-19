@@ -87,7 +87,7 @@ describe('UIProvider', () => {
     expect(screen.getByTestId('menu')).toHaveTextContent('true')
   })
 
-  it('animates newly intersecting, intentionally marked elements', () => {
+  it('reveals newly intersecting, intentionally marked elements', () => {
     const { container } = render(
       <UIProvider>
         <Consumer />
@@ -111,7 +111,8 @@ describe('UIProvider', () => {
       )
     })
 
-    expect(target).toHaveClass('animate-fade-up')
+    expect(target).toHaveClass('is-revealed')
+    expect(target).not.toHaveClass('reveal-pending')
   })
 
   it('tracks scrolling without creating an entrance observer when reduced motion is preferred', () => {

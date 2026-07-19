@@ -43,7 +43,7 @@ export function PageHero({
             centered && !media && 'text-center',
           )}
         >
-          <div>
+          <div data-reveal-on-scroll data-reveal-variant="scale">
             {breadcrumbs ? <div className="mb-7">{breadcrumbs}</div> : null}
             {eyebrow ? <Eyebrow className="mb-3">{eyebrow}</Eyebrow> : null}
             <Heading level={1} variant="page">
@@ -82,7 +82,16 @@ export function PageHero({
               </div>
             ) : null}
           </div>
-          {media ? <div className="mt-2 lg:mt-0">{media}</div> : null}
+          {media ? (
+            <div
+              className="mt-2 lg:mt-0"
+              data-reveal-on-scroll
+              data-reveal-variant="scale"
+              data-reveal-delay="2"
+            >
+              {media}
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

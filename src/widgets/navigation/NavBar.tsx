@@ -73,7 +73,7 @@ export default function NavBar() {
     <>
       <nav
         className={cn(
-          'fixed top-0 z-50 w-full border-b border-border-default bg-surface/95 transition-shadow',
+          'fixed top-0 z-50 w-full border-b border-border-default bg-surface/95 transition-shadow duration-300 motion-reduce:transition-none',
           scrolled && 'shadow-subtle',
         )}
         aria-label="Główna nawigacja"
@@ -139,14 +139,18 @@ export default function NavBar() {
         <div
           ref={menuRef}
           id="mobile-menu"
-          className="fixed inset-0 z-40 flex items-center justify-center overflow-y-auto bg-surface-muted px-6 pb-20 pt-44 min-[1180px]:hidden"
+          className="mobile-menu-enter fixed inset-0 z-40 flex items-center justify-center overflow-y-auto bg-surface-muted px-6 pb-20 pt-44 min-[1180px]:hidden"
           role="dialog"
           aria-modal="true"
           aria-label="Menu nawigacyjne"
         >
           <ul className="flex w-full max-w-sm flex-col items-center gap-3 py-8">
-            {MAIN_NAV_ITEMS.map((item) => (
-              <li key={item.id} className="w-full text-center">
+            {MAIN_NAV_ITEMS.map((item, index) => (
+              <li
+                key={item.id}
+                className="mobile-menu-item-enter w-full text-center"
+                style={{ animationDelay: `${index * 45}ms` }}
+              >
                 <Link
                   to={item.to}
                   hash={item.hash}
@@ -156,7 +160,7 @@ export default function NavBar() {
                     track(item.id, 'mobile-menu')
                     setIsMenuOpen(false)
                   }}
-                  className="inline-flex min-h-12 items-center justify-center rounded-md px-4 font-display text-2xl font-medium text-text-primary transition-colors hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 aria-[current=page]:text-action"
+                  className="inline-flex min-h-12 items-center justify-center rounded-md px-4 font-display text-2xl font-medium text-text-primary transition-[transform,color] duration-200 hover:scale-105 hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 motion-reduce:transform-none motion-reduce:transition-none aria-[current=page]:text-action"
                 >
                   {item.label}
                 </Link>

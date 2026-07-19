@@ -38,7 +38,7 @@ export default function SpecializationsSection() {
         eyebrow="Wybierz obszar"
       />
       <div className="mx-auto grid max-w-6xl gap-4 lg:grid-cols-3">
-        {specializations.map((item) => {
+        {specializations.map((item, index) => {
           const image = specializationImages[item.id]
 
           return (
@@ -54,6 +54,9 @@ export default function SpecializationsSection() {
                 })
               }
               className="group relative isolate flex h-[28rem] overflow-hidden focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-white sm:h-[30rem] md:h-[32rem] lg:h-[36rem]"
+              data-reveal-on-scroll
+              data-reveal-variant="scale"
+              data-reveal-delay={index.toString()}
             >
               <img
                 src={webpFallbackSrc(image.src)}

@@ -26,8 +26,9 @@ export const UIProvider = ({ children }: PropsWithChildren) => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-up')
-            entry.target.classList.remove('opacity-0', 'translate-y-8')
+            entry.target.classList.add('is-revealed')
+            entry.target.classList.remove('reveal-pending')
+            animationObserver.unobserve(entry.target)
           }
         })
       },
@@ -36,6 +37,8 @@ export const UIProvider = ({ children }: PropsWithChildren) => {
 
     const observeAnimatedElements = () => {
       document.querySelectorAll('[data-reveal-on-scroll]').forEach((el) => {
+        if (el.classList.contains('is-revealed')) return
+        el.classList.add('reveal-pending')
         animationObserver.observe(el)
       })
     }

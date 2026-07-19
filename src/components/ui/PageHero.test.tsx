@@ -27,6 +27,10 @@ describe('PageHero', () => {
       '/rezerwacja',
     )
     expect(screen.getByText('60 min')).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { level: 1, name: 'Kosmetologia' })
+        .parentElement,
+    ).toHaveAttribute('data-reveal-on-scroll')
   })
 
   it('renders optional editorial media after the hero content', () => {
@@ -47,5 +51,6 @@ describe('PageHero', () => {
     expect(image).toHaveAttribute('src', '/trychology.webp')
     const documentPosition = heading.compareDocumentPosition(image)
     expect(documentPosition & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0)
+    expect(image.parentElement).toHaveAttribute('data-reveal-variant', 'scale')
   })
 })
