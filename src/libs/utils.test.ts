@@ -33,4 +33,18 @@ describe('scroll helpers', () => {
 
     expect(scrollToSpy).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' })
   })
+
+  it('uses an instant scroll when reduced motion is preferred', () => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockReturnValue({ matches: true }),
+    })
+    const scrollToSpy = vi
+      .spyOn(window, 'scrollTo')
+      .mockImplementation(() => {})
+
+    scrollToTop()
+
+    expect(scrollToSpy).toHaveBeenCalledWith({ top: 0, behavior: 'auto' })
+  })
 })

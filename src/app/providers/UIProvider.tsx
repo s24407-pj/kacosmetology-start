@@ -1,3 +1,4 @@
+import { useReducedMotion } from '@hooks/useReducedMotion'
 import { type PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { UIContext } from './UIContext'
 
@@ -5,14 +6,29 @@ export const UIProvider = ({ children }: PropsWithChildren) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [showScrollToTop, setShowScrollToTop] = useState(false)
+  const reducedMotion = useReducedMotion()
 
   useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
+      setShowScrollToTop(window.scrollY > 300)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    if (reducedMotion) return
+
     const animationObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-up')
-            entry.target.classList.remove('opacity-0', 'translate-y-8')
+            entry.target.classList.add('is-revealed')
+            entry.target.classList.remove('reveal-pending')
+            animationObserver.unobserve(entry.target)
           }
         })
       },
@@ -20,14 +36,16 @@ export const UIProvider = ({ children }: PropsWithChildren) => {
     )
 
     const observeAnimatedElements = () => {
-      document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+      document.querySelectorAll('[data-reveal-on-scroll]').forEach((el) => {
+        if (el.classList.contains('is-revealed')) return
+        el.classList.add('reveal-pending')
         animationObserver.observe(el)
       })
     }
 
     observeAnimatedElements()
 
-    // Re-observe when lazy-loaded components add new .animate-on-scroll elements
+    // Re-observe intentionally marked elements from lazy-loaded sections.
     const mutationObserver = new MutationObserver((mutations) => {
       let hasNewNodes = false
       for (const mutation of mutations) {
@@ -43,19 +61,11 @@ export const UIProvider = ({ children }: PropsWithChildren) => {
 
     mutationObserver.observe(document.body, { childList: true, subtree: true })
 
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
-      setShowScrollToTop(window.scrollY > 300)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-
     return () => {
       animationObserver.disconnect()
       mutationObserver.disconnect()
-      window.removeEventListener('scroll', handleScroll)
     }
-  }, [])
+  }, [reducedMotion])
 
   const value = useMemo(
     () => ({

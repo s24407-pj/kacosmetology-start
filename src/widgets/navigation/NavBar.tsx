@@ -4,7 +4,7 @@ import { iconActionStyles } from '@components/ui'
 import { useUI } from '@context/UIContext'
 import { MAIN_NAV_ITEMS } from '@data/navigation'
 import { trackPlausibleEvent } from '@libs/analytics'
-import { cn } from '@libs/utils'
+import { cn, scrollToTop } from '@libs/utils'
 import { Link, useRouterState } from '@tanstack/react-router'
 import CTAButton from '@widgets/actions/CTAButton'
 import PromotionBanner from '@widgets/actions/PromotionBanner'
@@ -56,6 +56,11 @@ export default function NavBar() {
   const track = (target: string, context: string) =>
     trackPlausibleEvent('Navigation Link Click', { target, context })
 
+  const handleLogoClick = () => {
+    track('home', 'logo')
+    if (location.pathname === '/') scrollToTop()
+  }
+
   const isActive = (item: (typeof MAIN_NAV_ITEMS)[number]) => {
     if (item.hash) {
       return location.pathname === '/' && location.hash === item.hash
@@ -68,7 +73,7 @@ export default function NavBar() {
     <>
       <nav
         className={cn(
-          'fixed top-0 z-50 w-full border-b border-border-default bg-surface/95 transition-shadow',
+          'fixed top-0 z-50 w-full border-b border-border-default bg-surface/95 transition-shadow duration-300 ease-out motion-reduce:transition-none',
           scrolled && 'shadow-subtle',
         )}
         aria-label="Główna nawigacja"
@@ -99,7 +104,7 @@ export default function NavBar() {
               to="/"
               activeOptions={{ includeHash: true }}
               aria-label="Ka.Cosmetology — strona główna"
-              onClick={() => track('home', 'logo')}
+              onClick={handleLogoClick}
               className="justify-self-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40"
             >
               <KaCosmetologyLogo className="hidden w-32 text-action min-[1180px]:block" />
@@ -115,9 +120,13 @@ export default function NavBar() {
                     activeOptions={{ includeHash: true }}
                     aria-current={isActive(item) ? 'page' : undefined}
                     onClick={() => track(item.id, 'desktop')}
-                    className="inline-flex min-h-11 items-center rounded-md px-2 font-medium text-text-secondary transition-colors hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 aria-[current=page]:text-action"
+                    className="group relative inline-flex min-h-11 items-center rounded-md px-2 font-medium text-text-secondary transition-colors duration-300 ease-out hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 aria-[current=page]:text-action"
                   >
                     {item.label}
+                    <span
+                      aria-hidden="true"
+                      className="absolute bottom-1 left-2 right-2 h-px origin-left scale-x-0 bg-action transition-transform duration-200 ease-out group-hover:scale-x-100 group-aria-[current=page]:scale-x-100 motion-reduce:transition-none"
+                    />
                   </Link>
                 </li>
               ))}
@@ -134,7 +143,7 @@ export default function NavBar() {
         <div
           ref={menuRef}
           id="mobile-menu"
-          className="fixed inset-0 z-40 flex items-center justify-center overflow-y-auto bg-surface-muted px-6 pb-20 pt-44 min-[1180px]:hidden"
+          className="mobile-menu-enter fixed inset-0 z-40 flex items-center justify-center overflow-y-auto bg-surface-muted px-6 pb-20 pt-44 min-[1180px]:hidden"
           role="dialog"
           aria-modal="true"
           aria-label="Menu nawigacyjne"
@@ -143,8 +152,8 @@ export default function NavBar() {
             {MAIN_NAV_ITEMS.map((item, index) => (
               <li
                 key={item.id}
-                className="w-full animate-fade-up text-center"
-                style={{ animationDelay: `${index * 0.04}s` }}
+                className="mobile-menu-item-enter w-full text-center"
+                style={{ animationDelay: `${index * 60}ms` }}
               >
                 <Link
                   to={item.to}
@@ -155,7 +164,7 @@ export default function NavBar() {
                     track(item.id, 'mobile-menu')
                     setIsMenuOpen(false)
                   }}
-                  className="inline-flex min-h-12 items-center justify-center rounded-md px-4 font-display text-2xl font-medium text-text-primary transition-colors hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 aria-[current=page]:text-action"
+                  className="inline-flex min-h-12 items-center justify-center rounded-md px-4 font-display text-2xl font-medium text-text-primary transition-[transform,color] duration-300 ease-out hover:scale-105 hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 motion-reduce:transform-none motion-reduce:transition-none aria-[current=page]:text-action"
                 >
                   {item.label}
                 </Link>

@@ -3,10 +3,14 @@ import { defineConfig, devices } from '@playwright/test'
 const PORT = 4173
 const HOST = '127.0.0.1'
 const isCI = Boolean(process.env.CI)
+const webServerCommand = isCI
+  ? `HOST=${HOST} PORT=${PORT} pnpm start`
+  : `pnpm build && HOST=${HOST} PORT=${PORT} pnpm start`
 
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
+  forbidOnly: isCI,
   retries: isCI ? 2 : 0,
   failOnFlakyTests: isCI,
   reporter: isCI
@@ -20,7 +24,7 @@ export default defineConfig({
     trace: isCI ? 'retain-on-failure-and-retries' : 'retain-on-failure',
   },
   webServer: {
-    command: `pnpm build && HOST=${HOST} PORT=${PORT} pnpm start`,
+    command: webServerCommand,
     url: `http://${HOST}:${PORT}`,
     env: {
       PLAYWRIGHT_TEST_MODE: '1',

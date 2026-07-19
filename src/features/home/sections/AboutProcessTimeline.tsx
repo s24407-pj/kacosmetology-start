@@ -1,14 +1,8 @@
 import { SectionHeader } from '@components/ui'
 import { ABOUT_SECTION } from '@data/about'
+import { useReducedMotion } from '@hooks/useReducedMotion'
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 import AboutProcessStep from './AboutProcessStep'
-
-const STAGGER_CLASSES = [
-  'stagger-3',
-  'stagger-4',
-  'stagger-5',
-  'stagger-6',
-] as const
 
 function ChevronRight() {
   return (
@@ -61,22 +55,12 @@ export default function AboutProcessTimeline() {
   const { processHeading, processSteps } = ABOUT_SECTION
   const [activeIndex, setActiveIndex] = useState(0)
   const [isAutoPlay, setIsAutoPlay] = useState(true)
-  const [reducedMotion, setReducedMotion] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  })
+  const reducedMotion = useReducedMotion()
   const isAutoPlayRef = useRef(isAutoPlay)
 
   useEffect(() => {
     isAutoPlayRef.current = isAutoPlay
   }, [isAutoPlay])
-
-  useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const onChange = () => setReducedMotion(media.matches)
-    media.addEventListener('change', onChange)
-    return () => media.removeEventListener('change', onChange)
-  }, [])
 
   const handleVideoEnded = useCallback(() => {
     if (reducedMotion || !isAutoPlayRef.current) return
@@ -97,7 +81,6 @@ export default function AboutProcessTimeline() {
             <div className="min-w-0 flex-1">
               <AboutProcessStep
                 step={step}
-                staggerClass={STAGGER_CLASSES[index] ?? 'stagger-3'}
                 isActive={index === activeIndex}
                 onActivate={() => {
                   setActiveIndex(index)
@@ -114,10 +97,7 @@ export default function AboutProcessTimeline() {
         {processSteps.map((step, index) => (
           <Fragment key={step.step}>
             <li>
-              <AboutProcessStep
-                step={step}
-                staggerClass={STAGGER_CLASSES[index] ?? 'stagger-3'}
-              />
+              <AboutProcessStep step={step} />
             </li>
             {index < processSteps.length - 1 && <ThreadConnector />}
           </Fragment>

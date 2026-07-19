@@ -5,11 +5,24 @@ import { useCountUp } from '@hooks/useCountUp'
 import { pluralizeOpinie } from '@libs/pluralize'
 import { Star } from 'lucide-react'
 
-function PlatformStat({ name, count }: { name: string; count: number }) {
+function PlatformStat({
+  name,
+  count,
+  delay,
+}: {
+  name: string
+  count: number
+  delay: string
+}) {
   const [countRef, countDisplay] = useCountUp(count, 1400)
 
   return (
-    <div className="flex flex-col items-center gap-2 rounded-lg bg-surface px-5 py-8 text-center shadow-subtle animate-on-scroll stagger-2 sm:px-8">
+    <div
+      className="flex flex-col items-center gap-2 rounded-lg bg-surface px-5 py-8 text-center shadow-subtle sm:px-8"
+      data-reveal-on-scroll
+      data-reveal-variant="scale"
+      data-reveal-delay={delay}
+    >
       <span className="text-sm font-semibold uppercase tracking-widest text-text-muted">
         {name}
       </span>
@@ -54,8 +67,8 @@ export default function OpinionsSection() {
       />
 
       <div className="mx-auto mb-14 grid max-w-3xl grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6">
-        {platformStats.map((stat) => (
-          <PlatformStat key={stat.name} {...stat} />
+        {platformStats.map((stat, index) => (
+          <PlatformStat key={stat.name} {...stat} delay={index.toString()} />
         ))}
       </div>
 
@@ -63,7 +76,10 @@ export default function OpinionsSection() {
         {opinions.map((opinion, index) => (
           <article
             key={opinion.author + index.toString()}
-            className="flex min-h-full flex-col justify-between rounded-lg bg-surface p-6 shadow-subtle animate-on-scroll sm:p-8"
+            className="flex min-h-full flex-col justify-between rounded-lg bg-surface p-6 shadow-subtle transition-[transform,box-shadow] duration-400 ease-out hover:-translate-y-1 hover:shadow-raised motion-reduce:transform-none motion-reduce:transition-none sm:p-8"
+            data-reveal-on-scroll
+            data-reveal-variant="scale"
+            data-reveal-delay={index.toString()}
           >
             <div>
               <div
@@ -99,7 +115,10 @@ export default function OpinionsSection() {
       </div>
 
       <div className="mt-8 flex justify-end sm:mt-10">
-        <div className="opinions-signature flex items-center gap-3 text-action animate-on-scroll">
+        <div
+          className="opinions-signature flex items-center gap-3 text-action"
+          data-reveal-on-scroll
+        >
           <span className="font-body text-2xl italic sm:text-3xl">
             Dziękuję
           </span>

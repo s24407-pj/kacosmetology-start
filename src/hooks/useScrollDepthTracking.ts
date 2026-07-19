@@ -48,10 +48,13 @@ const getViewportHeight = () =>
   window.innerHeight || document.documentElement.clientHeight
 
 const sanitizeThresholds = (thresholds: ReadonlyArray<ScrollDepthThreshold>) =>
-  [...new Set(thresholds)]
-    .filter((threshold) => Number.isFinite(threshold) && threshold > 0)
-    .map((threshold) => Math.min(100, threshold))
-    .sort((first, second) => first - second)
+  [
+    ...new Set(
+      thresholds
+        .filter((threshold) => Number.isFinite(threshold) && threshold > 0)
+        .map((threshold) => Math.min(100, threshold)),
+    ),
+  ].sort((first, second) => first - second)
 
 export const useScrollDepthTracking = ({
   eventName = 'Scroll Depth',
@@ -71,22 +74,27 @@ export const useScrollDepthTracking = ({
 
     const trackedThresholds = new Set<number>()
 
-    const requestFrame =
-      window.requestAnimationFrame ??
-      ((callback: FrameRequestCallback) =>
-        window.setTimeout(
-          () =>
-            callback(
-              typeof window.performance === 'undefined'
-                ? Date.now()
-                : window.performance.now(),
-            ),
-          16,
-        ))
+    const supportsAnimationFrame =
+      typeof window.requestAnimationFrame === 'function' &&
+      typeof window.cancelAnimationFrame === 'function'
 
-    const cancelFrame =
-      window.cancelAnimationFrame ??
-      ((handle: number) => window.clearTimeout(handle))
+    const requestFrame = supportsAnimationFrame
+      ? (callback: FrameRequestCallback) =>
+          window.requestAnimationFrame(callback)
+      : (callback: FrameRequestCallback) =>
+          window.setTimeout(
+            () =>
+              callback(
+                typeof window.performance === 'undefined'
+                  ? Date.now()
+                  : window.performance.now(),
+              ),
+            16,
+          )
+
+    const cancelFrame = supportsAnimationFrame
+      ? (handle: number) => window.cancelAnimationFrame(handle)
+      : (handle: number) => window.clearTimeout(handle)
 
     let frameHandle: number | null = null
 

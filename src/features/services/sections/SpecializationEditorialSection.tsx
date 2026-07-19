@@ -166,10 +166,12 @@ function GuidedPath({ content }: { content: GuidedPathContent }) {
           className="mb-8"
         />
         <ul className="border-y border-border-default">
-          {content.concerns.map((concern) => (
+          {content.concerns.map((concern, index) => (
             <li
               key={concern}
               className="border-b border-border-default py-3.5 font-body text-base text-text-primary last:border-b-0"
+              data-reveal-on-scroll
+              data-reveal-delay={index.toString()}
             >
               {concern}
             </li>
@@ -181,6 +183,8 @@ function GuidedPath({ content }: { content: GuidedPathContent }) {
           <li
             key={step.title}
             className="grid gap-3 border-b border-border-default py-7 sm:grid-cols-[3rem_1fr] sm:gap-5 sm:py-8"
+            data-reveal-on-scroll
+            data-reveal-delay={index.toString()}
           >
             <span
               aria-hidden="true"
@@ -223,6 +227,8 @@ function EffectChoices({ content }: { content: EffectChoiceContent }) {
             <li
               key={choice.title}
               className="grid gap-4 border-b border-border-default py-7 sm:grid-cols-[3rem_1fr] sm:gap-5 sm:py-8"
+              data-reveal-on-scroll
+              data-reveal-delay={index.toString()}
             >
               <span
                 aria-hidden="true"

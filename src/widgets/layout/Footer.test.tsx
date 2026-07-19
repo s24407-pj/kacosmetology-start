@@ -3,6 +3,7 @@ import { brand, primarySalonLocation } from '@data/business'
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 
 vi.mock('@libs/analytics', () => ({
   trackPlausibleEvent: vi.fn(),
@@ -30,7 +31,7 @@ describe('Footer', () => {
       `tel:${primarySalonLocation.phone.replace(/\s+/g, '')}`,
     )
 
-    await user.click(phoneLink)
+    await clickAnalyticsLink(user, phoneLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
       channel: 'phone',
       placement: 'footer',
@@ -44,7 +45,7 @@ describe('Footer', () => {
     const emailLink = screen.getByRole('link', { name: 'Email' })
     expect(emailLink).toHaveAttribute('href', `mailto:${brand.email}`)
 
-    await user.click(emailLink)
+    await clickAnalyticsLink(user, emailLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
       channel: 'email',
       placement: 'footer',
@@ -59,7 +60,7 @@ describe('Footer', () => {
     expect(instagramLink).toHaveAttribute('href', brand.socialMedia.instagram)
     expect(instagramLink).toHaveAttribute('target', '_blank')
 
-    await user.click(instagramLink)
+    await clickAnalyticsLink(user, instagramLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
       channel: 'instagram',
       placement: 'footer',
@@ -78,7 +79,7 @@ describe('Footer', () => {
     expect(facebookLink).toHaveAttribute('href', brand.socialMedia.facebook)
     expect(facebookLink).toHaveAttribute('target', '_blank')
 
-    await user.click(facebookLink)
+    await clickAnalyticsLink(user, facebookLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
       channel: 'facebook',
       placement: 'footer',

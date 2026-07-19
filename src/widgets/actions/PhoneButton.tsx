@@ -23,7 +23,7 @@ export default function PhoneButton() {
     >
       {salonOpen && (
         <span
-          className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.25)] animate-pulse"
+          className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.25)] motion-safe:animate-pulse"
           aria-hidden="true"
         />
       )}

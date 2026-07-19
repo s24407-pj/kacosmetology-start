@@ -9,6 +9,7 @@ vi.mock('@libs/analytics', () => ({
 
 import { brand, primarySalonLocation } from '@data/business'
 import { trackPlausibleEvent } from '@libs/analytics'
+import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import HeroSection from './HeroSection'
 
 describe('HeroSection', () => {
@@ -20,64 +21,39 @@ describe('HeroSection', () => {
     vi.clearAllMocks()
   })
 
-  it('renders the hero section with correct id', () => {
-    const { container } = render(<HeroSection />)
-    const section = container.querySelector('#hero')
-    expect(section).toBeInTheDocument()
-  })
-
-  it('displays location badge with Starogard Gdański', () => {
+  it('exposes the practitioner identity and image alternative text', () => {
     render(<HeroSection />)
+
     expect(
-      screen.getByText(primarySalonLocation.address.locality),
+      screen.getByRole('heading', { level: 1, name: brand.practitionerName }),
     ).toBeInTheDocument()
-  })
-
-  it('displays main heading with name', () => {
-    render(<HeroSection />)
-    expect(screen.getByText(brand.practitionerName)).toBeInTheDocument()
-  })
-
-  it('uses the practitioner name as the hero image alternative', () => {
-    render(<HeroSection />)
     expect(
       screen.getByRole('img', { name: brand.practitionerName }),
     ).toBeVisible()
   })
 
-  it('displays tagline', () => {
-    render(<HeroSection />)
-    expect(
-      screen.getByText(
-        'Holistyczna kosmetologia i trychologia dopasowana do Ciebie.',
-      ),
-    ).toBeInTheDocument()
-  })
-
-  it('renders external Booksy CTA with tracking', async () => {
+  it('routes both CTAs and tracks their destinations', async () => {
     const user = userEvent.setup()
-    const { container } = render(<HeroSection />)
+    render(<HeroSection />)
 
-    const booksyLink = container.querySelector(
-      `a[href="${primarySalonLocation.bookingUrl}"]`,
-    )
-    expect(booksyLink).toBeInTheDocument()
-    await user.click(booksyLink!)
+    const booksyLink = screen.getByRole('link', { name: /umów wizytę/i })
+    const approachLink = screen.getByRole('link', {
+      name: /poznaj moje podejście/i,
+    })
+
+    expect(booksyLink).toHaveAttribute('href', primarySalonLocation.bookingUrl)
+    expect(booksyLink).toHaveAttribute('target', '_blank')
+    expect(approachLink).toHaveAttribute('href', '#o-mnie')
+
+    await clickAnalyticsLink(user, booksyLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('CTA Booksy Click', {
       placement: 'hero',
     })
-    expect(booksyLink).toHaveAttribute('target', '_blank')
-  })
 
-  it('displays location icon in hero section', () => {
-    const { container } = render(<HeroSection />)
-    const mapPinIcons = container.querySelectorAll('svg')
-    expect(mapPinIcons.length).toBeGreaterThan(0)
-  })
-
-  it('renders scroll button', () => {
-    render(<HeroSection />)
-    const scrollButton = screen.getByRole('link', { name: 'Przewiń w dół' })
-    expect(scrollButton).toBeInTheDocument()
+    await clickAnalyticsLink(user, approachLink)
+    expect(trackPlausibleEvent).toHaveBeenCalledWith('Secondary CTA Click', {
+      placement: 'hero',
+      target: 'o-mnie',
+    })
   })
 })

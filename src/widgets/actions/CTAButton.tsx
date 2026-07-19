@@ -29,7 +29,7 @@ export default function CTAButton({ placement = 'navbar' }: CTAButtonProps) {
 
         <span
           className={cn(
-            'grid transition-[grid-template-columns,opacity,margin] duration-300 ease-in-out',
+            'grid motion-safe:transition-[grid-template-columns,opacity,margin] motion-safe:duration-300 motion-safe:ease-out motion-reduce:transition-none',
             scrolled
               ? 'ml-0 grid-cols-[0fr] opacity-0'
               : 'ml-2 grid-cols-[1fr] opacity-100',

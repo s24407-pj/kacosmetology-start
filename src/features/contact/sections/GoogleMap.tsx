@@ -17,7 +17,7 @@ export default function GoogleMap() {
         })}
       >
         {!mapLoaded && (
-          <div className="absolute inset-0 animate-pulse bg-surface-strong" />
+          <div className="absolute inset-0 motion-safe:animate-pulse bg-surface-strong" />
         )}
         <iframe
           onLoad={() => setMapLoaded(true)}

@@ -34,7 +34,7 @@ export default function Footer() {
   const contactLinks = createContactLinks(brand, primarySalonLocation)
 
   return (
-    <footer className="relative overflow-hidden bg-text-primary text-white">
+    <footer className="relative overflow-hidden bg-text-primary pb-14 text-white min-[810px]:pb-0">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-action"

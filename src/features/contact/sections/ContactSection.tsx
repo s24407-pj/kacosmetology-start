@@ -46,12 +46,14 @@ export default function ContactSection() {
       />
 
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-        <div className="space-y-8 animate-on-scroll">
+        <div className="space-y-8">
           <div
             id="voucher"
             className={surfaceCardStyles({
               className: 'scroll-mt-48 p-6 sm:p-8',
             })}
+            data-reveal-on-scroll
+            data-reveal-variant="scale"
           >
             <Heading level={3} variant="card" className="mb-6">
               Informacje kontaktowe
@@ -63,7 +65,7 @@ export default function ContactSection() {
                 return (
                   <div
                     key={link.type}
-                    className="group flex items-center gap-4 rounded-md p-2 transition-colors hover:bg-surface-muted"
+                    className="group flex items-center gap-4 rounded-md p-2 transition-colors duration-300 ease-out hover:bg-surface-muted"
                   >
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-action">
                       <Icon className="h-6 w-6 text-white" />
@@ -118,8 +120,11 @@ export default function ContactSection() {
 
         <div
           className={surfaceCardStyles({
-            className: 'p-6 animate-on-scroll stagger-1 sm:p-8',
+            className: 'p-6 sm:p-8',
           })}
+          data-reveal-on-scroll
+          data-reveal-variant="scale"
+          data-reveal-delay="1"
         >
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <Heading level={3} variant="card" className="flex items-center">

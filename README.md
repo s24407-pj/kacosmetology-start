@@ -62,6 +62,4 @@ Business identity and salon-location facts have one canonical owner in
 that `llms.txt`, `robots.txt`, `sitemap.xml`, and `site.webmanifest` are current.
 
 See [AGENTS.md](./AGENTS.md) for repository conventions,
-[DESIGN.md](./DESIGN.md) for architecture and change boundaries, and
-[RUNBOOK.md](./RUNBOOK.md) for verified operating procedures and their explicit
-external limits.
+[DESIGN.md](./docs/DESIGN.md) for architecture and change boundaries

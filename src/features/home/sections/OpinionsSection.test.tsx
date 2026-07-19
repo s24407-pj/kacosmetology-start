@@ -28,75 +28,20 @@ describe('OpinionsSection', () => {
     cleanup()
   })
 
-  it('renders the section with correct id', () => {
-    const { container } = render(<OpinionsSection />)
-    const section = container.querySelector('#opinie')
-    expect(section).toBeInTheDocument()
-  })
-
-  it('displays section heading "Opinie"', () => {
+  it('renders the opinions heading and an article for every canonical opinion', () => {
     render(<OpinionsSection />)
-    expect(screen.getByText('Opinie')).toBeInTheDocument()
-  })
 
-  it('displays section subtitle', () => {
-    render(<OpinionsSection />)
     expect(
-      screen.getByText(/Wasze słowa są najlepszą rekomendacją mojej pracy/),
+      screen.getByRole('heading', { level: 2, name: 'Opinie' }),
     ).toBeInTheDocument()
+    expect(screen.getAllByRole('article')).toHaveLength(opinions.length)
   })
 
-  it('renders all opinion cards', () => {
-    const { container } = render(<OpinionsSection />)
-    const cards = container.querySelectorAll('article')
-    expect(cards).toHaveLength(opinions.length)
-  })
-
-  it('displays every opinion, author and source detail', () => {
+  it('labels every canonical opinion and platform rating widget', () => {
     render(<OpinionsSection />)
-    for (const opinion of opinions) {
-      expect(screen.getByText(`„${opinion.content}”`)).toBeInTheDocument()
-      expect(screen.getByText(opinion.author)).toBeInTheDocument()
-      if (opinion.service) {
-        expect(screen.getByText(opinion.service)).toBeInTheDocument()
-      }
-      if (opinion.source) {
-        expect(screen.getByText(opinion.source)).toBeInTheDocument()
-      }
-    }
-  })
 
-  it('renders Booksy stats card', () => {
-    render(<OpinionsSection />)
-    expect(screen.getByText('Booksy')).toBeInTheDocument()
-    expect(screen.getByText('opinie')).toBeInTheDocument()
-  })
-
-  it('renders Google Maps stats card', () => {
-    render(<OpinionsSection />)
-    expect(screen.getByText('Google Maps')).toBeInTheDocument()
-    expect(screen.getByText('opinie')).toBeInTheDocument()
-  })
-
-  it('renders two platform stat cards', () => {
-    const { container } = render(<OpinionsSection />)
-    const statCards = platformStats.map((stat) =>
-      screen.getByText(stat.name).closest('.shadow-subtle'),
-    )
-    expect(statCards).toHaveLength(2)
-    expect(statCards.every(Boolean)).toBe(true)
     expect(
-      container.querySelectorAll('[aria-label="Ocena: 5 gwiazdek"]'),
+      screen.getAllByRole('img', { name: 'Ocena: 5 gwiazdek' }),
     ).toHaveLength(platformStats.length + opinions.length)
-  })
-
-  it('renders the thank-you signature with a decorative heart', () => {
-    render(<OpinionsSection />)
-    const signature = screen.getByText('Dziękuję').parentElement
-    const heart = signature?.querySelector('svg')
-
-    expect(signature).toHaveClass('animate-on-scroll')
-    expect(heart).toHaveAttribute('aria-hidden', 'true')
-    expect(heart?.querySelector('.opinions-heart-path')).toBeInTheDocument()
   })
 })

@@ -6,6 +6,7 @@ import {
   surfaceCardStyles,
 } from '@components/ui'
 import { effectsItems } from '@data/effects'
+import { useReducedMotion } from '@hooks/useReducedMotion'
 import {
   IMAGE_SIZES,
   MOBILE_WIDTHS,
@@ -19,6 +20,7 @@ import { useCallback, useEffect, useState } from 'react'
 export default function EffectsGallerySection() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlay, setIsAutoPlay] = useState(true)
+  const reducedMotion = useReducedMotion()
 
   const goToPrevious = useCallback(() => {
     setCurrentIndex((prev) => (prev === 0 ? effectsItems.length - 1 : prev - 1))
@@ -33,7 +35,7 @@ export default function EffectsGallerySection() {
   }, [])
 
   useEffect(() => {
-    if (!isAutoPlay) return
+    if (!isAutoPlay || reducedMotion) return
 
     let interval: ReturnType<typeof setInterval>
     const timeout = setTimeout(() => {
@@ -48,7 +50,7 @@ export default function EffectsGallerySection() {
       clearTimeout(timeout)
       clearInterval(interval)
     }
-  }, [isAutoPlay])
+  }, [isAutoPlay, reducedMotion])
 
   return (
     <Section id="efekty" background="gray">
@@ -58,7 +60,11 @@ export default function EffectsGallerySection() {
         className="mb-10 sm:mb-14"
       />
 
-      <div className="relative mx-auto max-w-lg">
+      <div
+        className="relative mx-auto max-w-lg"
+        data-reveal-on-scroll
+        data-reveal-variant="scale"
+      >
         <div className="relative">
           <div
             className={surfaceCardStyles({
@@ -79,7 +85,7 @@ export default function EffectsGallerySection() {
                 alt={effectsItems[currentIndex].alt}
                 loading={currentIndex === 0 ? 'eager' : 'lazy'}
                 draggable={false}
-                className="w-full h-full object-cover"
+                className="gallery-slide-enter h-full w-full object-cover"
               />
             </div>
 
@@ -127,7 +133,7 @@ export default function EffectsGallerySection() {
               type="button"
               onClick={() => goToSlide(index)}
               className={cn(
-                'w-8 h-8 inline-flex items-center justify-center rounded-md transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-action',
+                'inline-flex h-8 w-8 items-center justify-center rounded-md transition-[transform,color] duration-300 ease-out hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-action motion-reduce:transform-none motion-reduce:transition-none',
                 index === currentIndex
                   ? 'text-action'
                   : 'text-text-muted hover:text-text-secondary',
@@ -137,7 +143,7 @@ export default function EffectsGallerySection() {
             >
               <span
                 className={cn(
-                  'h-2 rounded-full transition-all duration-300',
+                  'h-2 rounded-full motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out motion-reduce:transition-none',
                   index === currentIndex ? 'w-8 bg-current' : 'w-2 bg-current',
                 )}
               />

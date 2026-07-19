@@ -9,9 +9,11 @@ const Footer = lazy(() => import('@widgets/layout/Footer'))
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <UIProvider>
-      <div className="min-h-screen bg-surface text-text-primary pb-14 min-[810px]:pb-0">
+      <div className="flex min-h-screen flex-col bg-surface text-text-primary">
         <NavBar />
-        <main id="main-content">{children}</main>
+        <main id="main-content" className="flex flex-1 flex-col">
+          {children}
+        </main>
         <Suspense fallback={null}>
           <Footer />
         </Suspense>

@@ -88,6 +88,33 @@ describe('useCountUp', () => {
     expect(screen.getByTestId('counter')).toHaveTextContent('42')
   })
 
+  it('finishes immediately when reduced motion is enabled during the animation', async () => {
+    let listener: (() => void) | undefined
+    const media = {
+      matches: false,
+      media: '(prefers-reduced-motion: reduce)',
+      addEventListener: vi.fn((_event: string, callback: () => void) => {
+        listener = callback
+      }),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn(() => media),
+    })
+
+    render(<Counter target={42} />)
+    await waitFor(() => expect(observeMock).toHaveBeenCalled())
+
+    act(() => {
+      media.matches = true
+      listener?.()
+    })
+
+    expect(screen.getByTestId('counter')).toHaveTextContent('42')
+  })
+
   it('animates toward the target when the element enters the viewport', async () => {
     const { rerender } = render(<Counter target={100} duration={1000} />)
 

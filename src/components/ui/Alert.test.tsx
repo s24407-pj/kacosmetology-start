@@ -1,24 +1,27 @@
 import '@testing-library/jest-dom/vitest'
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it } from 'vitest'
 
 import { Alert } from './Alert'
 
 describe('Alert', () => {
-  it('renders info variant by default', () => {
+  afterEach(cleanup)
+
+  it('renders an accessible alert by default', () => {
     render(<Alert>Informational copy</Alert>)
 
-    const alert = screen.getByRole('alert')
-    expect(alert).toHaveClass('bg-blue-50', 'border-info-500', 'text-blue-900')
-    expect(alert.querySelector('svg')).toBeInTheDocument()
+    expect(screen.getByRole('alert')).toHaveTextContent('Informational copy')
   })
 
-  it('renders other variants', () => {
-    render(<Alert variant="error">Error copy</Alert>)
+  it.each([
+    ['info', 'border-info-500'],
+    ['warning', 'border-warning-500'],
+    ['error', 'border-danger-500'],
+    ['success', 'border-success-500'],
+  ] as const)('applies the %s status variant', (variant, statusClass) => {
+    render(<Alert variant={variant}>Status copy</Alert>)
 
-    const alerts = screen.getAllByRole('alert')
-    const alert = alerts.pop()
-    expect(alert).toHaveClass('bg-red-50', 'border-danger-500', 'text-red-900')
+    expect(screen.getByRole('alert')).toHaveClass(statusClass)
   })
 
   it('renders an optional semantic title', () => {

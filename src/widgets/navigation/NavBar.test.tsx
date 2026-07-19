@@ -6,15 +6,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const setIsMenuOpen = vi.fn()
 let isMenuOpen = false
+let location = { pathname: '/', hash: '' }
 
 vi.mock('@context/UIContext', () => ({
   useUI: () => ({ scrolled: false, isMenuOpen, setIsMenuOpen }),
 }))
 vi.mock('@widgets/actions/PromotionBanner', () => ({ default: () => null }))
 vi.mock('@libs/analytics', () => ({ trackPlausibleEvent: vi.fn() }))
+vi.mock('@libs/utils', () => ({
+  cn: (...classes: unknown[]) => classes.filter(Boolean).join(' '),
+  scrollToTop: vi.fn(),
+}))
 vi.mock('@tanstack/react-router', () => ({
   useRouterState: ({ select }: { select: (state: unknown) => unknown }) =>
-    select({ location: { pathname: '/', hash: '' } }),
+    select({ location }),
   Link: ({
     to,
     hash,
@@ -33,11 +38,13 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }))
 
+import { scrollToTop } from '@libs/utils'
 import NavBar from './NavBar'
 
 describe('NavBar', () => {
   beforeEach(() => {
     isMenuOpen = false
+    location = { pathname: '/', hash: '' }
     vi.clearAllMocks()
   })
   afterEach(cleanup)
@@ -64,6 +71,37 @@ describe('NavBar', () => {
     expect(
       screen.getByRole('link', { name: /Umów wizytę w Booksy/ }),
     ).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
+  })
+
+  it('animates a desktop link underline and keeps it visible for the active item', () => {
+    location = { pathname: '/kosmetologia', hash: '' }
+    render(<NavBar />)
+
+    const link = screen.getAllByRole('link', { name: 'Kosmetologia' })[0]
+    const underline = link.querySelector('span[aria-hidden="true"]')
+
+    expect(link).toHaveAttribute('aria-current', 'page')
+    expect(link).toHaveClass('group', 'relative')
+    expect(underline).toHaveClass(
+      'origin-left',
+      'scale-x-0',
+      'transition-transform',
+      'duration-200',
+      'group-hover:scale-x-100',
+      'group-aria-[current=page]:scale-x-100',
+      'motion-reduce:transition-none',
+    )
+  })
+
+  it('scrolls to the top when the logo is clicked on the home page', async () => {
+    const user = userEvent.setup()
+    render(<NavBar />)
+
+    await user.click(
+      screen.getByRole('link', { name: 'Ka.Cosmetology — strona główna' }),
+    )
+
+    expect(scrollToTop).toHaveBeenCalledOnce()
   })
 
   it('opens the accessible mobile menu', async () => {

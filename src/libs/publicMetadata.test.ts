@@ -2,6 +2,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { businessProfile } from '@data/business'
+import { getPublicServicePath, services } from '@data/services'
 import { afterEach, describe, expect, it } from 'vitest'
 import {
   getSitemapPaths,
@@ -83,13 +84,25 @@ describe('public metadata renderers', () => {
     })
   })
 
-  it('publishes the five primary routes and 24 stationary service details', () => {
-    expect(getSitemapPaths()).toHaveLength(29)
-    expect(getSitemapPaths()).toContain('/oprawa-oka/henna-brwi-z-regulacja')
-    expect(getSitemapPaths()).not.toContain('/rezerwacja')
-    expect(getSitemapPaths()).not.toContain(
-      '/trychologia/konsultacja-trychologiczna-online',
+  it('publishes fixed index routes and every published service detail', () => {
+    const fixedRoutes = [
+      '/',
+      '/kosmetologia',
+      '/oprawa-oka',
+      '/trychologia',
+      '/galeria',
+    ]
+    const serviceRoutes = services
+      .filter((service) => service.isPublished && service.hasDetailPage)
+      .flatMap((service) => {
+        const path = getPublicServicePath(service)
+        return path ? [path] : []
+      })
+
+    expect(new Set(getSitemapPaths())).toEqual(
+      new Set([...fixedRoutes, ...serviceRoutes]),
     )
+    expect(getSitemapPaths()).not.toContain('/rezerwacja')
   })
 
   it('derives origins and escapes XML and Markdown input', () => {

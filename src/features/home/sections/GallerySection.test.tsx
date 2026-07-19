@@ -9,27 +9,18 @@ describe('GallerySection', () => {
   afterEach(() => {
     cleanup()
   })
-  it('renders the section with correct id', () => {
+  it('renders a labelled, lazily loaded gallery from canonical image data', () => {
     render(<GallerySection />)
 
     expect(document.getElementById('gabinet')).toBeInTheDocument()
     expect(screen.getByLabelText('Galeria zdjęć')).toBeInTheDocument()
-  })
-
-  it('renders all gallery images', () => {
-    render(<GallerySection />)
 
     const images = screen.getAllByRole('img')
     expect(images).toHaveLength(galleryItems.length)
-  })
-
-  it('renders images with correct alt text', () => {
-    render(<GallerySection />)
 
     for (const item of galleryItems) {
-      expect(
-        screen.getByRole('img', { name: item.alt ?? item.title }),
-      ).toBeInTheDocument()
+      const image = screen.getByRole('img', { name: item.alt ?? item.title })
+      expect(image).toHaveAttribute('loading', 'lazy')
     }
   })
 })

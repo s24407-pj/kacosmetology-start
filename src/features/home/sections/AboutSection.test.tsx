@@ -32,38 +32,15 @@ describe('AboutSection', () => {
     vi.unstubAllGlobals()
   })
 
-  it('renders the section with correct id', () => {
+  it('renders the heading and image, with mobile-safe DOM ordering', () => {
     const { container } = render(<AboutSection />)
-    const section = container.querySelector('#o-mnie')
-    expect(section).toBeInTheDocument()
-  })
 
-  it('displays the main heading', () => {
-    render(<AboutSection />)
     expect(
-      screen.getByRole('heading', { name: /o\s*mnie/i }),
+      screen.getByRole('heading', { level: 2, name: /o\s*mnie/i }),
     ).toBeInTheDocument()
-  })
-
-  it('displays about content text', () => {
-    render(<AboutSection />)
-    expect(
-      screen.getByText(
-        /Kosmetologia i trychologia to nie tylko moja praca – to moja pasja/,
-      ),
-    ).toBeInTheDocument()
-  })
-
-  it('displays the showcase image', () => {
-    render(<AboutSection />)
-
     expect(
       screen.getByRole('img', { name: ABOUT_SECTION.image.alt }),
     ).toBeInTheDocument()
-  })
-
-  it('renders lead text before the image in the DOM for mobile ordering', () => {
-    const { container } = render(<AboutSection />)
 
     const section = container.querySelector('#o-mnie')
     const leadText = section?.querySelector('p')

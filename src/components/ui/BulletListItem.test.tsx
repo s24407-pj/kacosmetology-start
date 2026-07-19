@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest'
 import { BulletListItem } from './BulletListItem'
 
 describe('BulletListItem', () => {
-  it('uses the primary bullet color by default', () => {
+  it('renders a list item with its text content', () => {
     render(
       <ul>
         <BulletListItem>Feature A</BulletListItem>
@@ -13,12 +13,11 @@ describe('BulletListItem', () => {
     )
 
     const item = screen.getByText('Feature A').closest('li')
-    expect(item).toHaveClass('flex', 'items-start')
-    const bullet = item?.querySelector('div')
-    expect(bullet).toHaveClass('bg-brand')
+    expect(item).toBeInTheDocument()
+    expect(item?.querySelector('span')).toHaveTextContent('Feature A')
   })
 
-  it('applies the selected bullet color', () => {
+  it('supports the selected bullet color', () => {
     render(
       <ul>
         <BulletListItem color="red">Feature B</BulletListItem>

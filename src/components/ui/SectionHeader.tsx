@@ -26,8 +26,9 @@ export function SectionHeader({
 
   return (
     <div
+      data-reveal-on-scroll
       className={cn(
-        'mb-10 max-w-3xl animate-on-scroll sm:mb-12',
+        'mb-10 max-w-3xl sm:mb-12',
         centered && 'mx-auto text-center',
         className,
       )}
@@ -62,7 +63,7 @@ export function SectionHeader({
       {subtitle && (
         <p
           className={cn(
-            'max-w-3xl font-body text-lg leading-relaxed animate-on-scroll stagger-1 md:text-xl',
+            'max-w-3xl font-body text-lg leading-relaxed md:text-xl',
             tone === 'inverse' ? 'text-white/80' : 'text-text-secondary',
             centered && 'mx-auto',
           )}

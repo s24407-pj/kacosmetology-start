@@ -1,11 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-
-function prefersReducedMotion() {
-  return (
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  )
-}
+import { prefersReducedMotion, useReducedMotion } from './useReducedMotion'
 
 export function useCountUp(
   target: number,
@@ -14,6 +8,7 @@ export function useCountUp(
 ): [React.RefObject<HTMLElement | null>, string] {
   const ref = useRef<HTMLElement | null>(null)
   const finalValue = target.toFixed(decimals)
+  const reducedMotion = useReducedMotion()
   const [value, setValue] = useState(() =>
     prefersReducedMotion()
       ? finalValue
@@ -22,7 +17,10 @@ export function useCountUp(
   const started = useRef(false)
 
   useEffect(() => {
-    if (prefersReducedMotion()) return
+    if (reducedMotion) {
+      setValue(finalValue)
+      return
+    }
 
     const el = ref.current
     if (!el) return
@@ -51,7 +49,7 @@ export function useCountUp(
 
     observer.observe(el)
     return () => observer.disconnect()
-  }, [target, duration, decimals])
+  }, [target, duration, decimals, finalValue, reducedMotion])
 
   return [ref, value]
 }

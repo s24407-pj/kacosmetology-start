@@ -8,7 +8,6 @@ import AboutVideo from './AboutVideo'
 
 type AboutProcessStepProps = {
   step: AboutProcessStepData
-  staggerClass: string
   isActive?: boolean
   onActivate?: () => void
   onVideoEnded?: () => void
@@ -84,7 +83,6 @@ function StepMedia({
 
 export default function AboutProcessStep({
   step,
-  staggerClass,
   isActive,
   onActivate,
   onVideoEnded,
@@ -107,10 +105,11 @@ export default function AboutProcessStep({
         className={cn(
           surfaceCardStyles({ className: 'relative overflow-hidden' }),
           isAccordion &&
-            'origin-center transition-all duration-500 ease-in-out',
-          isAccordion && active && 'z-10 scale-[1.025] ring-1 ring-action/20',
+            'origin-center motion-safe:transition-all motion-safe:duration-500 motion-safe:ease-in-out motion-reduce:transition-none',
+          isAccordion &&
+            active &&
+            'z-10 motion-safe:scale-[1.025] ring-1 ring-action/20',
           isAccordion && !active && 'cursor-pointer',
-          !isAccordion && cn('animate-on-scroll', staggerClass),
         )}
       >
         <div className="relative">

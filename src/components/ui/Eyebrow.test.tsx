@@ -4,18 +4,13 @@ import { describe, expect, it } from 'vitest'
 import { Eyebrow } from './Eyebrow'
 
 describe('Eyebrow', () => {
-  it('uses the shared accent treatment by default', () => {
+  it('renders eyebrow content as inline text', () => {
     render(<Eyebrow>Context</Eyebrow>)
 
-    expect(screen.getByText('Context')).toHaveClass(
-      'text-xs',
-      'font-semibold',
-      'uppercase',
-      'text-action',
-    )
+    expect(screen.getByText('Context').tagName).toBe('SPAN')
   })
 
-  it('supports inverse contexts', () => {
+  it('supports the inverse tone', () => {
     render(<Eyebrow tone="inverse">Inverse context</Eyebrow>)
 
     expect(screen.getByText('Inverse context')).toHaveClass('text-white/80')

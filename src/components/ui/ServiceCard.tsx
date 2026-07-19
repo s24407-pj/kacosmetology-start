@@ -6,7 +6,13 @@ import { Heading } from './Heading'
 import { ServicePrice } from './ServicePrice'
 import { actionLinkStyles } from './styles'
 
-export function ServiceCard({ service }: { service: PublicService }) {
+export function ServiceCard({
+  service,
+  revealDelay,
+}: {
+  service: PublicService
+  revealDelay?: number
+}) {
   const detailTo =
     service.category === 'eye-styling'
       ? '/oprawa-oka/$slug'
@@ -15,7 +21,12 @@ export function ServiceCard({ service }: { service: PublicService }) {
         : '/trychologia/$slug'
 
   return (
-    <article className="group flex h-full flex-col border-t border-border-default py-6 sm:py-7">
+    <article
+      className="group flex h-full flex-col border-t border-border-default py-6 transition-[transform,box-shadow] duration-400 ease-out hover:-translate-y-1 sm:py-7 motion-reduce:transform-none motion-reduce:transition-none"
+      data-reveal-on-scroll
+      data-reveal-variant="scale"
+      data-reveal-delay={revealDelay?.toString()}
+    >
       <Heading level={3} variant="card">
         {service.name}
       </Heading>

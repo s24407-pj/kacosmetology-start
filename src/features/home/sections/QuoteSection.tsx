@@ -12,7 +12,10 @@ const vitruvianManSrc = '/images/vitruvian-man.webp'
 export default function QuoteSection() {
   return (
     <Section background="accent" spacing="compact">
-      <figure className="relative mx-auto max-w-4xl text-center animate-on-scroll">
+      <figure
+        className="relative mx-auto max-w-4xl text-center"
+        data-reveal-on-scroll
+      >
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 flex items-center justify-center"

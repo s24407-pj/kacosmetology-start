@@ -9,6 +9,8 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
     alias: [
+      // Workaround: bare import fails without package exports/main.
+      // https://github.com/plausible/analytics/issues/5879
       {
         find: /^@plausible-analytics\/tracker$/,
         replacement: require.resolve(
@@ -20,6 +22,7 @@ export default defineConfig({
   plugins: [tailwindcss(), viteReact()],
   test: {
     environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.test.ts?(x)'],
     exclude: ['tests/e2e/**/*'],
     coverage: {
