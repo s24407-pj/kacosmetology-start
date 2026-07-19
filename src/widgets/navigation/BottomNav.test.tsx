@@ -35,9 +35,13 @@ describe('BottomNav', () => {
     cleanup()
     useUIMock.mockReturnValue({ isMenuOpen: false })
   })
-  it('renders four route links and marks the current route', () => {
+  it('renders five route links and marks the current route', () => {
     render(<BottomNav />)
-    expect(screen.getAllByRole('link')).toHaveLength(4)
+    expect(screen.getAllByRole('link')).toHaveLength(5)
+    expect(screen.getByRole('link', { name: /Oprawa oka/ })).toHaveAttribute(
+      'href',
+      '/oprawa-oka',
+    )
     expect(screen.getByRole('link', { name: /Galeria/ })).toHaveAttribute(
       'aria-current',
       'page',

@@ -6,9 +6,82 @@ import {
   getAllActivePromotions,
   getPromotionScopeDescription,
 } from '@data/promotion'
+import { useReducedMotion } from '@hooks/useReducedMotion'
 import { trackPlausibleEvent } from '@libs/analytics'
 import { Percent, X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
+const BANNER_CTA_LABEL = 'Zarezerwuj termin'
+const BANNER_CTA_LABEL_COMPACT = 'Zarezerwuj'
+const MARQUEE_PIXELS_PER_SECOND = 40
+
+function PromotionBannerMessage({ message }: { message: string }) {
+  const reducedMotion = useReducedMotion()
+  const viewportRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLSpanElement>(null)
+  const [isOverflowing, setIsOverflowing] = useState(false)
+  const [durationSeconds, setDurationSeconds] = useState(0)
+  const shouldMarquee = isOverflowing && !reducedMotion
+
+  useEffect(() => {
+    const viewport = viewportRef.current
+    const content = contentRef.current
+    if (!viewport || !content) {
+      return
+    }
+
+    const updateOverflow = () => {
+      const segmentWidth = content.scrollWidth
+      const availableWidth = viewport.clientWidth
+      const overflowing = segmentWidth > availableWidth + 1
+      setIsOverflowing(overflowing)
+      setDurationSeconds(
+        overflowing ? segmentWidth / MARQUEE_PIXELS_PER_SECOND : 0,
+      )
+    }
+
+    updateOverflow()
+
+    const observer = new ResizeObserver(updateOverflow)
+    observer.observe(viewport)
+    observer.observe(content)
+
+    return () => observer.disconnect()
+  }, [message, shouldMarquee])
+
+  return (
+    <div ref={viewportRef} className="relative min-w-0 flex-1 overflow-hidden">
+      {shouldMarquee ? (
+        <div
+          className="animate-promotion-banner-marquee flex"
+          style={{ animationDuration: `${durationSeconds}s` }}
+        >
+          <span
+            ref={contentRef}
+            className="shrink-0 whitespace-nowrap pr-8 font-semibold leading-tight"
+          >
+            {message}
+          </span>
+          <span
+            className="shrink-0 whitespace-nowrap pr-8 font-semibold leading-tight"
+            aria-hidden="true"
+          >
+            {message}
+          </span>
+        </div>
+      ) : (
+        <span
+          ref={contentRef}
+          className={`block whitespace-nowrap font-semibold leading-tight${
+            isOverflowing ? ' truncate' : ''
+          }`}
+        >
+          {message}
+        </span>
+      )}
+    </div>
+  )
+}
 
 export default function PromotionBanner() {
   const renderTime = useRenderTime()
@@ -45,41 +118,36 @@ export default function PromotionBanner() {
           return (
             <div
               key={promotion.id}
-              className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-center sm:gap-4"
+              className="flex min-w-0 items-center gap-2 sm:gap-4"
             >
-              <div className="min-w-0 flex items-start gap-2 text-left sm:items-center sm:text-center">
-                <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-white/15 sm:mt-0 sm:h-6 sm:w-6">
-                  <Percent
-                    className="h-3.5 w-3.5 sm:h-4 sm:w-4"
-                    aria-hidden="true"
-                  />
-                </span>
-                <span className="font-semibold leading-tight sm:leading-normal">
-                  {bannerMessage}
-                </span>
-              </div>
-              <div className="flex items-center pr-1 sm:pr-0">
-                <a
-                  href={primarySalonLocation.bookingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`${promotion.ctaLabel} w Booksy (otwiera nową kartę)`}
-                  onClick={() =>
-                    trackPlausibleEvent('CTA Booksy Click', {
-                      placement: 'promotion-banner',
-                      promotionId: promotion.id,
-                    })
-                  }
-                  className={actionLinkStyles({
-                    variant: 'inverse',
-                    size: 'xs',
-                    className:
-                      'min-h-8 py-1.5 text-[11px] uppercase tracking-wide focus-visible:ring-white/70 focus-visible:ring-offset-action sm:min-h-9 sm:text-sm',
-                  })}
-                >
-                  {promotion.ctaLabel}
-                </a>
-              </div>
+              <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-white/15 sm:h-6 sm:w-6">
+                <Percent
+                  className="h-3.5 w-3.5 sm:h-4 sm:w-4"
+                  aria-hidden="true"
+                />
+              </span>
+              <PromotionBannerMessage message={bannerMessage} />
+              <a
+                href={primarySalonLocation.bookingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${BANNER_CTA_LABEL} w Booksy (otwiera nową kartę)`}
+                onClick={() =>
+                  trackPlausibleEvent('CTA Booksy Click', {
+                    placement: 'promotion-banner',
+                    promotionId: promotion.id,
+                  })
+                }
+                className={actionLinkStyles({
+                  variant: 'inverse',
+                  size: 'xs',
+                  className:
+                    'shrink-0 whitespace-nowrap min-h-8 py-1.5 text-[11px] uppercase tracking-wide focus-visible:ring-white/70 focus-visible:ring-offset-action sm:min-h-9 sm:text-sm',
+                })}
+              >
+                <span className="sm:hidden">{BANNER_CTA_LABEL_COMPACT}</span>
+                <span className="hidden sm:inline">{BANNER_CTA_LABEL}</span>
+              </a>
             </div>
           )
         })}

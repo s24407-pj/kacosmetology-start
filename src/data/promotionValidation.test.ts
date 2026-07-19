@@ -25,7 +25,6 @@ const validConfig: PromotionConfig = {
     type: 'services',
     serviceIds: ['service-testowy'],
   },
-  ctaLabel: 'Zarezerwuj',
 }
 
 describe('validatePromotionConfigs', () => {

@@ -199,7 +199,7 @@ const serviceSources: ServiceSource[] = [
     id: 'service-zabieg-trychologiczny-dobrany-indywidualnie',
     name: 'Zabieg trychologiczny dobrany indywidualnie',
     catalogCategory: 'Trychologia',
-    price: 350,
+    price: 300,
     duration: 90,
     isNext: true,
     description:
@@ -226,28 +226,6 @@ const serviceSources: ServiceSource[] = [
       'Alergia na składniki preparatów',
       'Otwarte rany na skórze głowy',
       'Nadwrażliwość na zapachy',
-    ],
-  },
-  {
-    id: 'service-mezoterapia-mikroiglowa-skory-glowy',
-    name: 'Mezoterapia mikroigłowa skóry głowy',
-    catalogCategory: 'Trychologia',
-    price: 400,
-    duration: 60,
-    isNext: true,
-    description:
-      'Mikronakłucia skóry głowy z wtłaczaniem substancji aktywnych (np. peptydów, witamin) w celu pobudzenia mieszków włosowych i poprawy mikrokrążenia.',
-    note: 'Wymagana wcześniejsza konsultacja trychologiczna.',
-    contraindications: [
-      'Ciąża i karmienie',
-      'Czynne choroby skóry głowy',
-      'Choroby autoimmunologiczne',
-      'Choroby nowotworowe',
-      'Alergia na składniki',
-      'Skłonność do bliznowacenia, aktywne rany',
-      'Przyjmowanie leków przeciwkrzepliwych',
-      'Infekcje ogólnoustrojowe lub gorączka',
-      'Świeża opalenizna lub uszkodzenia skóry głowy',
     ],
   },
   {

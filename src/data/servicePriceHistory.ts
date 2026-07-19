@@ -157,6 +157,10 @@ const servicePriceHistory: readonly ServicePriceHistoryEntry[] = [
         value: 350,
         changedAt: '2025-10-01T08:00:00.000Z',
       },
+      {
+        value: 300,
+        changedAt: '2026-07-19T08:00:00.000Z',
+      },
     ],
   },
   {
@@ -172,23 +176,6 @@ const servicePriceHistory: readonly ServicePriceHistoryEntry[] = [
       },
       {
         value: 200,
-        changedAt: '2025-10-01T08:00:00.000Z',
-      },
-    ],
-  },
-  {
-    serviceId: 'service-mezoterapia-mikroiglowa-skory-glowy',
-    history: [
-      {
-        value: 400,
-        changedAt: '2025-07-01T08:00:00.000Z',
-      },
-      {
-        value: 320,
-        changedAt: '2025-09-01T08:00:00.000Z',
-      },
-      {
-        value: 400,
         changedAt: '2025-10-01T08:00:00.000Z',
       },
     ],

@@ -42,13 +42,13 @@ const createPromotion = (
     type: 'all',
     description: 'wszystkie zabiegi',
   },
-  ctaLabel: 'Zarezerwuj termin',
   ...overrides,
 })
 
 describe('PromotionBanner', () => {
   afterEach(() => {
     cleanup()
+    vi.unstubAllGlobals()
   })
 
   beforeEach(() => {
@@ -56,6 +56,22 @@ describe('PromotionBanner', () => {
     formatPromotionDeadlineMock.mockReset()
     getPromotionScopeDescriptionMock.mockReset()
     trackPlausibleEventMock.mockReset()
+
+    class PassthroughResizeObserver {
+      callback: ResizeObserverCallback
+
+      constructor(callback: ResizeObserverCallback) {
+        this.callback = callback
+      }
+
+      observe() {}
+
+      unobserve() {}
+
+      disconnect() {}
+    }
+
+    vi.stubGlobal('ResizeObserver', PassthroughResizeObserver)
   })
 
   it('does not render when there is no active promotion', () => {
@@ -79,9 +95,13 @@ describe('PromotionBanner', () => {
       view.getByText('Promocja! - całe spa tylko dziś.'),
     ).toBeInTheDocument()
 
-    const ctaLink = view.getByRole('link', { name: /Zarezerwuj termin/ })
+    const ctaLink = view.getByRole('link', {
+      name: 'Zarezerwuj termin w Booksy (otwiera nową kartę)',
+    })
     expect(ctaLink).toHaveAttribute('href', primarySalonLocation.bookingUrl)
     expect(ctaLink).toHaveAttribute('target', '_blank')
+    expect(ctaLink).toHaveTextContent('Zarezerwuj')
+    expect(ctaLink).toHaveTextContent('Zarezerwuj termin')
   })
 
   it('tracks CTA clicks', async () => {
@@ -95,7 +115,9 @@ describe('PromotionBanner', () => {
     const user: UserEvent = userEvent.setup()
     await clickAnalyticsLink(
       user,
-      view.getByRole('link', { name: /Zarezerwuj termin/ }),
+      view.getByRole('link', {
+        name: 'Zarezerwuj termin w Booksy (otwiera nową kartę)',
+      }),
     )
 
     expect(trackPlausibleEventMock).toHaveBeenCalledWith('CTA Booksy Click', {
@@ -132,11 +154,9 @@ describe('PromotionBanner', () => {
   it('renders every message and tracks each campaign CTA independently', async () => {
     const firstPromotion = createPromotion({
       id: 'synthetic-first',
-      ctaLabel: 'Zarezerwuj pierwszy',
     })
     const secondPromotion = createPromotion({
       id: 'synthetic-second',
-      ctaLabel: 'Zarezerwuj drugi',
     })
     getAllActivePromotionsMock.mockReturnValue([
       firstPromotion,
@@ -158,14 +178,12 @@ describe('PromotionBanner', () => {
     ).toBeInTheDocument()
 
     const user = userEvent.setup()
-    await clickAnalyticsLink(
-      user,
-      view.getByRole('link', { name: /Zarezerwuj pierwszy/ }),
-    )
-    await clickAnalyticsLink(
-      user,
-      view.getByRole('link', { name: /Zarezerwuj drugi/ }),
-    )
+    const ctaLinks = view.getAllByRole('link', {
+      name: 'Zarezerwuj termin w Booksy (otwiera nową kartę)',
+    })
+    expect(ctaLinks).toHaveLength(2)
+    await clickAnalyticsLink(user, ctaLinks[0])
+    await clickAnalyticsLink(user, ctaLinks[1])
 
     expect(trackPlausibleEventMock).toHaveBeenNthCalledWith(
       1,
@@ -212,6 +230,52 @@ describe('PromotionBanner', () => {
     }
     await waitFor(() => {
       expect(view.queryByRole('status')).not.toBeInTheDocument()
+    })
+  })
+
+  it('enables the marquee track when the promotion message overflows', async () => {
+    const promotion = createPromotion()
+    getAllActivePromotionsMock.mockReturnValue([promotion])
+    getPromotionScopeDescriptionMock.mockReturnValue(
+      'bardzo długa promocja na wiele zabiegów kosmetologicznych',
+    )
+    formatPromotionDeadlineMock.mockReturnValue('tylko do końca miesiąca')
+
+    class OverflowResizeObserver {
+      callback: ResizeObserverCallback
+
+      constructor(callback: ResizeObserverCallback) {
+        this.callback = callback
+      }
+
+      observe(target: Element) {
+        const isViewport =
+          target instanceof HTMLElement &&
+          target.classList.contains('overflow-hidden')
+        Object.defineProperty(target, 'scrollWidth', {
+          configurable: true,
+          get: () => (isViewport ? 120 : 400),
+        })
+        Object.defineProperty(target, 'clientWidth', {
+          configurable: true,
+          get: () => (isViewport ? 120 : 400),
+        })
+        this.callback([], this)
+      }
+
+      unobserve() {}
+
+      disconnect() {}
+    }
+
+    vi.stubGlobal('ResizeObserver', OverflowResizeObserver)
+
+    const view = render(<PromotionBanner />)
+
+    await waitFor(() => {
+      expect(
+        view.container.querySelector('.animate-promotion-banner-marquee'),
+      ).toBeInTheDocument()
     })
   })
 })
