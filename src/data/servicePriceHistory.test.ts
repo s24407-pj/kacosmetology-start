@@ -33,7 +33,7 @@ describe('service price transition ledger', () => {
       0,
     )
 
-    expect(transitionCount).toBe(81)
+    expect(transitionCount).toBe(79)
 
     for (const service of services) {
       const history = getServicePriceHistory(service.id)

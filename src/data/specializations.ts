@@ -54,7 +54,7 @@ export const specializations: readonly Specialization[] = [
     description:
       'Diagnostyka skóry głowy, konsultacje trychologiczne i wsparcie w problemach dotyczących włosów.',
     consultationServiceId: 'service-pierwsza-konsultacja-trychologiczna',
-    stationaryServiceCount: 5,
+    stationaryServiceCount: 4,
     includesOnlineConsultation: true,
   },
 ]

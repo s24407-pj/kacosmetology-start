@@ -131,6 +131,7 @@ export type PublicRoutePath =
 export type BottomNavItemId =
   | 'kosmetologia'
   | 'trychologia'
+  | 'oprawa-oka'
   | 'galeria'
   | 'kontakt'
 

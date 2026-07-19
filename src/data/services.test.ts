@@ -17,7 +17,7 @@ describe('service catalog identity', () => {
   it('assigns every service a unique namespaced kebab-case ID', () => {
     const serviceIds = services.map((service) => service.id)
 
-    expect(serviceIds).toHaveLength(26)
+    expect(serviceIds).toHaveLength(25)
     expect(new Set(serviceIds).size).toBe(serviceIds.length)
     for (const serviceId of serviceIds) {
       expect(serviceId).toMatch(SERVICE_ID_PATTERN)
@@ -33,8 +33,8 @@ describe('service catalog identity', () => {
 
   it('projects public services without replacing stable IDs', () => {
     expect(getServicesByArea('cosmetology')).toHaveLength(20)
-    expect(getServicesByArea('trichology')).toHaveLength(6)
-    expect(getPublishedServices()).toHaveLength(26)
+    expect(getServicesByArea('trichology')).toHaveLength(5)
+    expect(getPublishedServices()).toHaveLength(25)
     const service = getPublicServiceBySlug(
       'cosmetology',
       'oczyszczanie-wodorowe',

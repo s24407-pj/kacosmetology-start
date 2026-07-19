@@ -3,11 +3,12 @@ import { useUI } from '@context/UIContext'
 import { BOTTOM_NAV_ITEMS } from '@data/navigation'
 import { trackPlausibleEvent } from '@libs/analytics'
 import { Link, useRouterState } from '@tanstack/react-router'
-import { Images, Phone, Sparkles } from 'lucide-react'
+import { Eye, Images, Phone, Sparkles } from 'lucide-react'
 
 const icons = {
   kosmetologia: Sparkles,
   trychologia: HairsBulbSVG,
+  'oprawa-oka': Eye,
   galeria: Images,
   kontakt: Phone,
 }
@@ -22,7 +23,7 @@ export default function BottomNav() {
       className="fixed inset-x-0 bottom-0 z-40 border-t border-border-default bg-surface/98 pb-[env(safe-area-inset-bottom)] backdrop-blur min-[810px]:hidden"
       aria-label="Nawigacja mobilna"
     >
-      <ul className="grid grid-cols-4">
+      <ul className="grid grid-cols-5">
         {BOTTOM_NAV_ITEMS.map((item) => {
           const Icon = icons[item.id]
           const active = item.hash
