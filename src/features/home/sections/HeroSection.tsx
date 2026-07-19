@@ -99,7 +99,7 @@ export default function HeroSection() {
 
         <a
           href="#o-mnie"
-          className="mx-auto hidden w-fit flex-col items-center gap-1 text-text-muted transition-[transform,color] duration-200 hover:translate-y-1 hover:text-action motion-reduce:transform-none motion-reduce:transition-none min-[810px]:flex"
+          className="mx-auto hidden w-fit flex-col items-center gap-1 text-text-muted transition-[transform,color] duration-300 ease-out hover:translate-y-1 hover:text-action motion-reduce:transform-none motion-reduce:transition-none min-[810px]:flex"
           aria-label="Przewiń w dół"
         >
           <span className="font-body text-xs uppercase tracking-wider">

@@ -31,7 +31,6 @@ export default function GallerySection() {
             key={item.id}
             className={cn(
               surfaceCardStyles({
-                interactive: true,
                 className: 'group relative self-start overflow-hidden',
               }),
               item.className ?? '',

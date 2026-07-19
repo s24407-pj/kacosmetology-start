@@ -133,7 +133,7 @@ export default function EffectsGallerySection() {
               type="button"
               onClick={() => goToSlide(index)}
               className={cn(
-                'inline-flex h-8 w-8 items-center justify-center rounded-md transition-[transform,color] duration-200 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-action motion-reduce:transform-none motion-reduce:transition-none',
+                'inline-flex h-8 w-8 items-center justify-center rounded-md transition-[transform,color] duration-300 ease-out hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-action motion-reduce:transform-none motion-reduce:transition-none',
                 index === currentIndex
                   ? 'text-action'
                   : 'text-text-muted hover:text-text-secondary',
@@ -143,7 +143,7 @@ export default function EffectsGallerySection() {
             >
               <span
                 className={cn(
-                  'h-2 rounded-full motion-safe:transition-all motion-safe:duration-300 motion-reduce:transition-none',
+                  'h-2 rounded-full motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-out motion-reduce:transition-none',
                   index === currentIndex ? 'w-8 bg-current' : 'w-2 bg-current',
                 )}
               />

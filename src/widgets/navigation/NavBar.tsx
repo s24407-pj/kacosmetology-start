@@ -73,7 +73,7 @@ export default function NavBar() {
     <>
       <nav
         className={cn(
-          'fixed top-0 z-50 w-full border-b border-border-default bg-surface/95 transition-shadow duration-300 motion-reduce:transition-none',
+          'fixed top-0 z-50 w-full border-b border-border-default bg-surface/95 transition-shadow duration-300 ease-out motion-reduce:transition-none',
           scrolled && 'shadow-subtle',
         )}
         aria-label="Główna nawigacja"
@@ -120,7 +120,7 @@ export default function NavBar() {
                     activeOptions={{ includeHash: true }}
                     aria-current={isActive(item) ? 'page' : undefined}
                     onClick={() => track(item.id, 'desktop')}
-                    className="inline-flex min-h-11 items-center rounded-md px-2 font-medium text-text-secondary transition-colors hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 aria-[current=page]:text-action"
+                    className="inline-flex min-h-11 items-center rounded-md px-2 font-medium text-text-secondary transition-colors duration-300 ease-out hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 aria-[current=page]:text-action"
                   >
                     {item.label}
                   </Link>
@@ -149,7 +149,7 @@ export default function NavBar() {
               <li
                 key={item.id}
                 className="mobile-menu-item-enter w-full text-center"
-                style={{ animationDelay: `${index * 45}ms` }}
+                style={{ animationDelay: `${index * 60}ms` }}
               >
                 <Link
                   to={item.to}
@@ -160,7 +160,7 @@ export default function NavBar() {
                     track(item.id, 'mobile-menu')
                     setIsMenuOpen(false)
                   }}
-                  className="inline-flex min-h-12 items-center justify-center rounded-md px-4 font-display text-2xl font-medium text-text-primary transition-[transform,color] duration-200 hover:scale-105 hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 motion-reduce:transform-none motion-reduce:transition-none aria-[current=page]:text-action"
+                  className="inline-flex min-h-12 items-center justify-center rounded-md px-4 font-display text-2xl font-medium text-text-primary transition-[transform,color] duration-300 ease-out hover:scale-105 hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 motion-reduce:transform-none motion-reduce:transition-none aria-[current=page]:text-action"
                 >
                   {item.label}
                 </Link>

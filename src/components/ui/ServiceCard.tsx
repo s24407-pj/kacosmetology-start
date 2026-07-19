@@ -22,7 +22,7 @@ export function ServiceCard({
 
   return (
     <article
-      className="group flex h-full flex-col border-t border-border-default py-6 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 sm:py-7 motion-reduce:transform-none motion-reduce:transition-none"
+      className="group flex h-full flex-col border-t border-border-default py-6 transition-[transform,box-shadow] duration-400 ease-out hover:-translate-y-1 sm:py-7 motion-reduce:transform-none motion-reduce:transition-none"
       data-reveal-on-scroll
       data-reveal-variant="scale"
       data-reveal-delay={revealDelay?.toString()}

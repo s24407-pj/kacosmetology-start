@@ -27,6 +27,14 @@ describe('GallerySection', () => {
     )
   })
 
+  it('does not lift gallery cards on hover', () => {
+    render(<GallerySection />)
+
+    expect(screen.getAllByRole('img')[0].closest('figure')).not.toHaveClass(
+      'hover:-translate-y-1',
+    )
+  })
+
   it('renders images with correct alt text', () => {
     render(<GallerySection />)
 

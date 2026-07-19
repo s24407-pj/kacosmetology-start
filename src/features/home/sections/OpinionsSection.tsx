@@ -76,7 +76,7 @@ export default function OpinionsSection() {
         {opinions.map((opinion, index) => (
           <article
             key={opinion.author + index.toString()}
-            className="flex min-h-full flex-col justify-between rounded-lg bg-surface p-6 shadow-subtle transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-raised motion-reduce:transform-none motion-reduce:transition-none sm:p-8"
+            className="flex min-h-full flex-col justify-between rounded-lg bg-surface p-6 shadow-subtle transition-[transform,box-shadow] duration-400 ease-out hover:-translate-y-1 hover:shadow-raised motion-reduce:transform-none motion-reduce:transition-none sm:p-8"
             data-reveal-on-scroll
             data-reveal-variant="scale"
             data-reveal-delay={index.toString()}

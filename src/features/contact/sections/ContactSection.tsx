@@ -65,7 +65,7 @@ export default function ContactSection() {
                 return (
                   <div
                     key={link.type}
-                    className="group flex items-center gap-4 rounded-md p-2 transition-colors hover:bg-surface-muted"
+                    className="group flex items-center gap-4 rounded-md p-2 transition-colors duration-300 ease-out hover:bg-surface-muted"
                   >
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-action">
                       <Icon className="h-6 w-6 text-white" />
