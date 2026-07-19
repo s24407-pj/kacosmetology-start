@@ -9,6 +9,17 @@ export const UIProvider = ({ children }: PropsWithChildren) => {
   const reducedMotion = useReducedMotion()
 
   useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
+      setShowScrollToTop(window.scrollY > 300)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
     if (reducedMotion) return
 
     const animationObserver = new IntersectionObserver(
@@ -47,17 +58,9 @@ export const UIProvider = ({ children }: PropsWithChildren) => {
 
     mutationObserver.observe(document.body, { childList: true, subtree: true })
 
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
-      setShowScrollToTop(window.scrollY > 300)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-
     return () => {
       animationObserver.disconnect()
       mutationObserver.disconnect()
-      window.removeEventListener('scroll', handleScroll)
     }
   }, [reducedMotion])
 

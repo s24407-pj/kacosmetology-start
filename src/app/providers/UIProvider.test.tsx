@@ -114,7 +114,7 @@ describe('UIProvider', () => {
     expect(target).toHaveClass('animate-fade-up')
   })
 
-  it('does not create an entrance observer when reduced motion is preferred', () => {
+  it('tracks scrolling without creating an entrance observer when reduced motion is preferred', () => {
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: vi.fn().mockReturnValue({
@@ -131,5 +131,13 @@ describe('UIProvider', () => {
     )
 
     expect(callbacks).toHaveLength(0)
+
+    act(() => {
+      Object.defineProperty(window, 'scrollY', { value: 350, writable: true })
+      window.dispatchEvent(new Event('scroll'))
+    })
+
+    expect(screen.getByTestId('scrolled')).toHaveTextContent('true')
+    expect(screen.getByTestId('scroll-top')).toHaveTextContent('true')
   })
 })
