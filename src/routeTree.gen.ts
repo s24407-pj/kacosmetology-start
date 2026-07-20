@@ -9,19 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as RezerwacjaRouteImport } from './routes/rezerwacja'
-import { Route as GaleriaRouteImport } from './routes/galeria'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TrychologiaIndexRouteImport } from './routes/trychologia/index'
-import { Route as OprawaOkaIndexRouteImport } from './routes/oprawa-oka/index'
+import { Route as GaleriaRouteImport } from './routes/galeria'
+import { Route as RezerwacjaRouteImport } from './routes/rezerwacja'
 import { Route as KosmetologiaIndexRouteImport } from './routes/kosmetologia/index'
-import { Route as TrychologiaSlugRouteImport } from './routes/trychologia/$slug'
-import { Route as OprawaOkaSlugRouteImport } from './routes/oprawa-oka/$slug'
 import { Route as KosmetologiaSlugRouteImport } from './routes/kosmetologia/$slug'
+import { Route as OprawaOkaIndexRouteImport } from './routes/oprawa-oka/index'
+import { Route as OprawaOkaSlugRouteImport } from './routes/oprawa-oka/$slug'
+import { Route as TrychologiaIndexRouteImport } from './routes/trychologia/index'
+import { Route as TrychologiaSlugRouteImport } from './routes/trychologia/$slug'
 
-const RezerwacjaRoute = RezerwacjaRouteImport.update({
-  id: '/rezerwacja',
-  path: '/rezerwacja',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GaleriaRoute = GaleriaRouteImport.update({
@@ -29,19 +29,9 @@ const GaleriaRoute = GaleriaRouteImport.update({
   path: '/galeria',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TrychologiaIndexRoute = TrychologiaIndexRouteImport.update({
-  id: '/trychologia/',
-  path: '/trychologia/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OprawaOkaIndexRoute = OprawaOkaIndexRouteImport.update({
-  id: '/oprawa-oka/',
-  path: '/oprawa-oka/',
+const RezerwacjaRoute = RezerwacjaRouteImport.update({
+  id: '/rezerwacja',
+  path: '/rezerwacja',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KosmetologiaIndexRoute = KosmetologiaIndexRouteImport.update({
@@ -49,9 +39,14 @@ const KosmetologiaIndexRoute = KosmetologiaIndexRouteImport.update({
   path: '/kosmetologia/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TrychologiaSlugRoute = TrychologiaSlugRouteImport.update({
-  id: '/trychologia/$slug',
-  path: '/trychologia/$slug',
+const KosmetologiaSlugRoute = KosmetologiaSlugRouteImport.update({
+  id: '/kosmetologia/$slug',
+  path: '/kosmetologia/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OprawaOkaIndexRoute = OprawaOkaIndexRouteImport.update({
+  id: '/oprawa-oka/',
+  path: '/oprawa-oka/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OprawaOkaSlugRoute = OprawaOkaSlugRouteImport.update({
@@ -59,9 +54,14 @@ const OprawaOkaSlugRoute = OprawaOkaSlugRouteImport.update({
   path: '/oprawa-oka/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const KosmetologiaSlugRoute = KosmetologiaSlugRouteImport.update({
-  id: '/kosmetologia/$slug',
-  path: '/kosmetologia/$slug',
+const TrychologiaIndexRoute = TrychologiaIndexRouteImport.update({
+  id: '/trychologia/',
+  path: '/trychologia/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrychologiaSlugRoute = TrychologiaSlugRouteImport.update({
+  id: '/trychologia/$slug',
+  path: '/trychologia/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -149,11 +149,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/rezerwacja': {
-      id: '/rezerwacja'
-      path: '/rezerwacja'
-      fullPath: '/rezerwacja'
-      preLoaderRoute: typeof RezerwacjaRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/galeria': {
@@ -163,25 +163,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GaleriaRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/trychologia/': {
-      id: '/trychologia/'
-      path: '/trychologia'
-      fullPath: '/trychologia/'
-      preLoaderRoute: typeof TrychologiaIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/oprawa-oka/': {
-      id: '/oprawa-oka/'
-      path: '/oprawa-oka'
-      fullPath: '/oprawa-oka/'
-      preLoaderRoute: typeof OprawaOkaIndexRouteImport
+    '/rezerwacja': {
+      id: '/rezerwacja'
+      path: '/rezerwacja'
+      fullPath: '/rezerwacja'
+      preLoaderRoute: typeof RezerwacjaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kosmetologia/': {
@@ -191,11 +177,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KosmetologiaIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/trychologia/$slug': {
-      id: '/trychologia/$slug'
-      path: '/trychologia/$slug'
-      fullPath: '/trychologia/$slug'
-      preLoaderRoute: typeof TrychologiaSlugRouteImport
+    '/kosmetologia/$slug': {
+      id: '/kosmetologia/$slug'
+      path: '/kosmetologia/$slug'
+      fullPath: '/kosmetologia/$slug'
+      preLoaderRoute: typeof KosmetologiaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oprawa-oka/': {
+      id: '/oprawa-oka/'
+      path: '/oprawa-oka'
+      fullPath: '/oprawa-oka/'
+      preLoaderRoute: typeof OprawaOkaIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/oprawa-oka/$slug': {
@@ -205,11 +198,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OprawaOkaSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/kosmetologia/$slug': {
-      id: '/kosmetologia/$slug'
-      path: '/kosmetologia/$slug'
-      fullPath: '/kosmetologia/$slug'
-      preLoaderRoute: typeof KosmetologiaSlugRouteImport
+    '/trychologia/': {
+      id: '/trychologia/'
+      path: '/trychologia'
+      fullPath: '/trychologia/'
+      preLoaderRoute: typeof TrychologiaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trychologia/$slug': {
+      id: '/trychologia/$slug'
+      path: '/trychologia/$slug'
+      fullPath: '/trychologia/$slug'
+      preLoaderRoute: typeof TrychologiaSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }

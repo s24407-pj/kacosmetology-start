@@ -20,13 +20,6 @@
     "enabled": true,
     "rules": {
       "preset": "recommended",
-      "a11y": {
-        "noStaticElementInteractions": "off",
-        "noSvgWithoutTitle": "off",
-        "useAriaPropsSupportedByRole": "off",
-        "useSemanticElements": "off",
-        "useValidAnchor": "off"
-      },
       "correctness": {
         "useExhaustiveDependencies": "off"
       },

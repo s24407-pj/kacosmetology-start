@@ -54,20 +54,19 @@ describe('HeroSection', () => {
     render(<HeroSection />)
 
     const booksyLink = screen.getByRole('link', { name: /umów wizytę/i })
-    const approachLink = screen.getByRole('link', {
+    const approachButton = screen.getByRole('button', {
       name: /poznaj moje podejście/i,
     })
 
     expect(booksyLink).toHaveAttribute('href', primarySalonLocation.bookingUrl)
     expect(booksyLink).toHaveAttribute('target', '_blank')
-    expect(approachLink).toHaveAttribute('href', '#o-mnie')
 
     await clickAnalyticsLink(user, booksyLink)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('CTA Booksy Click', {
       placement: 'hero',
     })
 
-    await user.click(approachLink)
+    await user.click(approachButton)
     expect(trackPlausibleEvent).toHaveBeenCalledWith('Secondary CTA Click', {
       placement: 'hero',
       target: 'o-mnie',

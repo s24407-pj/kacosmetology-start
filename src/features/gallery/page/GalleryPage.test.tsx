@@ -74,7 +74,10 @@ describe('GalleryPage', () => {
       throw new Error('Missing gallery suspense boundary')
     }
     expect(suspense.props.fallback).toMatchObject({
-      props: { 'aria-label': 'Ładowanie galerii' },
+      props: {
+        role: 'status',
+        'aria-live': 'polite',
+      },
     })
     const boundaries = suspense.props.children.filter(isValidElement)
     expect(boundaries.map((boundary) => boundary.props)).toMatchObject([

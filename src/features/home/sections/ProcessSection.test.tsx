@@ -36,7 +36,7 @@ describe('ProcessSection', () => {
     expect(
       screen.getByRole('heading', { name: ABOUT_SECTION.processHeading }),
     ).toBeInTheDocument()
-    const desktop = screen.getByRole('group', {
+    const desktop = screen.getByRole('region', {
       name: ABOUT_SECTION.processHeading,
     })
     expect(within(desktop).getAllByRole('article')).toHaveLength(4)

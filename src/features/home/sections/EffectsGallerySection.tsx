@@ -60,18 +60,19 @@ export default function EffectsGallerySection() {
         className="mb-10 sm:mb-14"
       />
 
-      <div
+      <section
         className="relative mx-auto max-w-lg"
         data-reveal-on-scroll
         data-reveal-variant="scale"
+        aria-label="Karuzela efektów zabiegów"
+        onMouseEnter={() => setIsAutoPlay(false)}
+        onMouseLeave={() => setIsAutoPlay(true)}
       >
         <div className="relative">
           <div
             className={surfaceCardStyles({
               className: 'relative overflow-hidden bg-surface-strong',
             })}
-            onMouseEnter={() => setIsAutoPlay(false)}
-            onMouseLeave={() => setIsAutoPlay(true)}
           >
             <div className="aspect-3/4 overflow-hidden">
               <img
@@ -156,7 +157,7 @@ export default function EffectsGallerySection() {
             {currentIndex + 1} / {effectsItems.length}
           </p>
         </div>
-      </div>
+      </section>
     </Section>
   )
 }

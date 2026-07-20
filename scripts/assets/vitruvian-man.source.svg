@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1412" height="1412" version="1.1"
 viewBox="0 0 28240 28240">
+<title>Człowiek witruiwiański</title>
 <defs>
   <filter id="vitruvian-thicken" x="-10%" y="-10%" width="120%" height="120%">
     <feMorphology operator="dilate" radius="55"/>

@@ -17,6 +17,7 @@ function ChevronRight() {
         strokeWidth={2.2}
         stroke="currentColor"
         className="h-5 w-5"
+        aria-hidden="true"
       >
         <path
           strokeLinecap="round"
@@ -37,6 +38,7 @@ function ThreadConnector() {
         viewBox="0 0 60 72"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
       >
         <path
           d="M 8 0 C 8 28, 52 20, 52 36 C 52 52, 8 44, 8 72"
@@ -70,8 +72,7 @@ export default function AboutProcessTimeline() {
   return (
     <div>
       <SectionHeader title={processHeading} eyebrow="Krok po kroku" />
-      <div
-        role="group"
+      <section
         aria-label={processHeading}
         className="hidden md:flex md:items-stretch md:gap-2"
         onMouseLeave={() => setIsAutoPlay(true)}
@@ -92,7 +93,7 @@ export default function AboutProcessTimeline() {
             {index < processSteps.length - 1 && <ChevronRight />}
           </Fragment>
         ))}
-      </div>
+      </section>
       <ol className="md:hidden">
         {processSteps.map((step, index) => (
           <Fragment key={step.step}>
