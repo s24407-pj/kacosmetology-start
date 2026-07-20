@@ -17,7 +17,7 @@ import BooksyLink from '@widgets/actions/BooksyLink'
 import { ChevronDown, MapPin } from 'lucide-react'
 import type { MouseEvent } from 'react'
 
-function scrollToAbout(event: MouseEvent<HTMLAnchorElement>) {
+function scrollToAbout(event: MouseEvent<HTMLButtonElement>) {
   if (
     event.defaultPrevented ||
     event.button !== 0 ||
@@ -27,7 +27,6 @@ function scrollToAbout(event: MouseEvent<HTMLAnchorElement>) {
     return
   }
 
-  event.preventDefault()
   if (scrollToId('o-mnie')) {
     window.history.pushState(null, '', '#o-mnie')
   }
@@ -72,8 +71,8 @@ export default function HeroSection() {
                 Umów wizytę
               </BooksyLink>
 
-              <a
-                href="#o-mnie"
+              <button
+                type="button"
                 onClick={(event) => {
                   trackPlausibleEvent('Secondary CTA Click', {
                     placement: 'hero',
@@ -87,7 +86,7 @@ export default function HeroSection() {
                 })}
               >
                 Poznaj moje podejście
-              </a>
+              </button>
             </div>
           </div>
 
@@ -118,8 +117,8 @@ export default function HeroSection() {
           </div>
         </div>
 
-        <a
-          href="#o-mnie"
+        <button
+          type="button"
           onClick={scrollToAbout}
           className="mx-auto hidden w-fit flex-col items-center gap-1 text-text-muted transition-colors duration-300 ease-out hover:text-action motion-reduce:transition-none min-[810px]:flex"
           aria-label="Przewiń w dół"
@@ -131,7 +130,7 @@ export default function HeroSection() {
             className="animate-scroll-cue h-5 w-5"
             aria-hidden="true"
           />
-        </a>
+        </button>
       </div>
     </section>
   )

@@ -38,7 +38,7 @@ describe('AboutProcessTimeline', () => {
 
   it('renders all four steps in desktop and mobile layouts', () => {
     const { container } = render(<AboutProcessTimeline />)
-    const desktop = screen.getByRole('group', {
+    const desktop = screen.getByRole('region', {
       name: ABOUT_SECTION.processHeading,
     })
     expect(within(desktop).getAllByRole('article')).toHaveLength(4)
@@ -55,7 +55,7 @@ describe('AboutProcessTimeline', () => {
 
   it('activates a desktop step on hover', () => {
     render(<AboutProcessTimeline />)
-    const desktop = screen.getByRole('group', {
+    const desktop = screen.getByRole('region', {
       name: ABOUT_SECTION.processHeading,
     })
     const steps = within(desktop).getAllByRole('article')
@@ -68,7 +68,7 @@ describe('AboutProcessTimeline', () => {
 
   it('advances after the active video ends while autoplay is enabled', () => {
     render(<AboutProcessTimeline />)
-    const desktop = screen.getByRole('group', {
+    const desktop = screen.getByRole('region', {
       name: ABOUT_SECTION.processHeading,
     })
     const firstVideo = desktop.querySelectorAll('video')[0]
@@ -84,7 +84,7 @@ describe('AboutProcessTimeline', () => {
 
   it('does not advance after a manual step selection', () => {
     render(<AboutProcessTimeline />)
-    const desktop = screen.getByRole('group', {
+    const desktop = screen.getByRole('region', {
       name: ABOUT_SECTION.processHeading,
     })
     const steps = within(desktop).getAllByRole('article')

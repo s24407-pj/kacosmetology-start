@@ -22,7 +22,7 @@ export default function GallerySection() {
         className="mb-10 sm:mb-14"
       />
 
-      <div
+      <section
         className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 items-start gap-4 sm:gap-6 lg:gap-8"
         aria-label="Galeria zdjęć"
       >
@@ -60,7 +60,7 @@ export default function GallerySection() {
             </div>
           </figure>
         ))}
-      </div>
+      </section>
     </Section>
   )
 }

@@ -20,7 +20,11 @@ export default function GalleryPage() {
         description="Zobacz efekty zabiegów oraz wnętrze gabinetu Ka.Cosmetology."
       />
       <Suspense
-        fallback={<div className="min-h-80" aria-label="Ładowanie galerii" />}
+        fallback={
+          <div role="status" aria-live="polite" className="min-h-80">
+            Ładowanie galerii
+          </div>
+        }
       >
         <DeferredSectionBoundary
           sectionId="efekty"

@@ -3,6 +3,7 @@ node_modules
 dist
 dist-ssr
 *.local
+lefthook-local.yml
 .env
 .nitro
 .tanstack

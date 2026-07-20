@@ -6,7 +6,7 @@ export function ServicePrice({ service }: { service: Service }) {
   const pricing = getServicePricing(service, useRenderTime())
 
   return (
-    <div className="space-y-1" aria-label={`Cena usługi ${service.name}`}>
+    <section className="space-y-1" aria-label={`Cena usługi ${service.name}`}>
       <p className="font-display text-2xl font-bold text-action">
         {pricing.activePromotion ? (
           <>
@@ -25,6 +25,6 @@ export function ServicePrice({ service }: { service: Service }) {
           {pricing.lowestPriceInLast30Days} zł
         </p>
       ) : null}
-    </div>
+    </section>
   )
 }
