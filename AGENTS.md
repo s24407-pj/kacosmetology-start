@@ -62,6 +62,9 @@ See [DESIGN.md](./docs/DESIGN.md) for boundaries, rationale, and change traces.
 | Brand, locations, opening schedule | `src/data/business.ts` |
 | Opening-hours calculation/projections | `src/libs/openingHours.ts` |
 | Nav labels and section IDs | `src/data/navigation.ts` |
+| Blog article MDX | `src/content/blog/` |
+| Blog metadata manifest | `src/data/blogPosts.generated.ts` (via `pnpm generate-blog-content`) |
+| Blog MDX syntax policy | `src/libs/blogMdxPolicy.ts` |
 | SEO head and JSON-LD composition | `src/routes/__root.tsx` |
 | Public metadata rendering | `src/libs/publicMetadata.ts` |
 | Deferred analytics lifecycle | `src/libs/analytics.ts` |
@@ -72,9 +75,11 @@ See [DESIGN.md](./docs/DESIGN.md) for boundaries, rationale, and change traces.
 | Reusable UI primitive | `src/components/ui/` |
 | Build/test/tool configuration | repository-root `*.config.*`, `package.json` |
 
-After editing `src/data/business.ts`, run
+After editing `src/data/business.ts` or public blog posts, run
+`pnpm generate-blog-content` when blog MDX changes, then
 `pnpm generate-public-metadata`; `check` and `build` reject stale committed
-`llms.txt`, `robots.txt`, `sitemap.xml`, or `site.webmanifest` files.
+`llms.txt`, `robots.txt`, `sitemap.xml`, `site.webmanifest`, or
+`blogPosts.generated.ts` files.
 
 ## Conventions and gotchas
 

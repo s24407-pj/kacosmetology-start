@@ -7,6 +7,7 @@ export const MAIN_NAV_ITEMS: MainNavItemData[] = [
   { id: 'oprawa-oka', label: 'Oprawa oka', to: '/oprawa-oka' },
   { id: 'o-mnie', label: 'O mnie', to: '/', hash: 'o-mnie' },
   { id: 'galeria', label: 'Galeria', to: '/galeria' },
+  { id: 'blog', label: 'Blog', to: '/blog' },
   { id: 'opinie', label: 'Opinie', to: '/', hash: 'opinie' },
   { id: 'kontakt', label: 'Kontakt', to: '/', hash: 'kontakt' },
 ]

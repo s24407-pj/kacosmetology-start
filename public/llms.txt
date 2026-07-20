@@ -13,6 +13,7 @@ Wielotrasowa witryna gabinetu Katarzyny Suwalskiej (magister kosmetologii). Ofer
 - [Trychologia](https://kacosmetology.pl/trychologia): Konsultacje i zabiegi trychologiczne
 - [Efekty](https://kacosmetology.pl/galeria#efekty): Galeria efektów przed i po
 - [Galeria gabinetu](https://kacosmetology.pl/galeria#gabinet): Zdjęcia gabinetu
+- [Blog](https://kacosmetology.pl/blog): Artykuły o pielęgnacji i zabiegach
 - [Opinie](https://kacosmetology.pl/#opinie): Opinie klientek
 - [Kontakt](https://kacosmetology.pl/#kontakt): Telefon, e-mail, adres, godziny otwarcia
 

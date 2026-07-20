@@ -73,6 +73,57 @@ export const toServiceJsonLd = ({
   },
 })
 
+export const toBlogPostingJsonLd = ({
+  brand,
+  post,
+  path,
+}: {
+  brand: BrandProfile
+  post: {
+    title: string
+    excerpt: string
+    publishedAt: string
+    updatedAt?: string
+    category: { label: string }
+    tags: readonly { label: string }[]
+    coverImage?: { src: string; alt: string }
+    seo?: { description?: string }
+  }
+  path: string
+}) => {
+  const url = new URL(path, brand.siteUrl).href
+  const image = post.coverImage
+    ? new URL(post.coverImage.src, brand.siteUrl).href
+    : new URL(brand.logo.imagePath, brand.siteUrl).href
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': new URL(`${path}#article`, brand.siteUrl).href,
+    headline: post.title,
+    description: post.seo?.description ?? post.excerpt,
+    url,
+    mainEntityOfPage: url,
+    datePublished: post.publishedAt,
+    ...(post.updatedAt ? { dateModified: post.updatedAt } : {}),
+    articleSection: post.category.label,
+    keywords: post.tags.map((tag) => tag.label).join(', '),
+    image,
+    author: {
+      '@type': 'Person',
+      name: brand.practitionerName,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: brand.name,
+      logo: {
+        '@type': 'ImageObject',
+        url: new URL(brand.logo.imagePath, brand.siteUrl).href,
+      },
+    },
+  }
+}
+
 export const toBreadcrumbListJsonLd = ({
   brand,
   items,

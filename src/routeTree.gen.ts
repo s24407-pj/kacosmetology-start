@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GaleriaRouteImport } from './routes/galeria'
 import { Route as RezerwacjaRouteImport } from './routes/rezerwacja'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as KosmetologiaIndexRouteImport } from './routes/kosmetologia/index'
 import { Route as KosmetologiaSlugRouteImport } from './routes/kosmetologia/$slug'
 import { Route as OprawaOkaIndexRouteImport } from './routes/oprawa-oka/index'
@@ -32,6 +34,16 @@ const GaleriaRoute = GaleriaRouteImport.update({
 const RezerwacjaRoute = RezerwacjaRouteImport.update({
   id: '/rezerwacja',
   path: '/rezerwacja',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KosmetologiaIndexRoute = KosmetologiaIndexRouteImport.update({
@@ -69,9 +81,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/galeria': typeof GaleriaRoute
   '/rezerwacja': typeof RezerwacjaRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/kosmetologia/$slug': typeof KosmetologiaSlugRoute
   '/oprawa-oka/$slug': typeof OprawaOkaSlugRoute
   '/trychologia/$slug': typeof TrychologiaSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/kosmetologia/': typeof KosmetologiaIndexRoute
   '/oprawa-oka/': typeof OprawaOkaIndexRoute
   '/trychologia/': typeof TrychologiaIndexRoute
@@ -80,9 +94,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/galeria': typeof GaleriaRoute
   '/rezerwacja': typeof RezerwacjaRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/kosmetologia/$slug': typeof KosmetologiaSlugRoute
   '/oprawa-oka/$slug': typeof OprawaOkaSlugRoute
   '/trychologia/$slug': typeof TrychologiaSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/kosmetologia': typeof KosmetologiaIndexRoute
   '/oprawa-oka': typeof OprawaOkaIndexRoute
   '/trychologia': typeof TrychologiaIndexRoute
@@ -92,9 +108,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/galeria': typeof GaleriaRoute
   '/rezerwacja': typeof RezerwacjaRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/kosmetologia/$slug': typeof KosmetologiaSlugRoute
   '/oprawa-oka/$slug': typeof OprawaOkaSlugRoute
   '/trychologia/$slug': typeof TrychologiaSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/kosmetologia/': typeof KosmetologiaIndexRoute
   '/oprawa-oka/': typeof OprawaOkaIndexRoute
   '/trychologia/': typeof TrychologiaIndexRoute
@@ -105,9 +123,11 @@ export interface FileRouteTypes {
     | '/'
     | '/galeria'
     | '/rezerwacja'
+    | '/blog/$slug'
     | '/kosmetologia/$slug'
     | '/oprawa-oka/$slug'
     | '/trychologia/$slug'
+    | '/blog/'
     | '/kosmetologia/'
     | '/oprawa-oka/'
     | '/trychologia/'
@@ -116,9 +136,11 @@ export interface FileRouteTypes {
     | '/'
     | '/galeria'
     | '/rezerwacja'
+    | '/blog/$slug'
     | '/kosmetologia/$slug'
     | '/oprawa-oka/$slug'
     | '/trychologia/$slug'
+    | '/blog'
     | '/kosmetologia'
     | '/oprawa-oka'
     | '/trychologia'
@@ -127,9 +149,11 @@ export interface FileRouteTypes {
     | '/'
     | '/galeria'
     | '/rezerwacja'
+    | '/blog/$slug'
     | '/kosmetologia/$slug'
     | '/oprawa-oka/$slug'
     | '/trychologia/$slug'
+    | '/blog/'
     | '/kosmetologia/'
     | '/oprawa-oka/'
     | '/trychologia/'
@@ -139,9 +163,11 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GaleriaRoute: typeof GaleriaRoute
   RezerwacjaRoute: typeof RezerwacjaRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   KosmetologiaSlugRoute: typeof KosmetologiaSlugRoute
   OprawaOkaSlugRoute: typeof OprawaOkaSlugRoute
   TrychologiaSlugRoute: typeof TrychologiaSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   KosmetologiaIndexRoute: typeof KosmetologiaIndexRoute
   OprawaOkaIndexRoute: typeof OprawaOkaIndexRoute
   TrychologiaIndexRoute: typeof TrychologiaIndexRoute
@@ -168,6 +194,20 @@ declare module '@tanstack/react-router' {
       path: '/rezerwacja'
       fullPath: '/rezerwacja'
       preLoaderRoute: typeof RezerwacjaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kosmetologia/': {
@@ -219,9 +259,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GaleriaRoute: GaleriaRoute,
   RezerwacjaRoute: RezerwacjaRoute,
+  BlogSlugRoute: BlogSlugRoute,
   KosmetologiaSlugRoute: KosmetologiaSlugRoute,
   OprawaOkaSlugRoute: OprawaOkaSlugRoute,
   TrychologiaSlugRoute: TrychologiaSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
   KosmetologiaIndexRoute: KosmetologiaIndexRoute,
   OprawaOkaIndexRoute: OprawaOkaIndexRoute,
   TrychologiaIndexRoute: TrychologiaIndexRoute,

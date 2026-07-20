@@ -1,6 +1,7 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import { dirname, join, relative } from 'node:path'
 import type { BusinessProfile } from '@app-types/types'
+import { getPublicBlogPaths } from '@data/blogPosts'
 import { getPublicServicePath, services } from '@data/services'
 
 export const PUBLIC_METADATA_PATHS = {
@@ -56,6 +57,7 @@ Wielotrasowa witryna gabinetu ${markdownEscape(brand.practitionerNameGenitive)} 
 - [Trychologia](${new URL('trychologia', root).href}): Konsultacje i zabiegi trychologiczne
 - [Efekty](${new URL('galeria#efekty', root).href}): Galeria efektów przed i po
 - [Galeria gabinetu](${new URL('galeria#gabinet', root).href}): Zdjęcia gabinetu
+- [Blog](${new URL('blog', root).href}): Artykuły o pielęgnacji i zabiegach
 - [Opinie](${new URL('#opinie', root).href}): Opinie klientek
 - [Kontakt](${new URL('#kontakt', root).href}): Telefon, e-mail, adres, godziny otwarcia
 
@@ -74,6 +76,7 @@ export const getSitemapPaths = () => [
   '/oprawa-oka',
   '/trychologia',
   '/galeria',
+  ...getPublicBlogPaths(),
   ...services
     .filter((service) => service.isPublished && service.hasDetailPage)
     .flatMap((service) => {

@@ -91,6 +91,8 @@ describe('public metadata renderers', () => {
       '/oprawa-oka',
       '/trychologia',
       '/galeria',
+      '/blog',
+      '/blog/pielegnacja-anti-aging-po-50',
     ]
     const serviceRoutes = services
       .filter((service) => service.isPublished && service.hasDetailPage)

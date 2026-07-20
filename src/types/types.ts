@@ -126,6 +126,7 @@ export type PublicRoutePath =
   | '/oprawa-oka'
   | '/trychologia'
   | '/galeria'
+  | '/blog'
   | '/rezerwacja'
 
 export type BottomNavItemId =
@@ -149,6 +150,7 @@ export type MainNavItemId =
   | 'trychologia'
   | 'o-mnie'
   | 'galeria'
+  | 'blog'
   | 'opinie'
   | 'kontakt'
 

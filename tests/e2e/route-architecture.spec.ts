@@ -25,6 +25,12 @@ const metadataRoutes = [
       'Efekty zabiegów i wnętrze gabinetu Ka.Cosmetology w Starogardzie Gdańskim.',
   },
   {
+    path: '/blog',
+    title: 'Blog | Ka.Cosmetology',
+    description:
+      'Artykuły o pielęgnacji skóry, zabiegach i świadomej rutynie kosmetologicznej w Ka.Cosmetology.',
+  },
+  {
     path: '/kosmetologia',
     title: 'Kosmetologia | Ka.Cosmetology',
     description:
@@ -472,6 +478,7 @@ for (const path of [
   '/trychologia',
   '/trychologia/zabieg-trychologiczny-dobrany-indywidualnie',
   '/galeria',
+  '/blog',
 ]) {
   test(`${path} has no serious accessibility violations`, async ({ page }) => {
     await ready(page, path)

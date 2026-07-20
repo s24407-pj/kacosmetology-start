@@ -1,8 +1,9 @@
+import type { PublicRoutePath } from '@app-types/types'
 import { Link } from '@tanstack/react-router'
 
 export interface BreadcrumbItem {
   label: string
-  to?: '/' | '/kosmetologia' | '/oprawa-oka' | '/trychologia'
+  to?: PublicRoutePath
 }
 
 export function Breadcrumbs({ items }: { items: readonly BreadcrumbItem[] }) {
