@@ -25,7 +25,8 @@ The development server is available at `http://localhost:3000`.
 | `pnpm dev` | Start the development server |
 | `pnpm build` | Type-check and build the production server |
 | `pnpm start` | Run the built Nitro server |
-| `pnpm check` | Run Biome formatting and lint checks |
+| `pnpm check` | Run Biome formatting and lint checks plus metadata drift |
+| `pnpm check:ci` | Run Biome in CI mode (matches GitHub Actions) |
 | `pnpm generate-public-metadata` | Regenerate committed public metadata |
 | `pnpm check:public-metadata` | Check committed public metadata for drift |
 | `pnpm format:write` | Format files with Biome |
@@ -33,6 +34,7 @@ The development server is available at `http://localhost:3000`.
 | `pnpm test:coverage` | Run unit tests with coverage |
 | `pnpm test:e2e` | Run Playwright tests |
 | `pnpm run validate` | Run the complete local validation suite |
+| `pnpm ci` | Run the GitHub Actions pipeline locally |
 
 ## Dokploy
 

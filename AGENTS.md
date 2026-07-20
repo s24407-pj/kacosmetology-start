@@ -13,18 +13,21 @@ pnpm dev                       # local server on port 3000
 pnpm typecheck                 # TypeScript only
 pnpm lint                      # Biome lint only
 pnpm check                     # Biome + generated metadata drift
+pnpm check:ci                  # Biome CI mode (matches GitHub Actions)
 pnpm test                      # all Vitest tests
 pnpm vitest run src/libs/utils.test.ts # one unit file
 pnpm playwright test tests/e2e/services-section.spec.ts # one E2E file
 pnpm build                     # typecheck, metadata check, Nitro build
 pnpm start                     # run .output/server/index.mjs
 pnpm run validate              # check, build, coverage, audit, E2E
+pnpm ci                        # CI pipeline locally (biome ci + build + coverage + audit + E2E)
 ```
 
 Install browsers once with `pnpm exec playwright install`; on a fresh Linux host
 use `pnpm exec playwright install --with-deps`. Run `pnpm check` and `pnpm test`
 before finishing. Run `pnpm run validate` for multi-file, layout, navigation,
-dependency, performance, or E2E-covered changes.
+dependency, performance, or E2E-covered changes. Use `pnpm ci` when matching
+GitHub Actions gates (after browsers are installed).
 
 Deployment is configured externally as a Dokploy Node service; this repository
 has no deploy command.
