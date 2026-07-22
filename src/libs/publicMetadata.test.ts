@@ -105,6 +105,15 @@ describe('public metadata renderers', () => {
     expect(getSitemapPaths()).not.toContain('/rezerwacja')
   })
 
+  it('publishes only canonical locations without unsupported crawl hints', () => {
+    const sitemap = renderSitemapXml(businessProfile)
+
+    expect(sitemap).not.toContain('<priority>')
+    expect(sitemap).not.toContain('<changefreq>')
+    expect(sitemap).not.toContain('<lastmod>')
+    expect(sitemap.match(/<loc>/g)).toHaveLength(getSitemapPaths().length)
+  })
+
   it('derives origins and escapes XML and Markdown input', () => {
     const profile = {
       ...businessProfile,

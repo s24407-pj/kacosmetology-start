@@ -76,7 +76,11 @@ export function SpecializationPage({
       <SpecializationHero
         specializationId={specializationId}
         eyebrow={copy.eyebrow}
-        title={specialization.name}
+        title={
+          specializationId === 'trichology'
+            ? 'Trycholog w Starogardzie Gdańskim'
+            : specialization.name
+        }
         description={copy.intro}
         image={copy.image}
         actions={

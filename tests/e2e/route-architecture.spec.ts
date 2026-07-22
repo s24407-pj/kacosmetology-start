@@ -1,6 +1,10 @@
 import AxeBuilder from '@axe-core/playwright'
 import { brand } from '@data/business'
 import { getPublicServicePath, services } from '@data/services'
+import {
+  routeSocialImages,
+  type SocialImageDescriptor,
+} from '@libs/routeMetadata'
 import { expect, type Page, test } from '@playwright/test'
 
 const ready = async (page: Page, path: string) => {
@@ -17,30 +21,35 @@ const metadataRoutes = [
     title: 'Kosmetolog i trycholog w Starogardzie Gdańskim | Ka.Cosmetology',
     description:
       'Indywidualna kosmetologia i trychologia w Ka.Cosmetology. Poznaj specjalizacje i umów wizytę.',
+    socialImage: routeSocialImages.home,
   },
   {
     path: '/galeria',
     title: 'Galeria | Ka.Cosmetology',
     description:
       'Efekty zabiegów i wnętrze gabinetu Ka.Cosmetology w Starogardzie Gdańskim.',
+    socialImage: routeSocialImages.gallery,
   },
   {
     path: '/kosmetologia',
     title: 'Kosmetologia | Ka.Cosmetology',
     description:
       'Indywidualne terapie skóry i zabiegi kosmetologiczne w Starogardzie Gdańskim.',
+    socialImage: routeSocialImages.cosmetology,
   },
   {
     path: '/oprawa-oka',
     title: 'Oprawa oka | Ka.Cosmetology',
     description:
       'Stylizacja brwi i rzęs dopasowana do urody i oczekiwanego efektu w Starogardzie Gdańskim.',
+    socialImage: routeSocialImages.eyeStyling,
   },
   {
     path: '/trychologia',
-    title: 'Trychologia | Ka.Cosmetology',
+    title: 'Trycholog Starogard Gdański | Ka.Cosmetology',
     description:
-      'Konsultacje trychologiczne, badanie skóry głowy i indywidualny plan postępowania.',
+      'Trycholog w Starogardzie Gdańskim. Konsultacje trychologiczne, badanie skóry głowy i indywidualne terapie problemów skóry głowy oraz włosów.',
+    socialImage: routeSocialImages.trichology,
   },
   ...services.flatMap((service) => {
     const path = getPublicServicePath(service)
@@ -51,6 +60,12 @@ const metadataRoutes = [
         path,
         title: `${service.name} | ${brand.name}`,
         description: service.shortDescription,
+        socialImage:
+          service.category === 'eye-styling'
+            ? routeSocialImages.eyeStyling
+            : service.area === 'cosmetology'
+              ? routeSocialImages.cosmetology
+              : routeSocialImages.trichology,
       },
     ]
   }),
@@ -65,6 +80,8 @@ test.describe('desktop public metadata', () => {
       test.skip(isMobile, 'Desktop metadata contract')
 
       const canonical = new URL(route.path, brand.siteUrl).href
+      const socialImage = route.socialImage as SocialImageDescriptor
+      const socialImageUrl = new URL(socialImage.path, brand.siteUrl).href
       await ready(page, route.path)
       await expect(page).toHaveTitle(route.title)
       await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
@@ -113,11 +130,39 @@ test.describe('desktop public metadata', () => {
       )
       await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
         'content',
-        new URL(brand.logo.imagePath, brand.siteUrl).href,
+        socialImageUrl,
       )
       await expect(
         page.locator('meta[property="og:image:alt"]'),
-      ).toHaveAttribute('content', brand.logo.imageAlt)
+      ).toHaveAttribute('content', socialImage.alt)
+      await expect(
+        page.locator('meta[property="og:image:type"]'),
+      ).toHaveAttribute('content', socialImage.type)
+      await expect(
+        page.locator('meta[property="og:image:width"]'),
+      ).toHaveAttribute('content', socialImage.width.toString())
+      await expect(
+        page.locator('meta[property="og:image:height"]'),
+      ).toHaveAttribute('content', socialImage.height.toString())
+      await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+        'content',
+        'summary_large_image',
+      )
+      await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute(
+        'content',
+        route.title,
+      )
+      await expect(
+        page.locator('meta[name="twitter:description"]'),
+      ).toHaveAttribute('content', route.description)
+      await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
+        'content',
+        socialImageUrl,
+      )
+      await expect(
+        page.locator('meta[name="twitter:image:alt"]'),
+      ).toHaveAttribute('content', socialImage.alt)
+      await expect(page.locator('meta[property="og:image"]')).toHaveCount(1)
     })
   }
 })
@@ -232,6 +277,14 @@ test('landing and detail routes preserve specialization boundaries', async ({
   await expect(page).toHaveURL('/oprawa-oka/regulacja-brwi')
   await expect(page.getByRole('navigation', { name: 'Okruszki' })).toBeVisible()
 
+  await ready(page, '/trychologia')
+  await expect(
+    page.getByRole('heading', {
+      level: 1,
+      name: 'Trycholog w Starogardzie Gdańskim',
+    }),
+  ).toBeVisible()
+
   await ready(page, '/trychologia/oczyszczanie-wodorowe')
   await expect(
     page.getByRole('heading', { level: 1, name: 'Nie znaleziono strony' }),
@@ -280,9 +333,27 @@ test('booking actions lead directly to Booksy and the legacy route redirects', a
   await expect(page.locator('a[href^="/rezerwacja"]')).toHaveCount(0)
 
   const response = await request.get('/rezerwacja', { maxRedirects: 0 })
-  expect(response.status()).toBeGreaterThanOrEqual(300)
-  expect(response.status()).toBeLessThan(400)
+  expect(response.status()).toBe(307)
   expect(response.headers().location).toBe('https://kacosmetology.booksy.com')
+})
+
+test('legacy eye-styling service URLs redirect permanently', async ({
+  request,
+}) => {
+  const eyeStylingServices = services.filter(
+    (service) =>
+      service.isPublished &&
+      service.hasDetailPage &&
+      service.category === 'eye-styling',
+  )
+
+  for (const service of eyeStylingServices) {
+    const response = await request.get(`/kosmetologia/${service.slug}`, {
+      maxRedirects: 0,
+    })
+    expect(response.status()).toBe(308)
+    expect(response.headers().location).toBe(`/oprawa-oka/${service.slug}`)
+  }
 })
 
 test('desktop navigation exposes home sections and keeps its CTA aligned', async ({

@@ -1,6 +1,6 @@
 import { loadServiceDetail } from '@features/services/model/serviceDetail'
 import { ServiceDetailPage } from '@features/services/page/ServiceDetailPage'
-import { createRouteHead } from '@libs/routeMetadata'
+import { createRouteHead, routeSocialImages } from '@libs/routeMetadata'
 import { createFileRoute, notFound, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/kosmetologia/$slug')({
@@ -12,6 +12,7 @@ export const Route = createFileRoute('/kosmetologia/$slug')({
         to: '/oprawa-oka/$slug',
         params: { slug: params.slug },
         replace: true,
+        statusCode: 308,
       })
     }
     if (!service) throw notFound()
@@ -23,6 +24,7 @@ export const Route = createFileRoute('/kosmetologia/$slug')({
           path: `/kosmetologia/${loaderData.service.slug}`,
           title: loaderData.service.name,
           description: loaderData.service.shortDescription,
+          socialImage: routeSocialImages.cosmetology,
         })
       : {},
   component: RouteComponent,

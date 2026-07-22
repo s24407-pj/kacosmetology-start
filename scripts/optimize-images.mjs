@@ -1,4 +1,4 @@
-import { readdir } from 'node:fs/promises'
+import { mkdir, readdir } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
@@ -10,6 +10,8 @@ const MOBILE_WIDTHS = [360, 720, 1080]
 const POSTER_WIDTHS = [360, 720]
 const GALLERY_WIDTHS = [360, 720, 1080, 1440]
 const SPECIALIZATION_WIDTHS = [360, 720, 1080]
+const SOCIAL_IMAGE_WIDTH = 1200
+const SOCIAL_IMAGE_HEIGHT = 630
 
 async function generateVariants(inputPath, outputPrefix, widths, quality = 82) {
   for (const width of widths) {
@@ -17,6 +19,38 @@ async function generateVariants(inputPath, outputPrefix, widths, quality = 82) {
     await sharp(inputPath).resize(width).webp({ quality }).toFile(output)
     globalThis.console.log(`Generated: ${output}`)
   }
+}
+
+async function generateSocialImage(inputPath, outputPath) {
+  await sharp(inputPath)
+    .resize(SOCIAL_IMAGE_WIDTH, SOCIAL_IMAGE_HEIGHT, {
+      fit: 'cover',
+      position: 'centre',
+    })
+    .webp({ quality: 86 })
+    .toFile(outputPath)
+  globalThis.console.log(`Generated: ${outputPath}`)
+}
+
+const socialImagesDir = join(publicDir, 'images/social')
+await mkdir(socialImagesDir, { recursive: true })
+for (const [outputName, inputPath] of [
+  ['home.webp', join(publicDir, 'images/gallery/witryna.webp')],
+  ['gallery.webp', join(publicDir, 'images/gallery/lozko.webp')],
+  [
+    'cosmetology.webp',
+    join(publicDir, 'images/specializations/cosmetology.webp'),
+  ],
+  [
+    'eye-styling.webp',
+    join(publicDir, 'images/specializations/eye-styling.webp'),
+  ],
+  [
+    'trichology.webp',
+    join(publicDir, 'images/specializations/trichology.webp'),
+  ],
+]) {
+  await generateSocialImage(inputPath, join(socialImagesDir, outputName))
 }
 
 await generateVariants(

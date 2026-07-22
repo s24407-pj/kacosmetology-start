@@ -12,8 +12,6 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { createServerFn } from '@tanstack/react-start'
 import appCss from '../app/styles/index.css?url'
 
-const logoUrl = new URL(brand.logo.imagePath, brand.siteUrl).href
-
 interface RootSearch {
   [PLAYWRIGHT_REFERENCE_TIME_QUERY_KEY]?: string
 }
@@ -62,14 +60,6 @@ export const Route = createRootRoute({
       { property: 'og:site_name', content: brand.name },
       { property: 'og:type', content: 'website' },
       { property: 'og:locale', content: 'pl_PL' },
-      {
-        property: 'og:image',
-        content: logoUrl,
-      },
-      {
-        property: 'og:image:alt',
-        content: brand.logo.imageAlt,
-      },
     ],
     links: [
       { rel: 'stylesheet', href: appCss },

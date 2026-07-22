@@ -28,7 +28,17 @@ export function ServiceCard({
       data-reveal-delay={revealDelay?.toString()}
     >
       <Heading level={3} variant="card">
-        {service.name}
+        {service.hasDetailPage ? (
+          <Link
+            to={detailTo}
+            params={{ slug: service.slug }}
+            className="transition-colors hover:text-action"
+          >
+            {service.name}
+          </Link>
+        ) : (
+          service.name
+        )}
       </Heading>
       <p className="mt-3 grow leading-relaxed text-text-secondary">
         {service.shortDescription}

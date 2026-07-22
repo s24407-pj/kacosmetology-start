@@ -49,7 +49,7 @@ describe('SpecializationPage', () => {
     ],
     [
       'trichology',
-      'Trychologia',
+      'Trycholog w Starogardzie Gdańskim',
       'Indywidualna opieka nad skórą głowy',
       'Umów konsultację (otwiera nową kartę)',
       'Mycie i masaż skóry głowy podczas zabiegu w salonie',
