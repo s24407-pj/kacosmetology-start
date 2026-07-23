@@ -85,8 +85,8 @@ export const getSitemapPaths = () => [
 export const renderSitemapXml = (profile: BusinessProfile) => {
   const entries = getSitemapPaths()
     .map(
-      (path, index) =>
-        `  <url>\n    <loc>${xmlEscape(new URL(path, profile.brand.siteUrl).href)}</loc>\n    <changefreq>${index === 0 ? 'weekly' : 'monthly'}</changefreq>\n    <priority>${index === 0 ? '1.0' : index < 5 ? '0.8' : '0.6'}</priority>\n  </url>`,
+      (path) =>
+        `  <url>\n    <loc>${xmlEscape(new URL(path, profile.brand.siteUrl).href)}</loc>\n  </url>`,
     )
     .join('\n')
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries}\n</urlset>\n`

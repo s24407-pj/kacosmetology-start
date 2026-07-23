@@ -1,5 +1,5 @@
 import HomePage from '@features/home/page/HomePage'
-import { createRouteHead } from '@libs/routeMetadata'
+import { createRouteHead, routeSocialImages } from '@libs/routeMetadata'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
@@ -9,6 +9,7 @@ export const Route = createFileRoute('/')({
       title: 'Kosmetolog i trycholog w Starogardzie Gdańskim',
       description:
         'Indywidualna kosmetologia i trychologia w Ka.Cosmetology. Poznaj specjalizacje i umów wizytę.',
+      socialImage: routeSocialImages.home,
     })
     return {
       ...head,

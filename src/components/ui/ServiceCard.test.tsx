@@ -46,6 +46,9 @@ describe('ServiceCard', () => {
       expect(
         screen.getByRole('link', { name: /Poznaj szczegóły/ }),
       ).toHaveAttribute('href', href)
+      expect(
+        screen.getByRole('heading', { level: 3 }).querySelector('a'),
+      ).toHaveAttribute('href', href)
     },
   )
 
@@ -60,6 +63,14 @@ describe('ServiceCard', () => {
     expect(
       screen.queryByRole('link', { name: /Poznaj szczegóły/ }),
     ).not.toBeInTheDocument()
+    expect(
+      screen
+        .getByRole('heading', {
+          level: 3,
+          name: 'Konsultacja kosmetologiczna online',
+        })
+        .querySelector('a'),
+    ).toBeNull()
   })
 
   it('exposes the reveal variant and requested stagger delay', () => {

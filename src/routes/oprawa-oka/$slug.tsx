@@ -1,6 +1,6 @@
 import { loadServiceDetail } from '@features/services/model/serviceDetail'
 import { ServiceDetailPage } from '@features/services/page/ServiceDetailPage'
-import { createRouteHead } from '@libs/routeMetadata'
+import { createRouteHead, routeSocialImages } from '@libs/routeMetadata'
 import { createFileRoute, notFound } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/oprawa-oka/$slug')({
@@ -16,6 +16,7 @@ export const Route = createFileRoute('/oprawa-oka/$slug')({
           path: `/oprawa-oka/${loaderData.service.slug}`,
           title: loaderData.service.name,
           description: loaderData.service.shortDescription,
+          socialImage: routeSocialImages.eyeStyling,
         })
       : {},
   component: RouteComponent,

@@ -1,6 +1,6 @@
 import { brand } from '@data/business'
 import { describe, expect, it } from 'vitest'
-import { createRouteHead } from './routeMetadata'
+import { createRouteHead, routeSocialImages } from './routeMetadata'
 
 describe('createRouteHead', () => {
   it('resolves route paths against the canonical site URL', () => {
@@ -8,6 +8,7 @@ describe('createRouteHead', () => {
       path: '/kosmetologia/oczyszczanie-wodorowe',
       title: 'Oczyszczanie wodorowe',
       description: 'Opis usługi.',
+      socialImage: routeSocialImages.cosmetology,
     })
 
     expect(head.links).toEqual([
@@ -24,6 +25,7 @@ describe('createRouteHead', () => {
       path: '/galeria',
       title: 'Galeria',
       description,
+      socialImage: routeSocialImages.gallery,
     })
 
     expect(head.meta).toEqual([
@@ -34,6 +36,28 @@ describe('createRouteHead', () => {
       {
         property: 'og:url',
         content: 'https://kacosmetology.pl/galeria',
+      },
+      {
+        property: 'og:image',
+        content: 'https://kacosmetology.pl/images/social/gallery.webp',
+      },
+      {
+        property: 'og:image:alt',
+        content: routeSocialImages.gallery.alt,
+      },
+      { property: 'og:image:type', content: 'image/webp' },
+      { property: 'og:image:width', content: '1200' },
+      { property: 'og:image:height', content: '630' },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: `Galeria | ${brand.name}` },
+      { name: 'twitter:description', content: description },
+      {
+        name: 'twitter:image',
+        content: 'https://kacosmetology.pl/images/social/gallery.webp',
+      },
+      {
+        name: 'twitter:image:alt',
+        content: routeSocialImages.gallery.alt,
       },
     ])
   })
