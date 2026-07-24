@@ -1,6 +1,28 @@
 pre-commit:
   commands:
+    forbidden-files:
+      run: node scripts/check-staged-files.mjs
     biome:
-      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,css}"
+      glob: "**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,json,jsonc,css}"
       run: pnpm exec biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
       stage_fixed: true
+    diff-check:
+      run: git diff --cached --check
+    production-data:
+      glob: "{scripts/check-production-data.mjs,src/data/{services,promotion,servicePriceHistory,specializations,serviceValidation}.ts}"
+      run: pnpm check:production-data
+    public-metadata:
+      glob: "{scripts/generate-public-metadata.mjs,src/data/{business,services}.ts,src/libs/publicMetadata.ts,public/{sitemap.xml,robots.txt,llms.txt,site.webmanifest}}"
+      run: pnpm check:public-metadata
+
+pre-push:
+  parallel: true
+  commands:
+    biome:
+      run: pnpm check:ci
+    typecheck:
+      run: pnpm typecheck
+    typecheck-e2e:
+      run: pnpm typecheck:e2e
+    test:
+      run: pnpm test

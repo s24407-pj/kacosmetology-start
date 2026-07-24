@@ -41,27 +41,27 @@
     "@tanstack/react-start": "^1.168.32",
     "@tanstack/router-plugin": "^1.168.23",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.25.0",
+    "lucide-react": "^1.26.0",
     "nitro": "3.0.260610-beta",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",
-    "@biomejs/biome": "2.5.4",
+    "@biomejs/biome": "2.5.5",
     "@playwright/test": "^1.61.1",
-    "@tanstack/react-devtools": "0.10.8",
+    "@tanstack/react-devtools": "0.10.9",
     "@tanstack/react-router-devtools": "^1.167.0",
     "@tanstack/router-cli": "^1.167.21",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^26.1.1",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.3",
+    "@vitejs/plugin-react": "^6.0.4",
     "@vitest/coverage-v8": "^4.1.10",
     "jsdom": "^29.1.1",
     "lefthook": "^2.1.10",
@@ -71,7 +71,7 @@
     "vite": "^8.1.5",
     "vitest": "^4.1.10"
   },
-  "packageManager": "pnpm@11.15.1+sha512.81350b07e53c9538a02f1f2303b4290fa2d7be04e56e2a970c4cc4b417dc761de196edabd49d55c7dc9580db81007c44143e4e3d7e462b3000d23c255122d065",
+  "packageManager": "pnpm@11.17.0+sha512.cca3cea332ad254bb84145f966d19f4879615210346fc92c79a047f23a0d7b3cca3c3792f0076ba1f1831d277efbcf0a9119b31a9a60eca7fb3d6231f331ef72",
   "engines": {
     "node": "24.x"
   }
