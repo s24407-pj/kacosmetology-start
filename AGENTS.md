@@ -14,7 +14,8 @@ pnpm typecheck                 # TypeScript only
 pnpm lint                      # Biome lint only
 pnpm check                     # Biome + generated metadata drift
 pnpm check:ci                  # Biome CI mode (matches GitHub Actions)
-pnpm exec lefthook run pre-commit # dry-run Git pre-commit (Biome on staged files; hooks install via pnpm install)
+pnpm exec lefthook run pre-commit # dry-run fast staged checks; hooks install via pnpm install
+pnpm exec lefthook run pre-push   # dry-run Biome CI, both TypeScript projects, and unit tests
 pnpm test                      # all Vitest tests
 pnpm vitest run src/libs/utils.test.ts # one unit file
 pnpm playwright test tests/e2e/services-section.spec.ts # one E2E file
