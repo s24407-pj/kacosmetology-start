@@ -51,7 +51,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",
     "@biomejs/biome": "2.5.5",
-    "@playwright/test": "^1.61.1",
+    "@playwright/test": "^1.62.0",
     "@tanstack/react-devtools": "0.10.9",
     "@tanstack/react-router-devtools": "^1.167.0",
     "@tanstack/router-cli": "^1.167.21",
