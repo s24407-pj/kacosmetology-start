@@ -4,4 +4,4 @@ pnpm = "11"
 
 [env]
 PNPM_HOME = "/opt/pnpm"
-_.path = ["/opt/pnpm"]
+_.path = ["/opt/pnpm", "/opt/pnpm/bin"]
