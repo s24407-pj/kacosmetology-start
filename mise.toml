@@ -1,3 +1,7 @@
 [tools]
 node = "24"
 pnpm = "11"
+
+[env]
+PNPM_HOME = "/opt/pnpm"
+_.path = ["/opt/pnpm"]
