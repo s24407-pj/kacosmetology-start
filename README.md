@@ -9,6 +9,10 @@ oprawa oka and trychologia share one brand and canonical business-data model.
 - Node.js 24
 - pnpm 11
 
+With [mise](https://mise.jdx.dev/) installed and activated in your shell, from
+the repo root run `mise install` to install the versions pinned in
+`mise.toml`, then continue with the quick start below.
+
 ## Quick start
 
 ```bash
