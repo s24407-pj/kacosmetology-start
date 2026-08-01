@@ -5,7 +5,8 @@ patterns; do not commit unless the user or an active workflow authorizes it.
 
 ## Commands
 
-Requires Node 24 and pnpm 11.
+Requires Node 24 and pnpm 11. With mise activated, run `mise install`
+to use the versions pinned in `mise.toml`.
 
 ```bash
 pnpm install --frozen-lockfile # install
@@ -72,6 +73,7 @@ See [DESIGN.md](./docs/DESIGN.md) for boundaries, rationale, and change traces.
 | Route metadata composition | `src/libs/routeMetadata.ts` |
 | Reusable UI primitive | `src/components/ui/` |
 | Build/test/tool configuration | repository-root `*.config.*`, `package.json` |
+| Local Node/pnpm toolchain pins | `mise.toml` |
 
 After editing `src/data/business.ts`, run
 `pnpm generate-public-metadata`; `check` and `build` reject stale committed

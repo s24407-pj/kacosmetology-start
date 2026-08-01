@@ -6,6 +6,10 @@ pre-commit:
       glob: "**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,json,jsonc,css}"
       run: pnpm exec biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
       stage_fixed: true
+    biome-schema-sync:
+      glob: "package.json"
+      run: pnpm exec biome migrate --write
+      stage_fixed: true
     diff-check:
       run: git diff --cached --check
     production-data:
