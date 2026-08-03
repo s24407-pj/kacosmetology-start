@@ -42,9 +42,13 @@ export default defineConfig({
       name: 'Mobile Chrome',
       use: { ...devices['Pixel 5'] },
     },
-    ...(isCI ? [{
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 13'] },
-    },] : []),
+    ...(isCI
+      ? [
+          {
+            name: 'Mobile Safari',
+            use: { ...devices['iPhone 13'] },
+          },
+        ]
+      : []),
   ],
 })
