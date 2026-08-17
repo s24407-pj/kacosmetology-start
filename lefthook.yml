@@ -7,7 +7,7 @@ pre-commit:
       run: pnpm exec biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
       stage_fixed: true
     biome-schema-sync:
-      glob: "package.json"
+      glob: "{package.json,biome.json}"
       run: pnpm exec biome migrate --write
       stage_fixed: true
     diff-check:
