@@ -102,7 +102,7 @@ export default function HeroSection() {
                   srcSet={webpSrcSet('/images/hero.webp', MOBILE_WIDTHS)}
                   sizes={IMAGE_SIZES.hero}
                   alt={brand.practitionerName}
-                  className="h-full w-full origin-top object-cover object-[50%_24%] scale-[1.05]"
+                  className="h-full w-full origin-top object-cover object-[50%_48%] scale-[1.05]"
                   loading="eager"
                   fetchPriority="high"
                 />
