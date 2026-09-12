@@ -8,8 +8,9 @@ pre-commit:
       stage_fixed: true
     biome-schema-sync:
       glob: "{package.json,biome.json}"
-      run: pnpm exec biome migrate --write
-      stage_fixed: true
+      # migrate may rewrite biome.json even when only package.json is staged;
+      # stage_fixed only re-adds originally staged paths, so add explicitly
+      run: pnpm exec biome migrate --write && git add biome.json
     diff-check:
       run: git diff --cached --check
     production-data:
