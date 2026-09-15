@@ -5,11 +5,7 @@ declare global {
     dataLayer: unknown[]
     gtag: (...args: unknown[]) => void
     fbq: (...args: unknown[]) => void
-    oaiq: (
-      action: string,
-      eventName?: string,
-      params?: Record<string, unknown>,
-    ) => void
+    oaiq: (...args: unknown[]) => void
     plausible: (
       eventName: string,
       options?: { props?: Record<string, unknown> },

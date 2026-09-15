@@ -112,4 +112,45 @@ describe('analytics facade', () => {
     facade.init()
     expect(() => facade.trackPageView({ path: '/' })).not.toThrow()
   })
+
+  it('stops dispatching to gated adapters after consent revoke', () => {
+    const google = createMockAdapter({
+      name: 'google',
+      consentCategory: 'analytics',
+      applyConsent: vi.fn(),
+    })
+    const facade = createAnalyticsFacadeForTests([google])
+
+    facade.init()
+    facade.updateConsent({ analytics: true, marketing: false })
+    facade.trackPageView({ path: '/ok' })
+
+    expect(google.trackPageView).toHaveBeenCalledTimes(1)
+
+    facade.updateConsent({ analytics: false, marketing: false })
+    facade.trackPageView({ path: '/denied' })
+
+    expect(google.applyConsent).toHaveBeenCalledWith(false)
+    expect(google.trackPageView).toHaveBeenCalledTimes(1)
+    expect(google.init).toHaveBeenCalledTimes(1)
+  })
+
+  it('re-enables dispatch on re-grant without re-init', () => {
+    const google = createMockAdapter({
+      name: 'google',
+      consentCategory: 'analytics',
+      applyConsent: vi.fn(),
+    })
+    const facade = createAnalyticsFacadeForTests([google])
+
+    facade.init()
+    facade.updateConsent({ analytics: true, marketing: false })
+    facade.updateConsent({ analytics: false, marketing: false })
+    facade.updateConsent({ analytics: true, marketing: false })
+    facade.trackPageView({ path: '/again' })
+
+    expect(google.init).toHaveBeenCalledTimes(1)
+    expect(google.applyConsent).toHaveBeenLastCalledWith(true)
+    expect(google.trackPageView).toHaveBeenCalledWith({ path: '/again' })
+  })
 })

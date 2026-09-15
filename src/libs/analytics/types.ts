@@ -46,6 +46,8 @@ export interface AnalyticsAdapter {
   readonly consentCategory?: ConsentCategory
   isInitialized: boolean
   init: () => void
+  /** Sync vendor consent mode after grant/revoke without re-init. */
+  applyConsent?: (granted: boolean) => void
   trackPageView?: (data: PageViewEvent) => void
   trackInitiateCheckout?: (data: InitiateCheckoutEvent) => void
   trackPurchase?: (data: PurchaseEvent) => void

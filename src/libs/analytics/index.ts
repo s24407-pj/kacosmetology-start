@@ -34,11 +34,28 @@ function collectAdapters(): AnalyticsAdapter[] {
   ].filter((adapter): adapter is AnalyticsAdapter => adapter !== null)
 }
 
+function isCategoryAllowed(
+  adapter: AnalyticsAdapter,
+  consent: ConsentSettings,
+): boolean {
+  if (!adapter.consentCategory) {
+    return true
+  }
+
+  return adapter.consentCategory === 'analytics'
+    ? consent.analytics
+    : consent.marketing
+}
+
 function createAnalyticsFacade(
   adapters: AnalyticsAdapter[],
   options: FacadeOptions = {},
 ) {
   let bootstrapped = false
+  let consent: ConsentSettings = {
+    analytics: false,
+    marketing: false,
+  }
 
   const shouldSkipRuntime = () => {
     if (!isBrowser()) {
@@ -52,9 +69,11 @@ function createAnalyticsFacade(
     return false
   }
 
-  const forInitialized = (run: (adapter: AnalyticsAdapter) => void): void => {
+  const forAllowedAdapters = (
+    run: (adapter: AnalyticsAdapter) => void,
+  ): void => {
     for (const adapter of adapters) {
-      if (!adapter.isInitialized) {
+      if (!adapter.isInitialized || !isCategoryAllowed(adapter, consent)) {
         continue
       }
 
@@ -88,7 +107,7 @@ function createAnalyticsFacade(
       }
     },
 
-    updateConsent(consent: ConsentSettings) {
+    updateConsent(next: ConsentSettings) {
       if (shouldSkipRuntime()) {
         return
       }
@@ -97,24 +116,32 @@ function createAnalyticsFacade(
         this.init()
       }
 
+      consent = {
+        analytics: next.analytics,
+        marketing: next.marketing,
+      }
+
       for (const adapter of adapters) {
-        if (!adapter.consentCategory || adapter.isInitialized) {
+        if (!adapter.consentCategory) {
           continue
         }
 
-        const allowed =
-          adapter.consentCategory === 'analytics'
-            ? consent.analytics
-            : consent.marketing
+        const allowed = isCategoryAllowed(adapter, consent)
 
-        if (!allowed) {
-          continue
+        if (allowed && !adapter.isInitialized) {
+          try {
+            adapter.init()
+          } catch {
+            // Consent-gated init failure is non-fatal.
+          }
         }
 
-        try {
-          adapter.init()
-        } catch {
-          // Consent-gated init failure is non-fatal.
+        if (adapter.isInitialized) {
+          try {
+            adapter.applyConsent?.(allowed)
+          } catch {
+            // Consent sync failure is non-fatal.
+          }
         }
       }
     },
@@ -124,7 +151,7 @@ function createAnalyticsFacade(
         return
       }
 
-      forInitialized((adapter) => adapter.trackPageView?.(data))
+      forAllowedAdapters((adapter) => adapter.trackPageView?.(data))
     },
 
     trackInitiateCheckout(data: Omit<InitiateCheckoutEvent, 'attribution'>) {
@@ -137,7 +164,7 @@ function createAnalyticsFacade(
         attribution: getAttributionContext(),
       }
 
-      forInitialized((adapter) => adapter.trackInitiateCheckout?.(payload))
+      forAllowedAdapters((adapter) => adapter.trackInitiateCheckout?.(payload))
     },
 
     trackPurchase(data: PurchaseEvent) {
@@ -145,7 +172,7 @@ function createAnalyticsFacade(
         return
       }
 
-      forInitialized((adapter) => adapter.trackPurchase?.(data))
+      forAllowedAdapters((adapter) => adapter.trackPurchase?.(data))
     },
 
     trackLead(data: LeadEvent) {
@@ -153,7 +180,7 @@ function createAnalyticsFacade(
         return
       }
 
-      forInitialized((adapter) => adapter.trackLead?.(data))
+      forAllowedAdapters((adapter) => adapter.trackLead?.(data))
     },
 
     /** @internal Test seam: registered adapters. */

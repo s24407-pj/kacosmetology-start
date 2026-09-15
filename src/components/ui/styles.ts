@@ -29,7 +29,7 @@ export function actionLinkStyles({
   }
 
   return cn(
-    'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-[background-color,color,box-shadow] duration-300 ease-out motion-reduce:transition-none',
+    'inline-flex cursor-pointer items-center justify-center gap-2 rounded-md font-semibold transition-[background-color,color,box-shadow] duration-300 ease-out motion-reduce:transition-none',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 focus-visible:ring-offset-2',
     variants[variant],
     sizes[size],

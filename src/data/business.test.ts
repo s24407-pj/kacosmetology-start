@@ -5,6 +5,7 @@ import {
   businessProfile,
   getPrimarySalonLocation,
   getSalonLocation,
+  legalEntity,
   primarySalonLocation,
 } from './business'
 
@@ -29,6 +30,11 @@ describe('business profile', () => {
         imageAlt: 'Logotyp Ka.Cosmetology – monogram w odcieniach burgundu',
       },
       appShortName: 'KA',
+    })
+    expect(legalEntity).toEqual({
+      legalName: 'KA.COSMETOLOGY KATARZYNA SUWALSKA',
+      nip: '5922305779',
+      regon: '542380023',
     })
     expect(primarySalonLocation).toMatchObject({
       id: 'salon-starogard-gdanski',

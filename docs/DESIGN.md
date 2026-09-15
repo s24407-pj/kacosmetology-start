@@ -32,10 +32,14 @@ Canonical ownership matters because most changes cross several rendered views:
   deterministic non-stacking precedence; `promotionValidation.ts` owns the
   production configuration gate.
   `src/data/promotionValidation.test.ts`.
-- `business.ts` owns brand, practitioner, locations, contacts, and structured
-  opening schedules. UI, JSON-LD, analytics domain, and committed public files
-  are projections, not competing sources.
+- `business.ts` owns brand, practitioner, legal entity (NIP/REGON), locations,
+  contacts, and structured opening schedules. UI, JSON-LD, analytics domain,
+  privacy-policy facts, and committed public files are projections, not
+  competing sources.
   `src/data/business.test.ts`, `src/libs/openingHours.test.ts`.
+- Privacy policy copy for `/polityka-prywatnosci` lives in
+  `src/features/legal/content/` and must stay aligned with real consent,
+  analytics, and personal-data behavior on the site.
 - `navigation.ts` owns top-level route labels and destinations. TanStack Router
   owns current-route state; `HomePage` retries scrolling when a lazy home hash
   target mounts.`src/features/home/page/HomePage.test.tsx`,
@@ -89,9 +93,28 @@ section with Polish recovery UI; reload remains user-triggered.
 `scheduleDeferredWork` owns deferred font loading after first scroll or a
 4-second fallback. Analytics boots early via `AnalyticsBootstrap` /
 `analytics.init()` (attribution capture + cookieless adapters). Consent-gated
-pixels (GA, Meta, OpenAI) load only after `analytics.updateConsent`. SPA page
-views are deduped in the bootstrap component.
-`src/libs/analytics/index.test.ts`, `src/libs/scheduleDeferredWork.test.ts`.
+pixels (GA, Meta, OpenAI) load only after `analytics.updateConsent`, which the
+cookie banner drives through `src/libs/consent` (Prior Consent, localStorage
+version + timestamp). `updateConsent` also handles revoke without a page reload:
+the facade stops dispatching to denied categories and syncs vendor consent
+via `applyConsent` (Google Consent Mode; OpenAI Measurement Pixel `consent`).
+SPA page views are deduped in the bootstrap component.
+The cookie banner keeps Accept and Reject as equal-weight first-layer actions
+(same outline style; Accept first for reading order) and mirrors those one-click
+shortcuts in the preferences dialog; it deliberately avoids an asymmetric
+primary-only Accept. The first-layer bar is non-blocking (no Cookie Wall):
+bottom-fixed, no page overlay or body scroll lock. Preferences open with
+optional categories unchecked and necessary locked on (Planet49). Withdrawal
+stays available via footer “Zarządzaj cookies”.
+Any change to cookies, consent categories, pixels, attribution, vendors, or
+other personal-data processing must be checked against the public Privacy
+Policy and updated there when behavior diverges; processing must remain
+compatible with applicable EU and Polish law (GDPR/RODO, cookie/ePrivacy).
+`src/libs/analytics/index.test.ts`, `src/libs/analytics/priorConsent.script.test.ts`,
+`src/libs/consent/ConsentProvider.test.tsx`,
+`src/components/consent/CookieBanner.test.tsx`,
+`src/features/legal/page/PrivacyPolicyPage.test.tsx`,
+`src/libs/scheduleDeferredWork.test.ts`.
 
 ## Key decisions
 
@@ -138,6 +161,10 @@ every consumer, configuration/generation effects, operational checks, and
 rollback. Expect tests at each boundary plus production-build E2E where loading,
 SSR/hydration, navigation, or readiness changes. Do not add global mutable state,
 test-only production branches without a guard, or broad compatibility shims.
+For cookies, consent, analytics/marketing pixels, attribution, or other
+personal-data flows: verify EU/PL legal fit, then update
+`src/features/legal/content/` (and `CONSENT_POLICY_VERSION` when re-consent is
+required) before considering the change done.
 
 ## Known debt
 
@@ -148,9 +175,6 @@ test-only production branches without a guard, or broad compatibility shims.
 - **Low, newly discovered and untriaged.** The local
   `useDeferredSections` name hides that it is a one-way mount-policy gate.
   Consequence: name-only navigation requires reading its body.
-- **Low, accepted.** Cookie banner UI is not shipped yet; marketing/analytics
-  pixels stay unloaded until a future banner calls `analytics.updateConsent`.
-  Consequence: paid-media pixels will not fire until that integration lands.
 
 The repository contains no registry of out-of-repository consumers. That means
 none can be discovered here, not that none exist. Re-check with the relevant

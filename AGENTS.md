@@ -61,12 +61,15 @@ See [DESIGN.md](./docs/DESIGN.md) for boundaries, rationale, and change traces.
 | Immutable historical prices | `src/data/servicePriceHistory.ts` |
 | Promotion records and precedence | `src/data/promotion.ts` |
 | Promotion integrity rules | `src/data/promotionValidation.ts` |
-| Brand, locations, opening schedule | `src/data/business.ts` |
+| Brand, locations, opening schedule, legal entity | `src/data/business.ts` |
 | Opening-hours calculation/projections | `src/libs/openingHours.ts` |
 | Nav labels and section IDs | `src/data/navigation.ts` |
 | SEO head and JSON-LD composition | `src/routes/__root.tsx` |
 | Public metadata rendering | `src/libs/publicMetadata.ts` |
 | Analytics facade (Prior Consent) | `src/libs/analytics/` |
+| Cookie consent persistence + provider | `src/libs/consent/` |
+| Cookie banner / preferences UI | `src/components/consent/` |
+| Privacy policy copy (RODO / cookies) | `src/features/legal/content/` |
 | Deferred font startup scheduling | `src/libs/scheduleDeferredWork.ts` |
 | New domain section | `src/features/<domain>/sections/` |
 | Service public URL and specialization | `src/data/services.ts` |
@@ -103,7 +106,18 @@ After editing `src/data/business.ts`, run
   attribution, and Prior Consent gating; cookieless Plausible starts on
   `analytics.init()`, while GA/Meta/OpenAI wait for `updateConsent`. Callers use
   `trackPageView` / `trackInitiateCheckout` / `trackLead` / `trackPurchase`.
+  Consent UI and localStorage persistence live in `src/libs/consent` and
+  `src/components/consent`.
   `src/libs/analytics/index.test.ts`.
+- After any change to cookies, consent categories, analytics/marketing pixels,
+  attribution storage, personal-data collection, or related vendors, verify and
+  update the public Privacy Policy (`src/features/legal/content/`, route
+  `/polityka-prywatnosci`) so it still matches real behavior. Bump
+  `CONSENT_POLICY_VERSION` when stored consent choices must be re-collected.
+- Processing of personal data, cookies, and similar technologies must stay
+  consistent with applicable EU and Polish law (including GDPR/RODO and
+  cookie/ePrivacy rules). Do not invent legal claims, controllers, or vendors;
+  ask before changing tracking, consent, or privacy-policy scope.
 - Deferred fonts load on first scroll or the 4-second fallback; keep that work
   out of the critical path.
 - E2E retries are zero locally. CI permits two diagnostic retries but
@@ -119,7 +133,8 @@ After editing `src/data/business.ts`, run
 - Do not change public metadata by hand; change its canonical input/renderer.
 - Do not weaken tests, retries, readiness markers, or validation to get green.
 - Ask before changing public contracts, dependencies, persistence, deployment,
-  analytics schemas, promotion policy, or cross-module ownership.
+  analytics schemas, promotion policy, consent/privacy processing, or
+  cross-module ownership.
 
 Write an execution plan before multi-module features, schema/interface changes,
 dependency upgrades, migrations, deployment work, or changes with rollback/data

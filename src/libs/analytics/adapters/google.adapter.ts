@@ -50,6 +50,18 @@ export function createGoogleAdapter(): AnalyticsAdapter | null {
 
       adapter.isInitialized = true
     },
+    applyConsent(granted: boolean) {
+      if (typeof window === 'undefined' || typeof window.gtag !== 'function') {
+        return
+      }
+
+      window.gtag('consent', 'update', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: granted ? 'granted' : 'denied',
+      })
+    },
     trackPageView(data: PageViewEvent) {
       window.gtag?.('event', 'page_view', {
         page_path: data.path,

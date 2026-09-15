@@ -91,6 +91,7 @@ describe('public metadata renderers', () => {
       '/oprawa-oka',
       '/trychologia',
       '/galeria',
+      '/polityka-prywatnosci',
     ]
     const serviceRoutes = services
       .filter((service) => service.isPublished && service.hasDetailPage)
