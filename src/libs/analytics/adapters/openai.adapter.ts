@@ -1,6 +1,7 @@
 import { injectAsyncScript } from '../script'
 import type {
   AnalyticsAdapter,
+  ConsentSettings,
   InitiateCheckoutEvent,
   LeadEvent,
   PurchaseEvent,
@@ -58,12 +59,12 @@ export function createOpenAiAdapter(): AnalyticsAdapter | null {
       window.oaiq('init', { pixelId })
       adapter.isInitialized = true
     },
-    applyConsent(granted: boolean) {
+    applyConsent(settings: ConsentSettings) {
       if (typeof window === 'undefined' || typeof window.oaiq !== 'function') {
         return
       }
 
-      window.oaiq('consent', granted)
+      window.oaiq('consent', settings.marketing)
     },
     trackInitiateCheckout(data: InitiateCheckoutEvent) {
       const contents =

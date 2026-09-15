@@ -43,11 +43,17 @@ export type ConsentSettings = {
 
 export interface AnalyticsAdapter {
   readonly name: string
+  /** Single required category. Ignored when `consentCategories` is set. */
   readonly consentCategory?: ConsentCategory
+  /**
+   * Dual-purpose vendors (e.g. Google Analytics + Ads under one gtag).
+   * Adapter may init / receive events when any listed category is granted.
+   */
+  readonly consentCategories?: ConsentCategory[]
   isInitialized: boolean
   init: () => void
   /** Sync vendor consent mode after grant/revoke without re-init. */
-  applyConsent?: (granted: boolean) => void
+  applyConsent?: (settings: ConsentSettings) => void
   trackPageView?: (data: PageViewEvent) => void
   trackInitiateCheckout?: (data: InitiateCheckoutEvent) => void
   trackPurchase?: (data: PurchaseEvent) => void

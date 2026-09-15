@@ -34,17 +34,32 @@ function collectAdapters(): AnalyticsAdapter[] {
   ].filter((adapter): adapter is AnalyticsAdapter => adapter !== null)
 }
 
+function isCategoryGranted(
+  category: NonNullable<AnalyticsAdapter['consentCategory']>,
+  consent: ConsentSettings,
+): boolean {
+  return category === 'analytics' ? consent.analytics : consent.marketing
+}
+
 function isCategoryAllowed(
   adapter: AnalyticsAdapter,
   consent: ConsentSettings,
 ): boolean {
+  if (adapter.consentCategories?.length) {
+    return adapter.consentCategories.some((category) =>
+      isCategoryGranted(category, consent),
+    )
+  }
+
   if (!adapter.consentCategory) {
     return true
   }
 
-  return adapter.consentCategory === 'analytics'
-    ? consent.analytics
-    : consent.marketing
+  return isCategoryGranted(adapter.consentCategory, consent)
+}
+
+function isConsentGated(adapter: AnalyticsAdapter): boolean {
+  return Boolean(adapter.consentCategory || adapter.consentCategories?.length)
 }
 
 function createAnalyticsFacade(
@@ -95,7 +110,7 @@ function createAnalyticsFacade(
       captureAttribution()
 
       for (const adapter of adapters) {
-        if (adapter.consentCategory) {
+        if (isConsentGated(adapter)) {
           continue
         }
 
@@ -122,7 +137,7 @@ function createAnalyticsFacade(
       }
 
       for (const adapter of adapters) {
-        if (!adapter.consentCategory) {
+        if (!isConsentGated(adapter)) {
           continue
         }
 
@@ -138,7 +153,7 @@ function createAnalyticsFacade(
 
         if (adapter.isInitialized) {
           try {
-            adapter.applyConsent?.(allowed)
+            adapter.applyConsent?.(consent)
           } catch {
             // Consent sync failure is non-fatal.
           }

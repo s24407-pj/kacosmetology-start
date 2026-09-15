@@ -93,11 +93,13 @@ section with Polish recovery UI; reload remains user-triggered.
 `scheduleDeferredWork` owns deferred font loading after first scroll or a
 4-second fallback. Analytics boots early via `AnalyticsBootstrap` /
 `analytics.init()` (attribution capture + cookieless adapters). Consent-gated
-pixels (GA, Meta, OpenAI) load only after `analytics.updateConsent`, which the
+pixels (GA/Ads via one gtag, Meta, OpenAI) load only after `analytics.updateConsent`, which the
 cookie banner drives through `src/libs/consent` (Prior Consent, localStorage
-version + timestamp). `updateConsent` also handles revoke without a page reload:
-the facade stops dispatching to denied categories and syncs vendor consent
-via `applyConsent` (Google Consent Mode; OpenAI Measurement Pixel `consent`).
+version + timestamp). Google uses dual categories: `analytics_storage` maps to
+Analityczne and `ad_*` to Marketingowe under the same Measurement ID. `updateConsent`
+also handles revoke without a page reload: the facade stops dispatching to denied
+categories and syncs vendor consent via `applyConsent` (Google Consent Mode;
+OpenAI Measurement Pixel `consent`).
 SPA page views are deduped in the bootstrap component.
 The cookie banner keeps Accept and Reject as equal-weight first-layer actions
 (same outline style; Accept first for reading order) and mirrors those one-click

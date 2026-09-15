@@ -25,9 +25,10 @@ describe('createGoogleAdapter', () => {
     expect(createGoogleAdapter()).toBeNull()
   })
 
-  it('bootstraps gtag consent defaults and config once', () => {
+  it('bootstraps gtag with denied consent defaults and config once', () => {
     const adapter = createGoogleAdapter()
     expect(adapter).not.toBeNull()
+    expect(adapter?.consentCategories).toEqual(['analytics', 'marketing'])
     adapter?.init()
     adapter?.init()
 
@@ -49,19 +50,54 @@ describe('createGoogleAdapter', () => {
         ad_storage: 'denied',
         ad_user_data: 'denied',
         ad_personalization: 'denied',
-        analytics_storage: 'granted',
+        analytics_storage: 'denied',
       },
     ])
   })
 
-  it('updates consent mode and tracks facade events', () => {
+  it('maps analytics and marketing grants to Consent Mode signals', () => {
     const adapter = createGoogleAdapter()
     adapter?.init()
     const gtag = vi.fn()
     window.gtag = gtag
 
-    adapter?.applyConsent?.(true)
-    adapter?.applyConsent?.(false)
+    adapter?.applyConsent?.({ analytics: true, marketing: false })
+    adapter?.applyConsent?.({ analytics: false, marketing: true })
+    adapter?.applyConsent?.({ analytics: true, marketing: true })
+    adapter?.applyConsent?.({ analytics: false, marketing: false })
+
+    expect(gtag).toHaveBeenCalledWith('consent', 'update', {
+      analytics_storage: 'granted',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+    })
+    expect(gtag).toHaveBeenCalledWith('consent', 'update', {
+      analytics_storage: 'denied',
+      ad_storage: 'granted',
+      ad_user_data: 'granted',
+      ad_personalization: 'granted',
+    })
+    expect(gtag).toHaveBeenCalledWith('consent', 'update', {
+      analytics_storage: 'granted',
+      ad_storage: 'granted',
+      ad_user_data: 'granted',
+      ad_personalization: 'granted',
+    })
+    expect(gtag).toHaveBeenCalledWith('consent', 'update', {
+      analytics_storage: 'denied',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+    })
+  })
+
+  it('tracks facade events', () => {
+    const adapter = createGoogleAdapter()
+    adapter?.init()
+    const gtag = vi.fn()
+    window.gtag = gtag
+
     adapter?.trackPageView?.({ path: '/galeria', title: 'Galeria' })
     adapter?.trackInitiateCheckout?.({
       placement: 'hero',
@@ -78,18 +114,6 @@ describe('createGoogleAdapter', () => {
     })
     adapter?.trackLead?.({ channel: 'phone', placement: 'footer' })
 
-    expect(gtag).toHaveBeenCalledWith('consent', 'update', {
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied',
-      analytics_storage: 'granted',
-    })
-    expect(gtag).toHaveBeenCalledWith('consent', 'update', {
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied',
-      analytics_storage: 'denied',
-    })
     expect(gtag).toHaveBeenCalledWith('event', 'page_view', {
       page_path: '/galeria',
       page_title: 'Galeria',
@@ -116,6 +140,8 @@ describe('createGoogleAdapter', () => {
   it('no-ops applyConsent when gtag is unavailable', () => {
     const adapter = createGoogleAdapter()
     Reflect.deleteProperty(window, 'gtag')
-    expect(() => adapter?.applyConsent?.(true)).not.toThrow()
+    expect(() =>
+      adapter?.applyConsent?.({ analytics: true, marketing: false }),
+    ).not.toThrow()
   })
 })

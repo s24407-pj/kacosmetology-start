@@ -71,7 +71,7 @@ export function getPrivacyPolicySections(
             `Zapewnienie działania i bezpieczeństwa witryny oraz zapamiętanie Twoich wyborów dotyczących cookies (niezbędne pliki i podobne technologie) — art. 6 ust. 1 lit. f RODO (uzasadniony interes: sprawne i bezpieczne działanie serwisu).`,
             `Statystyka ruchu w ujęciu zbiorczym za pomocą cookieless Plausible Analytics (self-hosted) — art. 6 ust. 1 lit. f RODO (uzasadniony interes: zrozumienie, jak korzystacie z witryny, bez profilowania reklamowego).`,
             `Analityka z użyciem Google Analytics — wyłącznie po wyrażeniu zgody w banerze cookies (kategoria „Analityczne”) — art. 6 ust. 1 lit. a RODO.`,
-            `Marketing i pomiar kampanii (Meta Pixel, OpenAI Pixel) — wyłącznie po wyrażeniu zgody (kategoria „Marketingowe”) — art. 6 ust. 1 lit. a RODO.`,
+            `Marketing i pomiar kampanii (Google Ads, Meta Pixel, OpenAI Pixel) — wyłącznie po wyrażeniu zgody (kategoria „Marketingowe”) — art. 6 ust. 1 lit. a RODO.`,
           ],
         },
       ],
@@ -111,8 +111,8 @@ export function getPrivacyPolicySections(
           type: 'list',
           items: [
             'Niezbędne — zawsze aktywne. Obejmują m.in. zapis Twojej decyzji o zgodach w localStorage przeglądarki (klucz kacosmetology.consent), wymagany do działania mechanizmu zgód.',
-            'Analityczne — Google Analytics. Skrypty ładują się dopiero po Twojej zgodzie w kategorii „Analityczne”.',
-            'Marketingowe — Meta Pixel oraz OpenAI Pixel. Skrypty ładują się dopiero po zgodzie w kategorii „Marketingowe”.',
+            'Analityczne — Google Analytics. Skrypt Google tag ładuje się po zgodzie „Analityczne” lub „Marketingowe”; pomiar analityczny działa po zgodzie „Analityczne”.',
+            'Marketingowe — Google Ads (ten sam Google tag co Analytics), Meta Pixel oraz OpenAI Pixel. Funkcje reklamowe Google oraz pixele Meta/OpenAI działają po zgodzie „Marketingowe”.',
           ],
         },
         {
@@ -139,6 +139,7 @@ export function getPrivacyPolicySections(
             'dostawcy hostingu i infrastruktury serwerowej witryny,',
             'Plausible Analytics (self-hosted) — statystyka ruchu,',
             'Google (Google Analytics) — po zgodzie na cookies analityczne,',
+            'Google (Google Ads) — po zgodzie na cookies marketingowe,',
             'Meta Platforms — po zgodzie na cookies marketingowe,',
             'OpenAI — po zgodzie na cookies marketingowe,',
             `Booksy — gdy korzystasz z rezerwacji online (${location.bookingUrl}); Booksy jest niezależnym administratorem lub podmiotem przetwarzającym w zakresie własnej usługi.`,
