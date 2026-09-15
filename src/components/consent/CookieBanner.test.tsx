@@ -193,4 +193,68 @@ describe('CookieBanner', () => {
       marketing: true,
     })
   })
+
+  it('toggles marketing in preferences and closes on Escape', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <ConsentProvider>
+        <CookieBanner />
+      </ConsentProvider>,
+    )
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: 'Dostosuj' }),
+      ).toBeInTheDocument()
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Dostosuj' }))
+    await user.click(screen.getByRole('switch', { name: 'Marketingowe' }))
+    expect(screen.getByRole('switch', { name: 'Marketingowe' })).toBeChecked()
+
+    await user.keyboard('{Escape}')
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('dialog', { name: 'Ustawienia cookies' }),
+      ).not.toBeInTheDocument()
+    })
+  })
+
+  it('traps Tab focus inside the preferences dialog', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <ConsentProvider>
+        <CookieBanner />
+      </ConsentProvider>,
+    )
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: 'Dostosuj' }),
+      ).toBeInTheDocument()
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Dostosuj' }))
+
+    const dialog = screen.getByRole('dialog', { name: 'Ustawienia cookies' })
+    const focusable = Array.from(
+      dialog.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    )
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    expect(first).toBeTruthy()
+    expect(last).toBeTruthy()
+
+    last.focus()
+    await user.tab()
+    expect(document.activeElement).toBe(first)
+
+    first.focus()
+    await user.tab({ shift: true })
+    expect(document.activeElement).toBe(last)
+  })
 })
