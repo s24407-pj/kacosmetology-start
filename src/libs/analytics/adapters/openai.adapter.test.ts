@@ -57,7 +57,7 @@ describe('createOpenAiAdapter', () => {
       serviceCategory: 'permanent-makeup',
     })
     adapter?.trackLead?.({ channel: 'phone', placement: 'footer' })
-    adapter?.applyConsent?.(false)
+    adapter?.applyConsent?.({ analytics: false, marketing: false })
 
     expect(oaiq).toHaveBeenNthCalledWith(1, 'measure', 'checkout_started', {
       type: 'contents',

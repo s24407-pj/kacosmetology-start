@@ -1,6 +1,7 @@
 import { injectAsyncScript } from '../script'
 import type {
   AnalyticsAdapter,
+  ConsentSettings,
   InitiateCheckoutEvent,
   LeadEvent,
   PageViewEvent,
@@ -12,6 +13,10 @@ function getGaId(): string | undefined {
   return typeof id === 'string' && id.length > 0 ? id : undefined
 }
 
+function toConsentState(granted: boolean): 'granted' | 'denied' {
+  return granted ? 'granted' : 'denied'
+}
+
 export function createGoogleAdapter(): AnalyticsAdapter | null {
   const measurementId = getGaId()
   if (!measurementId) {
@@ -20,7 +25,7 @@ export function createGoogleAdapter(): AnalyticsAdapter | null {
 
   const adapter: AnalyticsAdapter = {
     name: 'google',
-    consentCategory: 'analytics',
+    consentCategories: ['analytics', 'marketing'],
     isInitialized: false,
     init() {
       if (adapter.isInitialized || typeof window === 'undefined') {
@@ -32,11 +37,12 @@ export function createGoogleAdapter(): AnalyticsAdapter | null {
         window.dataLayer.push(args)
       }
 
+      // Defaults denied; facade immediately syncs real category grants.
       window.gtag('consent', 'default', {
         ad_storage: 'denied',
         ad_user_data: 'denied',
         ad_personalization: 'denied',
-        analytics_storage: 'granted',
+        analytics_storage: 'denied',
       })
       window.gtag('js', new Date())
       window.gtag('config', measurementId, {
@@ -50,16 +56,16 @@ export function createGoogleAdapter(): AnalyticsAdapter | null {
 
       adapter.isInitialized = true
     },
-    applyConsent(granted: boolean) {
+    applyConsent(settings: ConsentSettings) {
       if (typeof window === 'undefined' || typeof window.gtag !== 'function') {
         return
       }
 
       window.gtag('consent', 'update', {
-        ad_storage: 'denied',
-        ad_user_data: 'denied',
-        ad_personalization: 'denied',
-        analytics_storage: granted ? 'granted' : 'denied',
+        analytics_storage: toConsentState(settings.analytics),
+        ad_storage: toConsentState(settings.marketing),
+        ad_user_data: toConsentState(settings.marketing),
+        ad_personalization: toConsentState(settings.marketing),
       })
     },
     trackPageView(data: PageViewEvent) {

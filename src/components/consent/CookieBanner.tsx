@@ -172,7 +172,7 @@ function PreferencesDialog({
           <ConsentToggle
             id="consent-marketing"
             label="Marketingowe"
-            description="Dopasowanie reklam i pomiar kampanii (Meta, OpenAI)."
+            description="Dopasowanie reklam i pomiar kampanii (Google Ads, Meta, OpenAI)."
             checked={draftSettings.marketing}
             onChange={(marketing) =>
               setDraftSettings({ ...draftSettings, marketing })

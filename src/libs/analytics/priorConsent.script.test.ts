@@ -94,4 +94,42 @@ describe('Prior Consent script injection', () => {
       document.querySelector('script[data-analytics-script="openai-pixel"]'),
     ).toHaveAttribute('src', 'https://bzrcdn.openai.com/sdk/oaiq.min.js')
   })
+
+  it('injects Google tag and marketing pixels on marketing-only consent', () => {
+    const google = requireAdapter(createGoogleAdapter(), 'google')
+    const meta = requireAdapter(createMetaAdapter(), 'meta')
+    const openai = requireAdapter(createOpenAiAdapter(), 'openai')
+
+    const facade = createAnalyticsFacadeForTests([google, meta, openai])
+    facade.init()
+    facade.updateConsent({ analytics: false, marketing: true })
+
+    expect(
+      document.querySelector('script[data-analytics-script="google-gtag"]'),
+    ).toHaveAttribute(
+      'src',
+      'https://www.googletagmanager.com/gtag/js?id=G-TEST123',
+    )
+    expect(
+      document.querySelector('script[data-analytics-script="meta-pixel"]'),
+    ).toHaveAttribute('src', 'https://connect.facebook.net/en_US/fbevents.js')
+    expect(
+      document.querySelector('script[data-analytics-script="openai-pixel"]'),
+    ).toHaveAttribute('src', 'https://bzrcdn.openai.com/sdk/oaiq.min.js')
+
+    const consentUpdate = window.dataLayer.find(
+      (entry) =>
+        Array.isArray(entry) && entry[0] === 'consent' && entry[1] === 'update',
+    )
+    expect(consentUpdate).toEqual([
+      'consent',
+      'update',
+      {
+        analytics_storage: 'denied',
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted',
+      },
+    ])
+  })
 })

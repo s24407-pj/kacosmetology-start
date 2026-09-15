@@ -1,4 +1,4 @@
-export const CONSENT_POLICY_VERSION = '1.0'
+export const CONSENT_POLICY_VERSION = '1.1'
 export const CONSENT_STORAGE_KEY = 'kacosmetology.consent'
 
 export interface ConsentCategorySettings {
