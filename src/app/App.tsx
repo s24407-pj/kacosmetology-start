@@ -1,6 +1,7 @@
 import { scheduleDeferredWork } from '@libs/scheduleDeferredWork'
 import { Outlet } from '@tanstack/react-router'
 import { useEffect } from 'react'
+import { AnalyticsBootstrap } from './AnalyticsBootstrap'
 import Layout from './layout/Layout'
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
 
   return (
     <Layout>
+      <AnalyticsBootstrap />
       <Outlet />
     </Layout>
   )

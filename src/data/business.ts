@@ -22,6 +22,11 @@ export const businessProfile = {
     },
     appShortName: 'KA',
   },
+  legalEntity: {
+    legalName: 'KA.COSMETOLOGY KATARZYNA SUWALSKA',
+    nip: '5922305779',
+    regon: '542380023',
+  },
   primaryLocationId: 'salon-starogard-gdanski',
   locations: [
     {
@@ -97,4 +102,5 @@ export const getPrimarySalonLocation = (
 ) => getSalonLocation(profile.primaryLocationId, profile)
 
 export const brand = businessProfile.brand
+export const legalEntity = businessProfile.legalEntity
 export const primarySalonLocation = getPrimarySalonLocation()

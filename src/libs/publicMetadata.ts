@@ -74,6 +74,7 @@ export const getSitemapPaths = () => [
   '/oprawa-oka',
   '/trychologia',
   '/galeria',
+  '/polityka-prywatnosci',
   ...services
     .filter((service) => service.isPublished && service.hasDetailPage)
     .flatMap((service) => {

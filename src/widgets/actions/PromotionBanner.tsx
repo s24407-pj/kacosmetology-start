@@ -7,7 +7,7 @@ import {
   getPromotionScopeDescription,
 } from '@data/promotion'
 import { useReducedMotion } from '@hooks/useReducedMotion'
-import { trackPlausibleEvent } from '@libs/analytics'
+import { analytics } from '@libs/analytics'
 import { Percent, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
@@ -95,13 +95,6 @@ export default function PromotionBanner() {
 
   const handleDismiss = () => {
     setIsDismissed(true)
-
-    for (const promotion of activePromotions) {
-      trackPlausibleEvent('Promotion Banner Dismissed', {
-        placement: 'promotion-banner',
-        promotionId: promotion.id,
-      })
-    }
   }
 
   return (
@@ -133,9 +126,9 @@ export default function PromotionBanner() {
                 rel="noopener noreferrer"
                 aria-label={`${BANNER_CTA_LABEL} w Booksy (otwiera nową kartę)`}
                 onClick={() =>
-                  trackPlausibleEvent('CTA Booksy Click', {
+                  analytics.trackInitiateCheckout({
                     placement: 'promotion-banner',
-                    promotionId: promotion.id,
+                    destinationUrl: primarySalonLocation.bookingUrl,
                   })
                 }
                 className={actionLinkStyles({

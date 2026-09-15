@@ -9,7 +9,7 @@ import {
 } from '@components/ui'
 import { useRenderTime } from '@context/RenderTimeProvider'
 import { brand, primarySalonLocation } from '@data/business'
-import { trackPlausibleEvent } from '@libs/analytics'
+import { analytics } from '@libs/analytics'
 import { createContactLinks, getContactHref } from '@libs/contactLinks'
 import { getOpeningHoursView } from '@libs/openingHours'
 import BooksyLink from '@widgets/actions/BooksyLink'
@@ -19,7 +19,7 @@ import type { ComponentType } from 'react'
 const CONTACT_SECTION_PLACEMENT = 'contact-section'
 
 const trackContactActionClick = (channel: ContactLinkType) => {
-  trackPlausibleEvent('Contact Action Click', {
+  analytics.trackLead({
     channel,
     placement: CONTACT_SECTION_PLACEMENT,
   })

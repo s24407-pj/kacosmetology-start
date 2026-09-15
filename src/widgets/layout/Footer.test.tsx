@@ -1,29 +1,56 @@
 import '@testing-library/jest-dom/vitest'
 import { brand, primarySalonLocation } from '@data/business'
+import { ConsentProvider } from '@libs/consent'
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 
 vi.mock('@libs/analytics', () => ({
-  trackPlausibleEvent: vi.fn(),
+  analytics: {
+    trackInitiateCheckout: vi.fn(),
+    trackLead: vi.fn(),
+    updateConsent: vi.fn(),
+  },
 }))
 
-import { trackPlausibleEvent } from '@libs/analytics'
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({
+    to,
+    children,
+    ...props
+  }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }) => (
+    <a href={to} {...props}>
+      {children}
+    </a>
+  ),
+}))
+
+import { analytics } from '@libs/analytics'
 import Footer from './Footer'
+
+function renderFooter() {
+  return render(
+    <ConsentProvider>
+      <Footer />
+    </ConsentProvider>,
+  )
+}
 
 describe('Footer', () => {
   afterEach(() => {
     cleanup()
+    localStorage.clear()
   })
 
   beforeEach(() => {
     vi.clearAllMocks()
+    localStorage.clear()
   })
 
   it('renders phone link with tracking', async () => {
     const user = userEvent.setup()
-    render(<Footer />)
+    renderFooter()
 
     const phoneLink = screen.getByRole('link', { name: 'Telefon' })
     expect(phoneLink).toHaveAttribute(
@@ -32,7 +59,7 @@ describe('Footer', () => {
     )
 
     await clickAnalyticsLink(user, phoneLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+    expect(analytics.trackLead).toHaveBeenCalledWith({
       channel: 'phone',
       placement: 'footer',
     })
@@ -40,13 +67,13 @@ describe('Footer', () => {
 
   it('renders email link with tracking', async () => {
     const user = userEvent.setup()
-    render(<Footer />)
+    renderFooter()
 
     const emailLink = screen.getByRole('link', { name: 'Email' })
     expect(emailLink).toHaveAttribute('href', `mailto:${brand.email}`)
 
     await clickAnalyticsLink(user, emailLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+    expect(analytics.trackLead).toHaveBeenCalledWith({
       channel: 'email',
       placement: 'footer',
     })
@@ -54,14 +81,14 @@ describe('Footer', () => {
 
   it('renders Instagram link with tracking', async () => {
     const user = userEvent.setup()
-    render(<Footer />)
+    renderFooter()
 
     const instagramLink = screen.getByRole('link', { name: 'Instagram' })
     expect(instagramLink).toHaveAttribute('href', brand.socialMedia.instagram)
     expect(instagramLink).toHaveAttribute('target', '_blank')
 
     await clickAnalyticsLink(user, instagramLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+    expect(analytics.trackLead).toHaveBeenCalledWith({
       channel: 'instagram',
       placement: 'footer',
     })
@@ -73,21 +100,21 @@ describe('Footer', () => {
     }
 
     const user = userEvent.setup()
-    render(<Footer />)
+    renderFooter()
 
     const facebookLink = screen.getByRole('link', { name: 'Facebook' })
     expect(facebookLink).toHaveAttribute('href', brand.socialMedia.facebook)
     expect(facebookLink).toHaveAttribute('target', '_blank')
 
     await clickAnalyticsLink(user, facebookLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+    expect(analytics.trackLead).toHaveBeenCalledWith({
       channel: 'facebook',
       placement: 'footer',
     })
   })
 
   it('displays contact information', () => {
-    render(<Footer />)
+    renderFooter()
 
     expect(screen.getByText(primarySalonLocation.phone)).toBeInTheDocument()
     expect(screen.getByText(brand.email)).toBeInTheDocument()
@@ -105,14 +132,20 @@ describe('Footer', () => {
     ).toHaveAttribute('href', primarySalonLocation.bookingUrl)
   })
 
-  it('displays copyright information', () => {
-    render(<Footer />)
+  it('displays copyright information and consent controls', () => {
+    renderFooter()
 
     const year = new Date().getFullYear()
     expect(
       screen.getByText(
         new RegExp(`© ${year} ${brand.name}. Wszystkie prawa zastrzeżone.`),
       ),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: 'Polityka prywatności' }),
+    ).toHaveAttribute('href', '/polityka-prywatnosci')
+    expect(
+      screen.getByRole('button', { name: 'Zarządzaj cookies' }),
     ).toBeInTheDocument()
   })
 })

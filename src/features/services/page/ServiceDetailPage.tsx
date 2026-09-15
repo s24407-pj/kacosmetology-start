@@ -12,12 +12,10 @@ import {
 } from '@components/ui'
 import { brand } from '@data/business'
 import { getPublicServicePath, getRelatedServices } from '@data/services'
-import { trackPlausibleEvent } from '@libs/analytics'
 import { toBreadcrumbListJsonLd, toServiceJsonLd } from '@libs/businessMetadata'
 import { Link } from '@tanstack/react-router'
 import BooksyLink from '@widgets/actions/BooksyLink'
 import { Clock } from 'lucide-react'
-import { useEffect } from 'react'
 
 function DetailList({ title, items }: { title: string; items?: string[] }) {
   if (!items?.length) return null
@@ -63,14 +61,6 @@ export function ServiceDetailPage({ service }: { service: PublicService }) {
       ],
     }),
   ]
-
-  useEffect(() => {
-    trackPlausibleEvent('Service Detail View', {
-      area: service.area,
-      serviceId: service.id,
-      serviceSlug: service.slug,
-    })
-  }, [service])
 
   return (
     <>
@@ -184,12 +174,6 @@ export function ServiceDetailPage({ service }: { service: PublicService }) {
                         : '/trychologia/$slug'
                   }
                   params={{ slug: item.slug }}
-                  onClick={() =>
-                    trackPlausibleEvent('Related Service Click', {
-                      serviceId: item.id,
-                      area: item.area,
-                    })
-                  }
                   className={actionLinkStyles({
                     variant: 'text',
                     size: 'sm',

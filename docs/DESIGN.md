@@ -32,10 +32,14 @@ Canonical ownership matters because most changes cross several rendered views:
   deterministic non-stacking precedence; `promotionValidation.ts` owns the
   production configuration gate.
   `src/data/promotionValidation.test.ts`.
-- `business.ts` owns brand, practitioner, locations, contacts, and structured
-  opening schedules. UI, JSON-LD, analytics domain, and committed public files
-  are projections, not competing sources.
+- `business.ts` owns brand, practitioner, legal entity (NIP/REGON), locations,
+  contacts, and structured opening schedules. UI, JSON-LD, analytics domain,
+  privacy-policy facts, and committed public files are projections, not
+  competing sources.
   `src/data/business.test.ts`, `src/libs/openingHours.test.ts`.
+- Privacy policy copy for `/polityka-prywatnosci` lives in
+  `src/features/legal/content/` and must stay aligned with real consent,
+  analytics, and personal-data behavior on the site.
 - `navigation.ts` owns top-level route labels and destinations. TanStack Router
   owns current-route state; `HomePage` retries scrolling when a lazy home hash
   target mounts.`src/features/home/page/HomePage.test.tsx`,
@@ -86,11 +90,31 @@ section with Polish recovery UI; reload remains user-triggered.
 `src/features/home/page/HomePage.test.tsx`,
 `src/features/home/components/DeferredSectionBoundary.test.tsx`.
 
-`scheduleDeferredWork` owns when optional work starts: analytics after load and
-idle, fonts after first scroll or a 4-second fallback. `analytics.ts` alone owns
-tracker import/initialization: one initial attempt, one retry only on later
-demand, then terminal disablement with static warnings. UI callers remain
-fire-and-forget.`src/libs/analytics.test.ts`.
+`scheduleDeferredWork` owns deferred font loading after first scroll or a
+4-second fallback. Analytics boots early via `AnalyticsBootstrap` /
+`analytics.init()` (attribution capture + cookieless adapters). Consent-gated
+pixels (GA, Meta, OpenAI) load only after `analytics.updateConsent`, which the
+cookie banner drives through `src/libs/consent` (Prior Consent, localStorage
+version + timestamp). `updateConsent` also handles revoke without a page reload:
+the facade stops dispatching to denied categories and syncs vendor consent
+via `applyConsent` (Google Consent Mode; OpenAI Measurement Pixel `consent`).
+SPA page views are deduped in the bootstrap component.
+The cookie banner keeps Accept and Reject as equal-weight first-layer actions
+(same outline style; Accept first for reading order) and mirrors those one-click
+shortcuts in the preferences dialog; it deliberately avoids an asymmetric
+primary-only Accept. The first-layer bar is non-blocking (no Cookie Wall):
+bottom-fixed, no page overlay or body scroll lock. Preferences open with
+optional categories unchecked and necessary locked on (Planet49). Withdrawal
+stays available via footer “Zarządzaj cookies”.
+Any change to cookies, consent categories, pixels, attribution, vendors, or
+other personal-data processing must be checked against the public Privacy
+Policy and updated there when behavior diverges; processing must remain
+compatible with applicable EU and Polish law (GDPR/RODO, cookie/ePrivacy).
+`src/libs/analytics/index.test.ts`, `src/libs/analytics/priorConsent.script.test.ts`,
+`src/libs/consent/ConsentProvider.test.tsx`,
+`src/components/consent/CookieBanner.test.tsx`,
+`src/features/legal/page/PrivacyPolicyPage.test.tsx`,
+`src/libs/scheduleDeferredWork.test.ts`.
 
 ## Key decisions
 
@@ -102,11 +126,11 @@ fire-and-forget.`src/libs/analytics.test.ts`.
   are returned before service-level resolution. Different services can receive
   different winners; stacking is forbidden and tie-breaks are deterministic.
    `src/data/promotion.test.ts`.
-- Looks wrong at first glance; intentional because the analytics client factory
-  is exported with `@internal`. It is the same implementation used by the
-  production singleton and permits deterministic lifecycle tests without global
-  reset hooks or duplicate state machines.
-  `src/libs/analytics.test.ts`.
+- Looks wrong at first glance; intentional because Booksy cannot return purchase
+  conversions to first-party pixels. `trackInitiateCheckout` attaches session
+  attribution (`utm_*`, `gclid`, `fbclid`) as the last controllable attribution
+  point before leaving the site.
+  `src/libs/analytics/attribution.test.ts`.
 - The E2E client-ready document attribute is a test synchronization contract,
   set after React effects install interactive behavior. It is not product state.
   `src/app/providers/RenderTimeProvider.test.tsx`,
@@ -137,6 +161,10 @@ every consumer, configuration/generation effects, operational checks, and
 rollback. Expect tests at each boundary plus production-build E2E where loading,
 SSR/hydration, navigation, or readiness changes. Do not add global mutable state,
 test-only production branches without a guard, or broad compatibility shims.
+For cookies, consent, analytics/marketing pixels, attribution, or other
+personal-data flows: verify EU/PL legal fit, then update
+`src/features/legal/content/` (and `CONSENT_POLICY_VERSION` when re-consent is
+required) before considering the change done.
 
 ## Known debt
 
@@ -147,10 +175,6 @@ test-only production branches without a guard, or broad compatibility shims.
 - **Low, newly discovered and untriaged.** The local
   `useDeferredSections` name hides that it is a one-way mount-policy gate.
   Consequence: name-only navigation requires reading its body.
-- **Low, newly discovered and untriaged.**
-  `ScheduleDeferredWorkDeps` does not identify its analytics/font startup scope.
-  Consequence: searches for deferred behavior surface two policies that must be
-  distinguished by reading their modules.
 
 The repository contains no registry of out-of-repository consumers. That means
 none can be discovered here, not that none exist. Re-check with the relevant

@@ -1,6 +1,5 @@
 import { Section, SectionHeader } from '@components/ui'
 import { specializations } from '@data/specializations'
-import { trackPlausibleEvent } from '@libs/analytics'
 import {
   IMAGE_SIZES,
   MOBILE_WIDTHS,
@@ -46,13 +45,6 @@ export default function SpecializationsSection() {
               key={item.id}
               to={item.path}
               aria-label={`Poznaj ofertę — ${item.name}`}
-              onClick={() =>
-                trackPlausibleEvent('Specialization Click', {
-                  area: item.area,
-                  placement: 'home',
-                  target: item.id,
-                })
-              }
               className="group relative isolate flex h-[28rem] overflow-hidden focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-white sm:h-[30rem] md:h-[32rem] lg:h-[36rem]"
               data-reveal-on-scroll
               data-reveal-variant="scale"

@@ -3,12 +3,11 @@ import InstagramSVG from '@components/icons/InstagramSVG'
 import { iconActionStyles, surfaceCardStyles } from '@components/ui'
 import { useUI } from '@context/UIContext'
 import { brand } from '@data/business'
-import { trackPlausibleEvent } from '@libs/analytics'
 import { cn } from '@libs/utils'
 import PhoneButton from '@widgets/actions/PhoneButton'
 import ScrollToTopButton from './ScrollToTopButton'
 
-function SocialLinks({ placement }: { placement: string }) {
+function SocialLinks() {
   return (
     <>
       <a
@@ -17,12 +16,6 @@ function SocialLinks({ placement }: { placement: string }) {
         rel="noopener noreferrer"
         aria-label="Instagram"
         className={iconActionStyles()}
-        onClick={() =>
-          trackPlausibleEvent('Social Media Click', {
-            platform: 'instagram',
-            placement,
-          })
-        }
       >
         <InstagramSVG className="w-6 h-6" />
       </a>
@@ -33,12 +26,6 @@ function SocialLinks({ placement }: { placement: string }) {
           rel="noopener noreferrer"
           aria-label="Facebook"
           className={iconActionStyles()}
-          onClick={() =>
-            trackPlausibleEvent('Social Media Click', {
-              platform: 'facebook',
-              placement,
-            })
-          }
         >
           <FacebookSVG className="w-6 h-6" />
         </a>
@@ -57,7 +44,7 @@ export default function RightAbsoluteColumn() {
           'fixed bottom-20 right-3 z-40 flex flex-col items-center gap-2 p-2 shadow-raised min-[810px]:bottom-8',
       })}
     >
-      <SocialLinks placement="right_column" />
+      <SocialLinks />
       <PhoneButton />
       <div
         inert={!show}

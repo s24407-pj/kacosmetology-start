@@ -1,7 +1,8 @@
 import type { ServiceArea, ServiceId } from '@app-types/types'
 import { actionLinkStyles } from '@components/ui'
 import { primarySalonLocation } from '@data/business'
-import { trackPlausibleEvent } from '@libs/analytics'
+import { getServiceById } from '@data/services'
+import { analytics } from '@libs/analytics'
 import { cn } from '@libs/utils'
 import { ExternalLink } from 'lucide-react'
 import type { ReactNode } from 'react'
@@ -21,6 +22,8 @@ export default function BooksyLink({
   className?: string
   showExternalIcon?: boolean
 }) {
+  const serviceName = serviceId ? getServiceById(serviceId)?.name : undefined
+
   return (
     <a
       href={primarySalonLocation.bookingUrl}
@@ -32,10 +35,11 @@ export default function BooksyLink({
           : 'Umów wizytę w Booksy (otwiera nową kartę)'
       }
       onClick={() =>
-        trackPlausibleEvent('CTA Booksy Click', {
+        analytics.trackInitiateCheckout({
           placement,
-          ...(area ? { area } : {}),
-          ...(serviceId ? { serviceId } : {}),
+          destinationUrl: primarySalonLocation.bookingUrl,
+          ...(area ? { serviceCategory: area } : {}),
+          ...(serviceName ? { serviceName } : {}),
         })
       }
       className={cn(actionLinkStyles(), className)}

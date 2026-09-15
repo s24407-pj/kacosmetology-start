@@ -5,15 +5,12 @@ import {
   routeSocialImages,
   type SocialImageDescriptor,
 } from '@libs/routeMetadata'
-import { expect, type Page, test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+import { clickSettled, ready, seedConsent } from './helpers'
 
-const ready = async (page: Page, path: string) => {
-  await page.goto(path)
-  await expect(page.locator('html')).toHaveAttribute(
-    'data-react-client-ready',
-    'true',
-  )
-}
+test.beforeEach(async ({ page }) => {
+  await seedConsent(page)
+})
 
 const metadataRoutes = [
   {
@@ -243,7 +240,7 @@ test('landing and detail routes preserve specialization boundaries', async ({
     'href',
     '/kosmetologia/oczyszczanie-wodorowe',
   )
-  await hydrogenCleaningDetails.click()
+  await clickSettled(hydrogenCleaningDetails)
   await expect(page).toHaveURL('/kosmetologia/oczyszczanie-wodorowe')
   await expect(page.getByRole('navigation', { name: 'Okruszki' })).toBeVisible()
 
@@ -273,7 +270,7 @@ test('landing and detail routes preserve specialization boundaries', async ({
     'href',
     '/oprawa-oka/regulacja-brwi',
   )
-  await eyebrowRegulationDetails.click()
+  await clickSettled(eyebrowRegulationDetails)
   await expect(page).toHaveURL('/oprawa-oka/regulacja-brwi')
   await expect(page.getByRole('navigation', { name: 'Okruszki' })).toBeVisible()
 

@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GaleriaRouteImport } from './routes/galeria'
+import { Route as PolitykaPrywatnosciRouteImport } from './routes/polityka-prywatnosci'
 import { Route as RezerwacjaRouteImport } from './routes/rezerwacja'
 import { Route as KosmetologiaIndexRouteImport } from './routes/kosmetologia/index'
 import { Route as KosmetologiaSlugRouteImport } from './routes/kosmetologia/$slug'
@@ -27,6 +28,11 @@ const IndexRoute = IndexRouteImport.update({
 const GaleriaRoute = GaleriaRouteImport.update({
   id: '/galeria',
   path: '/galeria',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PolitykaPrywatnosciRoute = PolitykaPrywatnosciRouteImport.update({
+  id: '/polityka-prywatnosci',
+  path: '/polityka-prywatnosci',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RezerwacjaRoute = RezerwacjaRouteImport.update({
@@ -68,6 +74,7 @@ const TrychologiaSlugRoute = TrychologiaSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/galeria': typeof GaleriaRoute
+  '/polityka-prywatnosci': typeof PolitykaPrywatnosciRoute
   '/rezerwacja': typeof RezerwacjaRoute
   '/kosmetologia/$slug': typeof KosmetologiaSlugRoute
   '/oprawa-oka/$slug': typeof OprawaOkaSlugRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/galeria': typeof GaleriaRoute
+  '/polityka-prywatnosci': typeof PolitykaPrywatnosciRoute
   '/rezerwacja': typeof RezerwacjaRoute
   '/kosmetologia/$slug': typeof KosmetologiaSlugRoute
   '/oprawa-oka/$slug': typeof OprawaOkaSlugRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/galeria': typeof GaleriaRoute
+  '/polityka-prywatnosci': typeof PolitykaPrywatnosciRoute
   '/rezerwacja': typeof RezerwacjaRoute
   '/kosmetologia/$slug': typeof KosmetologiaSlugRoute
   '/oprawa-oka/$slug': typeof OprawaOkaSlugRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/galeria'
+    | '/polityka-prywatnosci'
     | '/rezerwacja'
     | '/kosmetologia/$slug'
     | '/oprawa-oka/$slug'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/galeria'
+    | '/polityka-prywatnosci'
     | '/rezerwacja'
     | '/kosmetologia/$slug'
     | '/oprawa-oka/$slug'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/galeria'
+    | '/polityka-prywatnosci'
     | '/rezerwacja'
     | '/kosmetologia/$slug'
     | '/oprawa-oka/$slug'
@@ -138,6 +150,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GaleriaRoute: typeof GaleriaRoute
+  PolitykaPrywatnosciRoute: typeof PolitykaPrywatnosciRoute
   RezerwacjaRoute: typeof RezerwacjaRoute
   KosmetologiaSlugRoute: typeof KosmetologiaSlugRoute
   OprawaOkaSlugRoute: typeof OprawaOkaSlugRoute
@@ -161,6 +174,13 @@ declare module '@tanstack/react-router' {
       path: '/galeria'
       fullPath: '/galeria'
       preLoaderRoute: typeof GaleriaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/polityka-prywatnosci': {
+      id: '/polityka-prywatnosci'
+      path: '/polityka-prywatnosci'
+      fullPath: '/polityka-prywatnosci'
+      preLoaderRoute: typeof PolitykaPrywatnosciRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/rezerwacja': {
@@ -218,6 +238,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GaleriaRoute: GaleriaRoute,
+  PolitykaPrywatnosciRoute: PolitykaPrywatnosciRoute,
   RezerwacjaRoute: RezerwacjaRoute,
   KosmetologiaSlugRoute: KosmetologiaSlugRoute,
   OprawaOkaSlugRoute: OprawaOkaSlugRoute,

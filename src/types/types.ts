@@ -104,8 +104,15 @@ export interface SalonLocation {
   openingSchedule: OpeningSchedule
 }
 
+export interface LegalEntity {
+  legalName: string
+  nip: string
+  regon: string
+}
+
 export interface BusinessProfile {
   brand: BrandProfile
+  legalEntity: LegalEntity
   primaryLocationId: SalonLocationId
   locations: readonly SalonLocation[]
 }

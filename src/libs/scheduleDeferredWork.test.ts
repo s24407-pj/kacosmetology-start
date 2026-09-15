@@ -5,12 +5,7 @@ import {
 } from './scheduleDeferredWork'
 
 describe('scheduleDeferredWork', () => {
-  const initAnalytics = vi.fn()
   const loadDeferredFonts = vi.fn().mockResolvedValue(undefined)
-  const requestIdleCallback = vi.fn((callback: IdleRequestCallback) => {
-    callback({ didTimeout: false, timeRemaining: () => 50 })
-    return 1
-  })
 
   let loadHandler: (() => void) | undefined
   let scrollHandler: (() => void) | undefined
@@ -63,14 +58,12 @@ describe('scheduleDeferredWork', () => {
   const createDeps = (
     overrides: Partial<ScheduleDeferredWorkDeps> = {},
   ): ScheduleDeferredWorkDeps => ({
-    initAnalytics,
     loadDeferredFonts,
     addEventListener,
     removeEventListener,
     documentReadyState: 'loading',
     setTimeout,
     clearTimeout,
-    requestIdleCallback,
     ...overrides,
   })
 
@@ -86,10 +79,9 @@ describe('scheduleDeferredWork', () => {
     vi.restoreAllMocks()
   })
 
-  it('does not run analytics or fonts synchronously', () => {
+  it('does not load fonts synchronously', () => {
     scheduleDeferredWork(createDeps())
 
-    expect(initAnalytics).not.toHaveBeenCalled()
     expect(loadDeferredFonts).not.toHaveBeenCalled()
   })
 
@@ -111,12 +103,12 @@ describe('scheduleDeferredWork', () => {
     )
   })
 
-  it('initializes analytics on load via requestIdleCallback', () => {
+  it('does not initialize analytics on load', () => {
     scheduleDeferredWork(createDeps())
     loadHandler?.()
 
-    expect(initAnalytics).toHaveBeenCalledTimes(1)
     expect(loadDeferredFonts).not.toHaveBeenCalled()
+    expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 4000)
   })
 
   it('loads deferred fonts on first scroll', () => {
@@ -124,7 +116,6 @@ describe('scheduleDeferredWork', () => {
     scrollHandler?.()
 
     expect(loadDeferredFonts).toHaveBeenCalledTimes(1)
-    expect(initAnalytics).not.toHaveBeenCalled()
   })
 
   it('loads deferred fonts after 4s fallback on load', () => {
@@ -150,10 +141,9 @@ describe('scheduleDeferredWork', () => {
     expect(loadDeferredFonts).toHaveBeenCalledTimes(1)
   })
 
-  it('schedules load work immediately when hydration happens after load', () => {
+  it('schedules font fallback immediately when hydration happens after load', () => {
     scheduleDeferredWork(createDeps({ documentReadyState: 'complete' }))
 
-    expect(initAnalytics).toHaveBeenCalledTimes(1)
     expect(addEventListener).not.toHaveBeenCalledWith(
       'load',
       expect.any(Function),

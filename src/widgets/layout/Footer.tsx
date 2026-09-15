@@ -1,12 +1,14 @@
 import type { ContactLinkType } from '@app-types/types'
+import { CookieSettingsButton } from '@components/consent/CookieSettingsButton'
 import FacebookSVG from '@components/icons/FacebookSVG'
 import InstagramSVG from '@components/icons/InstagramSVG'
 import KaCosmetologyLogo from '@components/icons/KaCosmetologyLogo'
 import { Heading, iconActionStyles } from '@components/ui'
 import { useRenderTime } from '@context/RenderTimeProvider'
 import { brand, primarySalonLocation } from '@data/business'
-import { trackPlausibleEvent } from '@libs/analytics'
+import { analytics } from '@libs/analytics'
 import { createContactLinks, getContactHref } from '@libs/contactLinks'
+import { Link } from '@tanstack/react-router'
 import BooksyLink from '@widgets/actions/BooksyLink'
 import { Mail, Phone } from 'lucide-react'
 import type { ComponentType } from 'react'
@@ -23,7 +25,7 @@ const FOOTER_LINK_ICONS: Record<ContactLinkType, FooterIcon> = {
 }
 
 const trackFooterContactClick = (channel: ContactLinkType) => {
-  trackPlausibleEvent('Contact Action Click', {
+  analytics.trackLead({
     channel,
     placement: FOOTER_PLACEMENT,
   })
@@ -114,6 +116,15 @@ export default function Footer() {
           <p className="text-sm text-white/65">
             © {currentYear} {brand.name}. Wszystkie prawa zastrzeżone.
           </p>
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <Link
+              to="/polityka-prywatnosci"
+              className="text-sm text-white/65 underline-offset-4 hover:text-white hover:underline"
+            >
+              Polityka prywatności
+            </Link>
+            <CookieSettingsButton />
+          </div>
         </div>
       </div>
     </footer>

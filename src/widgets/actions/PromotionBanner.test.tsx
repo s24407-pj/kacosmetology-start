@@ -12,7 +12,10 @@ vi.mock('@data/promotion', () => ({
 }))
 
 vi.mock('@libs/analytics', () => ({
-  trackPlausibleEvent: vi.fn(),
+  analytics: {
+    trackInitiateCheckout: vi.fn(),
+    trackLead: vi.fn(),
+  },
 }))
 
 import { primarySalonLocation } from '@data/business'
@@ -22,14 +25,14 @@ import {
   getAllActivePromotions,
   getPromotionScopeDescription,
 } from '@data/promotion'
-import { trackPlausibleEvent } from '@libs/analytics'
+import { analytics } from '@libs/analytics'
 import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import PromotionBanner from './PromotionBanner'
 
 const getAllActivePromotionsMock = vi.mocked(getAllActivePromotions)
 const formatPromotionDeadlineMock = vi.mocked(formatPromotionDeadline)
 const getPromotionScopeDescriptionMock = vi.mocked(getPromotionScopeDescription)
-const trackPlausibleEventMock = vi.mocked(trackPlausibleEvent)
+const trackInitiateCheckoutMock = vi.mocked(analytics.trackInitiateCheckout)
 
 const createPromotion = (
   overrides: Partial<ActivePromotion> = {},
@@ -55,7 +58,7 @@ describe('PromotionBanner', () => {
     getAllActivePromotionsMock.mockReset()
     formatPromotionDeadlineMock.mockReset()
     getPromotionScopeDescriptionMock.mockReset()
-    trackPlausibleEventMock.mockReset()
+    trackInitiateCheckoutMock.mockReset()
 
     class PassthroughResizeObserver {
       callback: ResizeObserverCallback
@@ -120,9 +123,9 @@ describe('PromotionBanner', () => {
       }),
     )
 
-    expect(trackPlausibleEventMock).toHaveBeenCalledWith('CTA Booksy Click', {
+    expect(trackInitiateCheckoutMock).toHaveBeenCalledWith({
       placement: 'promotion-banner',
-      promotionId: promotion.id,
+      destinationUrl: primarySalonLocation.bookingUrl,
     })
   })
 
@@ -139,13 +142,7 @@ describe('PromotionBanner', () => {
       view.getByRole('button', { name: 'Zamknij baner promocji' }),
     )
 
-    expect(trackPlausibleEventMock).toHaveBeenCalledWith(
-      'Promotion Banner Dismissed',
-      {
-        placement: 'promotion-banner',
-        promotionId: promotion.id,
-      },
-    )
+    expect(trackInitiateCheckoutMock).not.toHaveBeenCalled()
     await waitFor(() => {
       expect(view.queryByRole('status')).not.toBeInTheDocument()
     })
@@ -185,25 +182,17 @@ describe('PromotionBanner', () => {
     await clickAnalyticsLink(user, ctaLinks[0])
     await clickAnalyticsLink(user, ctaLinks[1])
 
-    expect(trackPlausibleEventMock).toHaveBeenNthCalledWith(
-      1,
-      'CTA Booksy Click',
-      {
-        placement: 'promotion-banner',
-        promotionId: firstPromotion.id,
-      },
-    )
-    expect(trackPlausibleEventMock).toHaveBeenNthCalledWith(
-      2,
-      'CTA Booksy Click',
-      {
-        placement: 'promotion-banner',
-        promotionId: secondPromotion.id,
-      },
-    )
+    expect(trackInitiateCheckoutMock).toHaveBeenNthCalledWith(1, {
+      placement: 'promotion-banner',
+      destinationUrl: primarySalonLocation.bookingUrl,
+    })
+    expect(trackInitiateCheckoutMock).toHaveBeenNthCalledWith(2, {
+      placement: 'promotion-banner',
+      destinationUrl: primarySalonLocation.bookingUrl,
+    })
   })
 
-  it('dismisses the combined banner once and tracks every campaign', async () => {
+  it('dismisses the combined banner once', async () => {
     const promotions = [
       createPromotion({ id: 'synthetic-first' }),
       createPromotion({ id: 'synthetic-second' }),
@@ -218,16 +207,7 @@ describe('PromotionBanner', () => {
       view.getByRole('button', { name: 'Zamknij baner promocji' }),
     )
 
-    expect(trackPlausibleEventMock).toHaveBeenCalledTimes(2)
-    for (const promotion of promotions) {
-      expect(trackPlausibleEventMock).toHaveBeenCalledWith(
-        'Promotion Banner Dismissed',
-        {
-          placement: 'promotion-banner',
-          promotionId: promotion.id,
-        },
-      )
-    }
+    expect(trackInitiateCheckoutMock).not.toHaveBeenCalled()
     await waitFor(() => {
       expect(view.queryByRole('status')).not.toBeInTheDocument()
     })

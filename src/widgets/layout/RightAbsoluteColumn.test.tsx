@@ -1,14 +1,9 @@
 import '@testing-library/jest-dom/vitest'
 import { cleanup, render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@context/UIContext', () => ({
   useUI: vi.fn(),
-}))
-
-vi.mock('@libs/analytics', () => ({
-  trackPlausibleEvent: vi.fn(),
 }))
 
 vi.mock('@libs/openingHours', async (importOriginal) => ({
@@ -18,8 +13,6 @@ vi.mock('@libs/openingHours', async (importOriginal) => ({
 
 import { useUI } from '@context/UIContext'
 import { brand } from '@data/business'
-import { trackPlausibleEvent } from '@libs/analytics'
-import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import RightAbsoluteColumn from './RightAbsoluteColumn'
 
 const useUIMock = vi.mocked(useUI)
@@ -41,20 +34,13 @@ describe('RightAbsoluteColumn', () => {
     })
   })
 
-  it('renders Instagram links with correct href and tracking', async () => {
-    const user = userEvent.setup()
+  it('renders Instagram links with correct href', () => {
     render(<RightAbsoluteColumn />)
 
     const instagramLink = screen.getByRole('link', { name: 'Instagram' })
     expect(instagramLink).toHaveAttribute('href', brand.socialMedia.instagram)
     expect(instagramLink).toHaveAttribute('target', '_blank')
     expect(instagramLink).toHaveAttribute('rel', 'noopener noreferrer')
-
-    await clickAnalyticsLink(user, instagramLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Social Media Click', {
-      platform: 'instagram',
-      placement: 'right_column',
-    })
   })
 
   it('stays visible above the bottom navigation on mobile', () => {
@@ -68,20 +54,13 @@ describe('RightAbsoluteColumn', () => {
     expect(container.querySelector('aside')).not.toHaveClass('hidden')
   })
 
-  it('renders Facebook links with correct href and tracking', async () => {
-    const user = userEvent.setup()
+  it('renders Facebook links with correct href', () => {
     render(<RightAbsoluteColumn />)
 
     const facebookLink = screen.getByRole('link', { name: 'Facebook' })
     expect(facebookLink).toHaveAttribute('href', brand.socialMedia.facebook)
     expect(facebookLink).toHaveAttribute('target', '_blank')
     expect(facebookLink).toHaveAttribute('rel', 'noopener noreferrer')
-
-    await clickAnalyticsLink(user, facebookLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Social Media Click', {
-      platform: 'facebook',
-      placement: 'right_column',
-    })
   })
 
   it('shows scroll to top buttons when showScrollToTop is true', () => {

@@ -5,7 +5,6 @@ import {
   surfaceCardStyles,
 } from '@components/ui'
 import { brand, primarySalonLocation } from '@data/business'
-import { trackPlausibleEvent } from '@libs/analytics'
 import {
   IMAGE_SIZES,
   MOBILE_WIDTHS,
@@ -73,13 +72,7 @@ export default function HeroSection() {
 
               <button
                 type="button"
-                onClick={(event) => {
-                  trackPlausibleEvent('Secondary CTA Click', {
-                    placement: 'hero',
-                    target: 'o-mnie',
-                  })
-                  scrollToAbout(event)
-                }}
+                onClick={scrollToAbout}
                 className={actionLinkStyles({
                   variant: 'text',
                   className: 'cursor-pointer px-2',

@@ -3,7 +3,6 @@ import KaLogo from '@components/icons/KaLogo'
 import { iconActionStyles } from '@components/ui'
 import { useUI } from '@context/UIContext'
 import { MAIN_NAV_ITEMS } from '@data/navigation'
-import { trackPlausibleEvent } from '@libs/analytics'
 import { cn, scrollToTop } from '@libs/utils'
 import { Link, useRouterState } from '@tanstack/react-router'
 import CTAButton from '@widgets/actions/CTAButton'
@@ -53,11 +52,7 @@ export default function NavBar() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isMenuOpen, setIsMenuOpen])
 
-  const track = (target: string, context: string) =>
-    trackPlausibleEvent('Navigation Link Click', { target, context })
-
   const handleLogoClick = () => {
-    track('home', 'logo')
     if (location.pathname === '/') scrollToTop()
   }
 
@@ -119,7 +114,6 @@ export default function NavBar() {
                     hash={item.hash}
                     activeOptions={{ includeHash: true }}
                     aria-current={isActive(item) ? 'page' : undefined}
-                    onClick={() => track(item.id, 'desktop')}
                     className="group relative inline-flex min-h-11 items-center rounded-md px-2 font-medium text-text-secondary transition-colors duration-300 ease-out hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 aria-[current=page]:text-action"
                   >
                     {item.label}
@@ -161,7 +155,6 @@ export default function NavBar() {
                   activeOptions={{ includeHash: true }}
                   aria-current={isActive(item) ? 'page' : undefined}
                   onClick={() => {
-                    track(item.id, 'mobile-menu')
                     setIsMenuOpen(false)
                   }}
                   className="inline-flex min-h-12 items-center justify-center rounded-md px-4 font-display text-2xl font-medium text-text-primary transition-colors duration-300 ease-out hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-action/40 motion-reduce:transition-none aria-[current=page]:text-action"
