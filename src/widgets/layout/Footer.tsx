@@ -5,7 +5,7 @@ import KaCosmetologyLogo from '@components/icons/KaCosmetologyLogo'
 import { Heading, iconActionStyles } from '@components/ui'
 import { useRenderTime } from '@context/RenderTimeProvider'
 import { brand, primarySalonLocation } from '@data/business'
-import { trackPlausibleEvent } from '@libs/analytics'
+import { analytics } from '@libs/analytics'
 import { createContactLinks, getContactHref } from '@libs/contactLinks'
 import BooksyLink from '@widgets/actions/BooksyLink'
 import { Mail, Phone } from 'lucide-react'
@@ -23,7 +23,7 @@ const FOOTER_LINK_ICONS: Record<ContactLinkType, FooterIcon> = {
 }
 
 const trackFooterContactClick = (channel: ContactLinkType) => {
-  trackPlausibleEvent('Contact Action Click', {
+  analytics.trackLead({
     channel,
     placement: FOOTER_PLACEMENT,
   })

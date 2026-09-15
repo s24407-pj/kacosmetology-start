@@ -4,7 +4,10 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@libs/analytics', () => ({
-  trackPlausibleEvent: vi.fn(),
+  analytics: {
+    trackInitiateCheckout: vi.fn(),
+    trackLead: vi.fn(),
+  },
 }))
 
 vi.mock('@libs/utils', async () => {
@@ -17,7 +20,7 @@ vi.mock('@libs/utils', async () => {
 })
 
 import { brand, primarySalonLocation } from '@data/business'
-import { trackPlausibleEvent } from '@libs/analytics'
+import { analytics } from '@libs/analytics'
 import { scrollToId } from '@libs/utils'
 import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import HeroSection from './HeroSection'
@@ -49,7 +52,7 @@ describe('HeroSection', () => {
     ).not.toBeNull()
   })
 
-  it('routes both CTAs and tracks their destinations', async () => {
+  it('routes both CTAs and tracks Booksy checkout from the hero', async () => {
     const user = userEvent.setup()
     render(<HeroSection />)
 
@@ -62,15 +65,12 @@ describe('HeroSection', () => {
     expect(booksyLink).toHaveAttribute('target', '_blank')
 
     await clickAnalyticsLink(user, booksyLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('CTA Booksy Click', {
+    expect(analytics.trackInitiateCheckout).toHaveBeenCalledWith({
       placement: 'hero',
+      destinationUrl: primarySalonLocation.bookingUrl,
     })
 
     await user.click(approachButton)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Secondary CTA Click', {
-      placement: 'hero',
-      target: 'o-mnie',
-    })
     expect(scrollToId).toHaveBeenCalledWith('o-mnie')
   })
 })

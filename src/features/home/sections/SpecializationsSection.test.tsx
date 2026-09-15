@@ -1,10 +1,6 @@
 import '@testing-library/jest-dom/vitest'
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-
-vi.mock('@libs/analytics', () => ({
-  trackPlausibleEvent: vi.fn(),
-}))
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
@@ -18,7 +14,6 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }))
 
-import { trackPlausibleEvent } from '@libs/analytics'
 import SpecializationsSection from './SpecializationsSection'
 
 describe('SpecializationsSection', () => {
@@ -63,23 +58,5 @@ describe('SpecializationsSection', () => {
     expect(cosmetologyImage).toHaveAttribute('width', '2400')
     expect(cosmetologyImage).toHaveAttribute('height', '3600')
     expect(cosmetologyImage).toHaveClass('object-[50%_38%]')
-  })
-
-  it('preserves specialization click analytics', () => {
-    render(<SpecializationsSection />)
-
-    const link = screen.getByRole('link', {
-      name: 'Poznaj ofertę — Oprawa oka',
-    })
-    link.addEventListener('click', (event) => event.preventDefault(), {
-      once: true,
-    })
-    fireEvent.click(link)
-
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Specialization Click', {
-      area: 'cosmetology',
-      placement: 'home',
-      target: 'eye-styling',
-    })
   })
 })

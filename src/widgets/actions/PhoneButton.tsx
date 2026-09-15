@@ -1,7 +1,7 @@
 import { iconActionStyles } from '@components/ui'
 import { useRenderTime } from '@context/RenderTimeProvider'
 import { primarySalonLocation } from '@data/business'
-import { trackPlausibleEvent } from '@libs/analytics'
+import { analytics } from '@libs/analytics'
 import { isSalonOpenNow } from '@libs/openingHours'
 import { PhoneCall } from 'lucide-react'
 
@@ -16,7 +16,9 @@ export default function PhoneButton() {
   return (
     <a
       href={`tel:${phoneNumber}`}
-      onClick={() => trackPlausibleEvent('Call CTA Click')}
+      onClick={() =>
+        analytics.trackLead({ channel: 'phone', placement: 'phone-button' })
+      }
       className={iconActionStyles({ className: 'relative' })}
       aria-label={`Zadzwoń pod numer ${primarySalonLocation.phone}${salonOpen ? ', gabinet jest teraz otwarty' : ''}`}
       title={`Zadzwoń pod numer ${primarySalonLocation.phone}`}

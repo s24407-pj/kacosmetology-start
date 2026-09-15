@@ -66,8 +66,8 @@ See [DESIGN.md](./docs/DESIGN.md) for boundaries, rationale, and change traces.
 | Nav labels and section IDs | `src/data/navigation.ts` |
 | SEO head and JSON-LD composition | `src/routes/__root.tsx` |
 | Public metadata rendering | `src/libs/publicMetadata.ts` |
-| Deferred analytics lifecycle | `src/libs/analytics.ts` |
-| Deferred startup scheduling | `src/libs/scheduleDeferredWork.ts` |
+| Analytics facade (Prior Consent) | `src/libs/analytics/` |
+| Deferred font startup scheduling | `src/libs/scheduleDeferredWork.ts` |
 | New domain section | `src/features/<domain>/sections/` |
 | Service public URL and specialization | `src/data/services.ts` |
 | Route metadata composition | `src/libs/routeMetadata.ts` |
@@ -99,9 +99,11 @@ After editing `src/data/business.ts`, run
 - Below-fold home sections mount after load/idle or direct-hash demand. Each has
   its own `DeferredSectionBoundary`; preserve section IDs and local recovery.
   `src/features/home/page/HomePage.test.tsx`.
-- Analytics remains optional and deferred. Its wrapper owns one later-demand
-  import retry and static warnings; callers never add retries.
-  `src/libs/analytics.test.ts`.
+- Analytics remains optional and consent-aware. The facade owns adapters,
+  attribution, and Prior Consent gating; cookieless Plausible starts on
+  `analytics.init()`, while GA/Meta/OpenAI wait for `updateConsent`. Callers use
+  `trackPageView` / `trackInitiateCheckout` / `trackLead` / `trackPurchase`.
+  `src/libs/analytics/index.test.ts`.
 - Deferred fonts load on first scroll or the 4-second fallback; keep that work
   out of the critical path.
 - E2E retries are zero locally. CI permits two diagnostic retries but

@@ -8,13 +8,16 @@ vi.mock('@context/UIContext', () => ({
 }))
 
 vi.mock('@libs/analytics', () => ({
-  trackPlausibleEvent: vi.fn(),
+  analytics: {
+    trackInitiateCheckout: vi.fn(),
+    trackLead: vi.fn(),
+  },
 }))
 
 import type { UIContextType } from '@app-types/types'
 import { useUI } from '@context/UIContext'
 import { primarySalonLocation } from '@data/business'
-import { trackPlausibleEvent } from '@libs/analytics'
+import { analytics } from '@libs/analytics'
 import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import CTAButton from './CTAButton'
 
@@ -74,8 +77,9 @@ describe('CTAButton', () => {
     expect(link).toHaveAttribute('target', '_blank')
     await clickAnalyticsLink(user, link)
 
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('CTA Booksy Click', {
+    expect(analytics.trackInitiateCheckout).toHaveBeenCalledWith({
       placement: 'footer',
+      destinationUrl: primarySalonLocation.bookingUrl,
     })
   })
 })

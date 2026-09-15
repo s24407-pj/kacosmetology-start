@@ -1,7 +1,6 @@
 import HairsBulbSVG from '@components/icons/HairsBulbSVG'
 import { useUI } from '@context/UIContext'
 import { BOTTOM_NAV_ITEMS } from '@data/navigation'
-import { trackPlausibleEvent } from '@libs/analytics'
 import { Link, useRouterState } from '@tanstack/react-router'
 import { Eye, Images, Phone, Sparkles } from 'lucide-react'
 
@@ -36,12 +35,6 @@ export default function BottomNav() {
                 hash={item.hash}
                 aria-current={active ? 'page' : undefined}
                 className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-md text-[11px] text-text-secondary transition-[background-color,color] duration-300 ease-out hover:bg-surface-muted hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-action/50 motion-reduce:transition-none aria-[current=page]:text-action"
-                onClick={() =>
-                  trackPlausibleEvent('Navigation Link Click', {
-                    target: item.id,
-                    context: 'bottom-nav',
-                  })
-                }
               >
                 <Icon className="h-5 w-5" aria-hidden="true" />
                 {item.label}

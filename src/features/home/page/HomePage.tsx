@@ -1,6 +1,5 @@
 import { brand, primarySalonLocation } from '@data/business'
 import { useReducedMotion } from '@hooks/useReducedMotion'
-import { useScrollDepthTracking } from '@hooks/useScrollDepthTracking'
 import { toBeautySalonJsonLd } from '@libs/businessMetadata'
 import { useRouterState } from '@tanstack/react-router'
 import { lazy, useEffect, useState } from 'react'
@@ -111,7 +110,6 @@ const structuredData = toBeautySalonJsonLd({
 })
 
 export default function HomePage() {
-  useScrollDepthTracking()
   const shouldMountDeferredSections = useDeferredSections()
   return (
     <>

@@ -18,10 +18,13 @@ vi.mock('@libs/openingHours', async (importOriginal) => ({
 }))
 
 vi.mock('@libs/analytics', () => ({
-  trackPlausibleEvent: vi.fn(),
+  analytics: {
+    trackInitiateCheckout: vi.fn(),
+    trackLead: vi.fn(),
+  },
 }))
 
-import { trackPlausibleEvent } from '@libs/analytics'
+import { analytics } from '@libs/analytics'
 import { getOpeningHoursView } from '@libs/openingHours'
 import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import ContactSection from './ContactSection'
@@ -117,7 +120,7 @@ describe('ContactSection', () => {
     )
 
     await clickAnalyticsLink(user, phoneLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+    expect(analytics.trackLead).toHaveBeenCalledWith({
       channel: 'phone',
       placement: 'contact-section',
     })
@@ -131,7 +134,7 @@ describe('ContactSection', () => {
     expect(emailLink).toHaveAttribute('href', `mailto:${brand.email}`)
 
     await clickAnalyticsLink(user, emailLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+    expect(analytics.trackLead).toHaveBeenCalledWith({
       channel: 'email',
       placement: 'contact-section',
     })
@@ -197,7 +200,7 @@ describe('ContactSection', () => {
     expect(instagramLink).toHaveAttribute('target', '_blank')
 
     await clickAnalyticsLink(user, instagramLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+    expect(analytics.trackLead).toHaveBeenCalledWith({
       channel: 'instagram',
       placement: 'contact-section',
     })
@@ -216,7 +219,7 @@ describe('ContactSection', () => {
     expect(facebookLink).toHaveAttribute('target', '_blank')
 
     await clickAnalyticsLink(user, facebookLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+    expect(analytics.trackLead).toHaveBeenCalledWith({
       channel: 'facebook',
       placement: 'contact-section',
     })
@@ -236,8 +239,9 @@ describe('ContactSection', () => {
     expect(booksyButton).toHaveAttribute('target', '_blank')
 
     await clickAnalyticsLink(user, booksyButton)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('CTA Booksy Click', {
+    expect(analytics.trackInitiateCheckout).toHaveBeenCalledWith({
       placement: 'contact-section',
+      destinationUrl: primarySalonLocation.bookingUrl,
     })
   })
 

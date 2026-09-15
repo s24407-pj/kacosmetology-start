@@ -8,7 +8,6 @@ const { useUIMock } = vi.hoisted(() => ({
 }))
 
 vi.mock('@context/UIContext', () => ({ useUI: useUIMock }))
-vi.mock('@libs/analytics', () => ({ trackPlausibleEvent: vi.fn() }))
 vi.mock('@tanstack/react-router', () => ({
   useRouterState: ({ select }: { select: (state: unknown) => unknown }) =>
     select({ location: { pathname: '/galeria', hash: '' } }),

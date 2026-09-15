@@ -4,9 +4,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 let currentHash = ''
 
-vi.mock('@hooks/useScrollDepthTracking', () => ({
-  useScrollDepthTracking: vi.fn(),
-}))
 vi.mock('@tanstack/react-router', () => ({
   useRouterState: ({ select }: { select: (state: unknown) => unknown }) =>
     select({ location: { pathname: '/', hash: currentHash } }),

@@ -6,10 +6,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 
 vi.mock('@libs/analytics', () => ({
-  trackPlausibleEvent: vi.fn(),
+  analytics: {
+    trackInitiateCheckout: vi.fn(),
+    trackLead: vi.fn(),
+  },
 }))
 
-import { trackPlausibleEvent } from '@libs/analytics'
+import { analytics } from '@libs/analytics'
 import Footer from './Footer'
 
 describe('Footer', () => {
@@ -32,7 +35,7 @@ describe('Footer', () => {
     )
 
     await clickAnalyticsLink(user, phoneLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+    expect(analytics.trackLead).toHaveBeenCalledWith({
       channel: 'phone',
       placement: 'footer',
     })
@@ -46,7 +49,7 @@ describe('Footer', () => {
     expect(emailLink).toHaveAttribute('href', `mailto:${brand.email}`)
 
     await clickAnalyticsLink(user, emailLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+    expect(analytics.trackLead).toHaveBeenCalledWith({
       channel: 'email',
       placement: 'footer',
     })
@@ -61,7 +64,7 @@ describe('Footer', () => {
     expect(instagramLink).toHaveAttribute('target', '_blank')
 
     await clickAnalyticsLink(user, instagramLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+    expect(analytics.trackLead).toHaveBeenCalledWith({
       channel: 'instagram',
       placement: 'footer',
     })
@@ -80,7 +83,7 @@ describe('Footer', () => {
     expect(facebookLink).toHaveAttribute('target', '_blank')
 
     await clickAnalyticsLink(user, facebookLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Contact Action Click', {
+    expect(analytics.trackLead).toHaveBeenCalledWith({
       channel: 'facebook',
       placement: 'footer',
     })

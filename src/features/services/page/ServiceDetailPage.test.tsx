@@ -1,20 +1,9 @@
 import '@testing-library/jest-dom/vitest'
 import type { PublicService } from '@app-types/types'
 import { getServiceById } from '@data/services'
-import {
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-  within,
-} from '@testing-library/react'
+import { cleanup, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-const { trackPlausibleEvent } = vi.hoisted(() => ({
-  trackPlausibleEvent: vi.fn(),
-}))
-
-vi.mock('@libs/analytics', () => ({ trackPlausibleEvent }))
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
     to,
@@ -57,7 +46,6 @@ function getTestService(): PublicService {
 describe('ServiceDetailPage', () => {
   afterEach(() => {
     cleanup()
-    trackPlausibleEvent.mockReset()
   })
 
   it('composes optional service content, breadcrumbs and structured data', () => {
@@ -98,15 +86,10 @@ describe('ServiceDetailPage', () => {
     expect(structuredData[1]).toMatchObject({ '@type': 'BreadcrumbList' })
   })
 
-  it('filters non-routable related services and tracks views and related clicks', () => {
+  it('filters non-routable related services', () => {
     const service = getTestService()
     render(<ServiceDetailPage service={service} />)
 
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Service Detail View', {
-      area: service.area,
-      serviceId: service.id,
-      serviceSlug: service.slug,
-    })
     const relatedLink = screen.getByRole('link', {
       name: /Lifting rzęs \+ farbka/,
     })
@@ -117,14 +100,5 @@ describe('ServiceDetailPage', () => {
     expect(
       screen.queryByText('Konsultacja kosmetologiczna online'),
     ).not.toBeInTheDocument()
-
-    relatedLink.addEventListener('click', (event) => event.preventDefault(), {
-      once: true,
-    })
-    fireEvent.click(relatedLink)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Related Service Click', {
-      serviceId: 'service-lifting-rzes-farbka',
-      area: 'cosmetology',
-    })
   })
 })

@@ -17,11 +17,14 @@ vi.mock('@libs/openingHours', async (importOriginal) => ({
 }))
 
 vi.mock('@libs/analytics', () => ({
-  trackPlausibleEvent: vi.fn(),
+  analytics: {
+    trackInitiateCheckout: vi.fn(),
+    trackLead: vi.fn(),
+  },
 }))
 
 import { primarySalonLocation } from '@data/business'
-import { trackPlausibleEvent } from '@libs/analytics'
+import { analytics } from '@libs/analytics'
 import { isSalonOpenNow } from '@libs/openingHours'
 import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import PhoneButton from './PhoneButton'
@@ -56,7 +59,10 @@ describe('PhoneButton', () => {
     )
 
     await clickAnalyticsLink(user, link)
-    expect(trackPlausibleEvent).toHaveBeenCalledWith('Call CTA Click')
+    expect(analytics.trackLead).toHaveBeenCalledWith({
+      channel: 'phone',
+      placement: 'phone-button',
+    })
   })
 
   it('omits the open indicator when the salon is closed', () => {

@@ -12,7 +12,6 @@ vi.mock('@context/UIContext', () => ({
   useUI: () => ({ scrolled: false, isMenuOpen, setIsMenuOpen }),
 }))
 vi.mock('@widgets/actions/PromotionBanner', () => ({ default: () => null }))
-vi.mock('@libs/analytics', () => ({ trackPlausibleEvent: vi.fn() }))
 vi.mock('@libs/utils', () => ({
   cn: (...classes: unknown[]) => classes.filter(Boolean).join(' '),
   scrollToTop: vi.fn(),

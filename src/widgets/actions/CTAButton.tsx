@@ -1,7 +1,7 @@
 import { actionLinkStyles } from '@components/ui'
 import { useUI } from '@context/UIContext'
 import { primarySalonLocation } from '@data/business'
-import { trackPlausibleEvent } from '@libs/analytics'
+import { analytics } from '@libs/analytics'
 import { cn } from '@libs/utils'
 import { Calendar } from 'lucide-react'
 
@@ -19,7 +19,12 @@ export default function CTAButton({ placement = 'navbar' }: CTAButtonProps) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Umów wizytę w Booksy (otwiera nową kartę)"
-        onClick={() => trackPlausibleEvent('CTA Booksy Click', { placement })}
+        onClick={() =>
+          analytics.trackInitiateCheckout({
+            placement,
+            destinationUrl: primarySalonLocation.bookingUrl,
+          })
+        }
         className={cn(
           actionLinkStyles({ size: 'xs' }),
           'h-10 min-h-0 gap-0 leading-none',
