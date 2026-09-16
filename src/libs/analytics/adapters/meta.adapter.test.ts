@@ -35,11 +35,12 @@ describe('createMetaAdapter', () => {
     ).toHaveLength(1)
 
     const stub = window.fbq as typeof window.fbq & { queue: IArguments[] }
-    expect(stub.queue).toHaveLength(1)
+    expect(stub.queue).toHaveLength(2)
     expect(Object.prototype.toString.call(stub.queue[0])).toBe(
       '[object Arguments]',
     )
     expect(Array.from(stub.queue[0])).toEqual(['init', 'meta-123'])
+    expect(Array.from(stub.queue[1])).toEqual(['track', 'PageView'])
   })
 
   it('reuses an existing window.fbq without replacing it', () => {
@@ -51,6 +52,7 @@ describe('createMetaAdapter', () => {
 
     expect(window.fbq).toBe(existing)
     expect(existing).toHaveBeenCalledWith('init', 'meta-123')
+    expect(existing).toHaveBeenCalledWith('track', 'PageView')
   })
 
   it('routes events through callMethod when present', () => {

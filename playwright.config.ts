@@ -1,4 +1,17 @@
 import { defineConfig, devices } from '@playwright/test'
+import { loadEnv } from 'vite'
+
+// Expose VITE_* from .env to the Playwright process (skip gates / assertions).
+const viteEnv = loadEnv(
+  process.env.MODE ?? process.env.NODE_ENV ?? 'production',
+  process.cwd(),
+  'VITE_',
+)
+for (const [key, value] of Object.entries(viteEnv)) {
+  if (process.env[key] === undefined) {
+    process.env[key] = value
+  }
+}
 
 const PORT = 4173
 const HOST = '127.0.0.1'

@@ -64,6 +64,9 @@ export function createMetaAdapter(): AnalyticsAdapter | null {
         'meta-pixel',
       )
       window.fbq('init', pixelId)
+      // Official Meta base code fires PageView on install; SPA route changes
+      // rely on Meta's default History API listener (disablePushState not set).
+      window.fbq('track', 'PageView')
       adapter.isInitialized = true
     },
     trackInitiateCheckout(data: InitiateCheckoutEvent) {
