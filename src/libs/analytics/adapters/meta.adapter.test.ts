@@ -10,12 +10,14 @@ describe('createMetaAdapter', () => {
       script.remove()
     }
     Reflect.deleteProperty(window, 'fbq')
+    Reflect.deleteProperty(window, '_fbq')
     vi.stubEnv('VITE_META_PIXEL_ID', 'meta-123')
   })
 
   afterEach(() => {
     vi.unstubAllEnvs()
     Reflect.deleteProperty(window, 'fbq')
+    Reflect.deleteProperty(window, '_fbq')
   })
 
   it('returns null when pixel id is missing', () => {
@@ -30,6 +32,7 @@ describe('createMetaAdapter', () => {
     adapter?.init()
 
     expect(typeof window.fbq).toBe('function')
+    expect(window._fbq).toBe(window.fbq)
     expect(
       document.querySelectorAll('script[data-analytics-script="meta-pixel"]'),
     ).toHaveLength(1)
@@ -51,6 +54,7 @@ describe('createMetaAdapter', () => {
     adapter?.init()
 
     expect(window.fbq).toBe(existing)
+    expect(window._fbq).toBe(existing)
     expect(existing).toHaveBeenCalledWith('init', 'meta-123')
     expect(existing).toHaveBeenCalledWith('track', 'PageView')
   })

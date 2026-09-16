@@ -5,6 +5,8 @@ declare global {
     dataLayer: unknown[]
     gtag: (...args: unknown[]) => void
     fbq: (...args: unknown[]) => void
+    /** Meta Pixel alias; must remain identical to `fbq` or fbevents warns. */
+    _fbq: (...args: unknown[]) => void
     oaiq: (...args: unknown[]) => void
     plausible: (
       eventName: string,

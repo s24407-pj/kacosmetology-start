@@ -16,6 +16,7 @@ function clearInjectedAnalyticsScripts() {
   Reflect.deleteProperty(window, 'gtag')
   Reflect.deleteProperty(window, 'dataLayer')
   Reflect.deleteProperty(window, 'fbq')
+  Reflect.deleteProperty(window, '_fbq')
   Reflect.deleteProperty(window, 'oaiq')
 }
 
