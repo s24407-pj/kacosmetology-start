@@ -13,7 +13,7 @@ function getMetaPixelId(): string | undefined {
 
 type FbqStub = Window['fbq'] & {
   callMethod?: (...args: unknown[]) => void
-  queue: unknown[]
+  queue: IArguments[]
   loaded: boolean
   version: string
   push: Window['fbq']
@@ -24,12 +24,15 @@ function ensureFbqStub() {
     return
   }
 
-  const fbq = function fbq(...args: unknown[]) {
+  // Official fbevents stub queues Arguments; plain rest arrays can break drain.
+  const fbq = function fbq(..._args: unknown[]) {
     const stub = fbq as FbqStub
     if (stub.callMethod) {
-      stub.callMethod(...args)
+      // biome-ignore lint/complexity/noArguments: required by Meta Pixel queue protocol
+      stub.callMethod.apply(stub, arguments as unknown as unknown[])
     } else {
-      stub.queue.push(args)
+      // biome-ignore lint/complexity/noArguments: required by Meta Pixel queue protocol
+      stub.queue.push(arguments)
     }
   } as FbqStub
 

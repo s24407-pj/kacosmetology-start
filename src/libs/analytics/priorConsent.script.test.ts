@@ -117,11 +117,15 @@ describe('Prior Consent script injection', () => {
       document.querySelector('script[data-analytics-script="openai-pixel"]'),
     ).toHaveAttribute('src', 'https://bzrcdn.openai.com/sdk/oaiq.min.js')
 
-    const consentUpdate = window.dataLayer.find(
-      (entry) =>
-        Array.isArray(entry) && entry[0] === 'consent' && entry[1] === 'update',
-    )
-    expect(consentUpdate).toEqual([
+    const consentUpdate = window.dataLayer.find((entry) => {
+      if (!entry || typeof entry !== 'object') {
+        return false
+      }
+      const command = entry as ArrayLike<unknown>
+      return command[0] === 'consent' && command[1] === 'update'
+    })
+    expect(consentUpdate).toBeTruthy()
+    expect(Array.from(consentUpdate as ArrayLike<unknown>)).toEqual([
       'consent',
       'update',
       {
