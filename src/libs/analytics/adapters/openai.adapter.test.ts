@@ -36,8 +36,10 @@ describe('createOpenAiAdapter', () => {
       'https://bzrcdn.openai.com/sdk/oaiq.min.js',
     )
 
-    const queued = (window.oaiq as unknown as { q: unknown[][] }).q
-    expect(queued).toEqual([['init', { pixelId: 'px-test-123' }]])
+    const queued = (window.oaiq as unknown as { q: IArguments[] }).q
+    expect(queued).toHaveLength(1)
+    expect(Object.prototype.toString.call(queued[0])).toBe('[object Arguments]')
+    expect(Array.from(queued[0])).toEqual(['init', { pixelId: 'px-test-123' }])
   })
 
   it('maps facade events to official measure names and shapes', () => {

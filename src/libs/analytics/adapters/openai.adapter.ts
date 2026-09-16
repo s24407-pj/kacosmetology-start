@@ -20,7 +20,7 @@ function toMinorUnits(value: number): number {
 }
 
 type OaiqStub = ((...args: unknown[]) => void) & {
-  q: unknown[][]
+  q: IArguments[]
 }
 
 function ensureOaiqStub() {
@@ -28,11 +28,11 @@ function ensureOaiqStub() {
     return
   }
 
-  // Official snippet queues `arguments` onto `oaiq.q`; we queue a rest array
-  // with the same call shape for Biome/TS. See:
+  // Official snippet queues Arguments onto oaiq.q — not plain rest arrays.
   // https://developers.openai.com/ads/measurement-pixel
-  const oaiq = function oaiq(...args: unknown[]) {
-    ;(oaiq as OaiqStub).q.push(args)
+  const oaiq = function oaiq(..._args: unknown[]) {
+    // biome-ignore lint/complexity/noArguments: required by OpenAI Pixel queue protocol
+    ;(oaiq as OaiqStub).q.push(arguments)
   } as OaiqStub
 
   oaiq.q = []

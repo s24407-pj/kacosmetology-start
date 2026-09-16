@@ -37,13 +37,18 @@ describe('createGoogleAdapter', () => {
     ).toHaveLength(1)
     expect(window.dataLayer.length).toBeGreaterThan(0)
 
-    const consentDefault = window.dataLayer.find(
-      (entry) =>
-        Array.isArray(entry) &&
-        entry[0] === 'consent' &&
-        entry[1] === 'default',
+    const consentDefault = window.dataLayer.find((entry) => {
+      if (!entry || typeof entry !== 'object') {
+        return false
+      }
+      const command = entry as ArrayLike<unknown>
+      return command[0] === 'consent' && command[1] === 'default'
+    })
+    expect(consentDefault).toBeTruthy()
+    expect(Object.prototype.toString.call(consentDefault)).toBe(
+      '[object Arguments]',
     )
-    expect(consentDefault).toEqual([
+    expect(Array.from(consentDefault as ArrayLike<unknown>)).toEqual([
       'consent',
       'default',
       {

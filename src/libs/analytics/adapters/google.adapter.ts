@@ -33,8 +33,11 @@ export function createGoogleAdapter(): AnalyticsAdapter | null {
       }
 
       window.dataLayer = window.dataLayer || []
-      window.gtag = function gtag(...args: unknown[]) {
-        window.dataLayer.push(args)
+      // gtag.js only drains pre-load queue entries that are Arguments objects,
+      // not plain arrays from rest params — otherwise config/consent never apply.
+      window.gtag = function gtag(..._args: unknown[]) {
+        // biome-ignore lint/complexity/noArguments: required by gtag.js queue protocol
+        window.dataLayer.push(arguments)
       }
 
       // Defaults denied; facade immediately syncs real category grants.

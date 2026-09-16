@@ -34,8 +34,12 @@ describe('createMetaAdapter', () => {
       document.querySelectorAll('script[data-analytics-script="meta-pixel"]'),
     ).toHaveLength(1)
 
-    const stub = window.fbq as typeof window.fbq & { queue: unknown[] }
-    expect(stub.queue).toEqual([['init', 'meta-123']])
+    const stub = window.fbq as typeof window.fbq & { queue: IArguments[] }
+    expect(stub.queue).toHaveLength(1)
+    expect(Object.prototype.toString.call(stub.queue[0])).toBe(
+      '[object Arguments]',
+    )
+    expect(Array.from(stub.queue[0])).toEqual(['init', 'meta-123'])
   })
 
   it('reuses an existing window.fbq without replacing it', () => {
