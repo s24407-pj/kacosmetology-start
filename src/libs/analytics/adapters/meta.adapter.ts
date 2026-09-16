@@ -21,6 +21,10 @@ type FbqStub = Window['fbq'] & {
 
 function ensureFbqStub() {
   if (typeof window.fbq === 'function') {
+    // fbevents.js warns CONFLICTING_VERSIONS when window.fbq !== window._fbq.
+    if (!window._fbq) {
+      window._fbq = window.fbq
+    }
     return
   }
 
@@ -41,6 +45,8 @@ function ensureFbqStub() {
   fbq.version = '2.0'
   fbq.push = fbq
   window.fbq = fbq
+  // Official base code: if (!f._fbq) f._fbq = n
+  window._fbq = fbq
 }
 
 export function createMetaAdapter(): AnalyticsAdapter | null {
