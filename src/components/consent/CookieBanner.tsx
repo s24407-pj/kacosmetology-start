@@ -245,19 +245,19 @@ export function CookieBanner() {
     <>
       {bannerOpen && !preferencesOpen ? (
         <section
-          className="fixed inset-x-0 bottom-0 z-[60] border-t border-border-default bg-surface/95 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-subtle backdrop-blur-sm sm:px-6 sm:pt-6 sm:pb-[max(1.5rem,env(safe-area-inset-bottom))]"
+          className="fixed inset-x-0 bottom-0 z-[60] border-t border-border-default bg-surface/95 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-subtle backdrop-blur-sm sm:px-6 sm:pt-6 sm:pb-[max(1.5rem,env(safe-area-inset-bottom))] lg:px-8 lg:pt-8 lg:pb-[max(2rem,env(safe-area-inset-bottom))]"
           aria-label="Zarządzanie zgodami na pliki cookies"
           aria-describedby="cookie-banner-description"
         >
-          <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-3xl">
               <Heading
                 level={2}
                 variant="utility"
-                className="inline-flex items-center gap-2 font-semibold"
+                className="inline-flex items-center gap-2 font-semibold lg:text-xl"
               >
                 <Cookie
-                  className="h-5 w-5 shrink-0 text-action"
+                  className="h-5 w-5 shrink-0 text-action lg:h-6 lg:w-6"
                   aria-hidden="true"
                   strokeWidth={1.75}
                 />
@@ -265,7 +265,7 @@ export function CookieBanner() {
               </Heading>
               <p
                 id="cookie-banner-description"
-                className="mt-2 text-sm text-text-secondary"
+                className="mt-2 text-sm text-text-secondary lg:mt-3 lg:text-base"
               >
                 Niezbędne cookies zapewniają działanie strony. Za Twoją zgodą
                 używamy też analitycznych i marketingowych — pomagają nam
@@ -281,25 +281,25 @@ export function CookieBanner() {
               </p>
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:shrink-0 lg:flex-nowrap">
               <button
                 type="button"
                 onClick={acceptAll}
-                className={actionLinkStyles({ variant: 'outline', size: 'sm' })}
+                className={`${actionLinkStyles({ variant: 'outline', size: 'sm' })} lg:min-h-12 lg:px-6 lg:py-3 lg:text-base`}
               >
                 Zaakceptuj wszystkie
               </button>
               <button
                 type="button"
                 onClick={rejectAll}
-                className={actionLinkStyles({ variant: 'outline', size: 'sm' })}
+                className={`${actionLinkStyles({ variant: 'outline', size: 'sm' })} lg:min-h-12 lg:px-6 lg:py-3 lg:text-base`}
               >
                 Odrzuć opcjonalne
               </button>
               <button
                 type="button"
                 onClick={openSettings}
-                className={actionLinkStyles({ variant: 'text', size: 'sm' })}
+                className={`${actionLinkStyles({ variant: 'text', size: 'sm' })} lg:min-h-12 lg:px-6 lg:py-3 lg:text-base`}
               >
                 Dostosuj
               </button>
