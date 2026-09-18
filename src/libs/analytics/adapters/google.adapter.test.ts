@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { createGoogleAdapter } from './google.adapter'
+import { createGoogleAdapter, EEA_AND_UK_REGIONS } from './google.adapter'
 
 describe('createGoogleAdapter', () => {
   beforeEach(() => {
@@ -25,7 +25,7 @@ describe('createGoogleAdapter', () => {
     expect(createGoogleAdapter()).toBeNull()
   })
 
-  it('bootstraps gtag with denied consent defaults and config once', () => {
+  it('bootstraps gtag with denied consent defaults scoped to EEA/UK', () => {
     const adapter = createGoogleAdapter()
     expect(adapter).not.toBeNull()
     expect(adapter?.consentCategories).toEqual(['analytics', 'marketing'])
@@ -56,7 +56,60 @@ describe('createGoogleAdapter', () => {
         ad_user_data: 'denied',
         ad_personalization: 'denied',
         analytics_storage: 'denied',
+        region: EEA_AND_UK_REGIONS,
       },
+    ])
+  })
+
+  it('orders consent update before config and emits initial page_view with deduplication', () => {
+    const adapter = createGoogleAdapter()
+    adapter?.init()
+    adapter?.applyConsent?.({ analytics: true, marketing: true })
+
+    const entries = window.dataLayer.map((entry) =>
+      Array.from(entry as ArrayLike<unknown>),
+    )
+
+    const updateIndex = entries.findIndex(
+      (entry) => entry[0] === 'consent' && entry[1] === 'update',
+    )
+    const configIndex = entries.findIndex(
+      (entry) => entry[0] === 'config' && entry[1] === 'G-TEST123',
+    )
+    const pageViewIndex = entries.findIndex(
+      (entry) => entry[0] === 'event' && entry[1] === 'page_view',
+    )
+
+    expect(updateIndex).toBeGreaterThan(-1)
+    expect(configIndex).toBeGreaterThan(-1)
+    expect(pageViewIndex).toBeGreaterThan(-1)
+
+    // Consent update MUST happen before config so container starts in granted state.
+    expect(updateIndex).toBeLessThan(configIndex)
+    expect(configIndex).toBeLessThan(pageViewIndex)
+
+    expect(entries[pageViewIndex]).toEqual([
+      'event',
+      'page_view',
+      { page_path: '/', page_title: undefined },
+    ])
+
+    // Redundant trackPageView on same path does not duplicate
+    adapter?.trackPageView?.({ path: '/' })
+    const pageViewCount = entries.filter(
+      (entry) => entry[0] === 'event' && entry[1] === 'page_view',
+    ).length
+    expect(pageViewCount).toBe(1)
+
+    // Navigation tracks new path
+    adapter?.trackPageView?.({ path: '/galeria', title: 'Galeria' })
+    const lastEntry = Array.from(
+      window.dataLayer[window.dataLayer.length - 1] as ArrayLike<unknown>,
+    )
+    expect(lastEntry).toEqual([
+      'event',
+      'page_view',
+      { page_path: '/galeria', page_title: 'Galeria' },
     ])
   })
 

@@ -1,6 +1,7 @@
 import { injectAsyncScript } from '../script'
 import type {
   AnalyticsAdapter,
+  ConsentSettings,
   InitiateCheckoutEvent,
   LeadEvent,
   PurchaseEvent,
@@ -74,6 +75,13 @@ export function createMetaAdapter(): AnalyticsAdapter | null {
       // rely on Meta's default History API listener (disablePushState not set).
       window.fbq('track', 'PageView')
       adapter.isInitialized = true
+    },
+    applyConsent(settings: ConsentSettings) {
+      if (typeof window === 'undefined' || typeof window.fbq !== 'function') {
+        return
+      }
+
+      window.fbq('consent', settings.marketing ? 'grant' : 'revoke')
     },
     trackInitiateCheckout(data: InitiateCheckoutEvent) {
       window.fbq?.('track', 'InitiateCheckout', {
