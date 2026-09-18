@@ -104,4 +104,18 @@ describe('createMetaAdapter', () => {
       placement: 'banner',
     })
   })
+
+  it('synchronizes consent grant and revoke via fbq consent', () => {
+    const adapter = createMetaAdapter()
+    adapter?.init()
+
+    const fbq = vi.fn()
+    window.fbq = fbq
+
+    adapter?.applyConsent?.({ analytics: false, marketing: true })
+    expect(fbq).toHaveBeenCalledWith('consent', 'grant')
+
+    adapter?.applyConsent?.({ analytics: true, marketing: false })
+    expect(fbq).toHaveBeenCalledWith('consent', 'revoke')
+  })
 })
