@@ -17,10 +17,83 @@ function toConsentState(granted: boolean): 'granted' | 'denied' {
   return granted ? 'granted' : 'denied'
 }
 
+/**
+ * EEA member states plus UK and Switzerland (where GDPR/ePrivacy equivalents apply).
+ * Scoping consent defaults prevents Tag Quality alerts about 100% denied signals outside EEA.
+ */
+export const EEA_AND_UK_REGIONS = [
+  'AT',
+  'BE',
+  'BG',
+  'CH',
+  'CY',
+  'CZ',
+  'DE',
+  'DK',
+  'EE',
+  'ES',
+  'FI',
+  'FR',
+  'GB',
+  'GR',
+  'HR',
+  'HU',
+  'IE',
+  'IS',
+  'IT',
+  'LI',
+  'LT',
+  'LU',
+  'LV',
+  'MT',
+  'NL',
+  'NO',
+  'PL',
+  'PT',
+  'RO',
+  'SE',
+  'SI',
+  'SK',
+] as const
+
 export function createGoogleAdapter(): AnalyticsAdapter | null {
   const measurementId = getGaId()
   if (!measurementId) {
     return null
+  }
+
+  let isConfigured = false
+  let lastTrackedPath: string | null = null
+
+  function ensureConfigured() {
+    if (
+      isConfigured ||
+      typeof window === 'undefined' ||
+      typeof window.gtag !== 'function'
+    ) {
+      return
+    }
+
+    window.gtag('config', measurementId, {
+      send_page_view: false,
+    })
+    isConfigured = true
+  }
+
+  function sendPageView(path: string, title?: string) {
+    if (typeof window === 'undefined' || typeof window.gtag !== 'function') {
+      return
+    }
+
+    if (lastTrackedPath === path) {
+      return
+    }
+
+    lastTrackedPath = path
+    window.gtag('event', 'page_view', {
+      page_path: path,
+      page_title: title,
+    })
   }
 
   const adapter: AnalyticsAdapter = {
@@ -40,17 +113,15 @@ export function createGoogleAdapter(): AnalyticsAdapter | null {
         window.dataLayer.push(arguments)
       }
 
-      // Defaults denied; facade immediately syncs real category grants.
+      // Default denied scoped to EEA/UK; facade immediately syncs real category grants.
       window.gtag('consent', 'default', {
         ad_storage: 'denied',
         ad_user_data: 'denied',
         ad_personalization: 'denied',
         analytics_storage: 'denied',
+        region: EEA_AND_UK_REGIONS,
       })
       window.gtag('js', new Date())
-      window.gtag('config', measurementId, {
-        send_page_view: false,
-      })
 
       injectAsyncScript(
         `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`,
@@ -70,14 +141,31 @@ export function createGoogleAdapter(): AnalyticsAdapter | null {
         ad_user_data: toConsentState(settings.marketing),
         ad_personalization: toConsentState(settings.marketing),
       })
+
+      // Configure container only after updating consent signals so Tag Assistant
+      // / GA4 starts in the resolved consent state, not 'denied'.
+      ensureConfigured()
+
+      if (settings.analytics) {
+        const currentPath =
+          typeof window.location !== 'undefined'
+            ? window.location.pathname
+            : '/'
+        const currentTitle =
+          typeof document !== 'undefined' && document.title.length > 0
+            ? document.title
+            : undefined
+        sendPageView(currentPath, currentTitle)
+      } else {
+        lastTrackedPath = null
+      }
     },
     trackPageView(data: PageViewEvent) {
-      window.gtag?.('event', 'page_view', {
-        page_path: data.path,
-        page_title: data.title,
-      })
+      ensureConfigured()
+      sendPageView(data.path, data.title)
     },
     trackInitiateCheckout(data: InitiateCheckoutEvent) {
+      ensureConfigured()
       window.gtag?.('event', 'begin_checkout', {
         placement: data.placement,
         item_name: data.serviceName,
@@ -87,6 +175,7 @@ export function createGoogleAdapter(): AnalyticsAdapter | null {
       })
     },
     trackPurchase(data: PurchaseEvent) {
+      ensureConfigured()
       window.gtag?.('event', 'purchase', {
         transaction_id: data.bookingId,
         value: data.value,
@@ -95,6 +184,7 @@ export function createGoogleAdapter(): AnalyticsAdapter | null {
       })
     },
     trackLead(data: LeadEvent) {
+      ensureConfigured()
       window.gtag?.('event', 'generate_lead', {
         channel: data.channel,
         placement: data.placement,
