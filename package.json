@@ -51,7 +51,7 @@
     "@axe-core/playwright": "^4.13.0",
     "@biomejs/biome": "^2.5.14",
     "@playwright/test": "^1.63.0",
-    "@tanstack/react-devtools": "0.10.12",
+    "@tanstack/react-devtools": "0.10.13",
     "@tanstack/react-router-devtools": "^1.167.2",
     "@tanstack/router-cli": "^1.167.38",
     "@testing-library/jest-dom": "^7.0.1",
