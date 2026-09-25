@@ -1,4 +1,4 @@
-import { mkdir, readdir } from 'node:fs/promises'
+import { mkdir, readdir, readFile } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
@@ -21,36 +21,55 @@ async function generateVariants(inputPath, outputPrefix, widths, quality = 82) {
   }
 }
 
-async function generateSocialImage(inputPath, outputPath) {
-  await sharp(inputPath)
-    .resize(SOCIAL_IMAGE_WIDTH, SOCIAL_IMAGE_HEIGHT, {
+async function generateSocialImage(inputPath, outputPath, composites = []) {
+  let pipeline = sharp(inputPath).resize(
+    SOCIAL_IMAGE_WIDTH,
+    SOCIAL_IMAGE_HEIGHT,
+    {
       fit: 'cover',
       position: 'centre',
-    })
-    .webp({ quality: 86 })
-    .toFile(outputPath)
+    },
+  )
+  if (composites.length > 0) {
+    pipeline = pipeline.composite(composites)
+  }
+  await pipeline.webp({ quality: 86 }).toFile(outputPath)
   globalThis.console.log(`Generated: ${outputPath}`)
 }
 
+const logoSvg = await readFile(
+  join(__dirname, 'assets/ka-cosmetology-logo.svg'),
+)
 const socialImagesDir = join(publicDir, 'images/social')
 await mkdir(socialImagesDir, { recursive: true })
-for (const [outputName, inputPath] of [
-  ['home.webp', join(publicDir, 'images/gallery/witryna.webp')],
-  ['gallery.webp', join(publicDir, 'images/gallery/lozko.webp')],
+for (const [outputName, inputPath, composites] of [
+  [
+    'home.webp',
+    join(publicDir, 'images/hero.webp'),
+    [{ input: logoSvg, top: 220, left: 90 }],
+  ],
+  ['gallery.webp', join(publicDir, 'images/gallery/lozko.webp'), []],
   [
     'cosmetology.webp',
     join(publicDir, 'images/specializations/cosmetology.webp'),
+    [],
   ],
   [
     'eye-styling.webp',
     join(publicDir, 'images/specializations/eye-styling.webp'),
+    [],
   ],
   [
     'trichology.webp',
     join(publicDir, 'images/specializations/trichology.webp'),
+    [],
   ],
 ]) {
-  await generateSocialImage(inputPath, join(socialImagesDir, outputName))
+  await generateSocialImage(
+    inputPath,
+    join(socialImagesDir, outputName),
+    composites,
+  )
 }
 
 await generateVariants(

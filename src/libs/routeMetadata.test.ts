@@ -48,17 +48,18 @@ describe('createRouteHead', () => {
       { property: 'og:image:type', content: 'image/webp' },
       { property: 'og:image:width', content: '1200' },
       { property: 'og:image:height', content: '630' },
-      { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: `Galeria | ${brand.name}` },
-      { name: 'twitter:description', content: description },
-      {
-        name: 'twitter:image',
-        content: 'https://kacosmetology.pl/images/social/gallery.webp',
-      },
-      {
-        name: 'twitter:image:alt',
-        content: routeSocialImages.gallery.alt,
-      },
     ])
+  })
+})
+
+describe('routeSocialImages', () => {
+  it('exposes the home social image descriptor with the hero photo and practitioner alt text', () => {
+    expect(routeSocialImages.home).toEqual({
+      path: '/images/social/home.webp',
+      alt: 'Katarzyna Suwalska – kosmetolog i trycholog w Ka.Cosmetology w Starogardzie Gdańskim',
+      type: 'image/webp',
+      width: 1200,
+      height: 630,
+    })
   })
 })
