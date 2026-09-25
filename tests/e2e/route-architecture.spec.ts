@@ -141,25 +141,8 @@ test.describe('desktop public metadata', () => {
       await expect(
         page.locator('meta[property="og:image:height"]'),
       ).toHaveAttribute('content', socialImage.height.toString())
-      await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
-        'content',
-        'summary_large_image',
-      )
-      await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute(
-        'content',
-        route.title,
-      )
-      await expect(
-        page.locator('meta[name="twitter:description"]'),
-      ).toHaveAttribute('content', route.description)
-      await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
-        'content',
-        socialImageUrl,
-      )
-      await expect(
-        page.locator('meta[name="twitter:image:alt"]'),
-      ).toHaveAttribute('content', socialImage.alt)
       await expect(page.locator('meta[property="og:image"]')).toHaveCount(1)
+      await expect(page.locator('meta[name^="twitter:"]')).toHaveCount(0)
     })
   }
 })

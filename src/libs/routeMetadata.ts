@@ -11,7 +11,7 @@ export interface SocialImageDescriptor {
 export const routeSocialImages = {
   home: {
     path: '/images/social/home.webp',
-    alt: 'Witryna salonu Ka.Cosmetology w Starogardzie Gdańskim',
+    alt: 'Katarzyna Suwalska – kosmetolog i trycholog w Ka.Cosmetology w Starogardzie Gdańskim',
     type: 'image/webp',
     width: 1200,
     height: 630,
@@ -72,11 +72,6 @@ export function createRouteHead({
       { property: 'og:image:type', content: socialImage.type },
       { property: 'og:image:width', content: socialImage.width.toString() },
       { property: 'og:image:height', content: socialImage.height.toString() },
-      { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: completeTitle },
-      { name: 'twitter:description', content: description },
-      { name: 'twitter:image', content: socialImageUrl },
-      { name: 'twitter:image:alt', content: socialImage.alt },
     ],
     links: [{ rel: 'canonical', href: canonical }],
   }
