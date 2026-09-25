@@ -67,7 +67,7 @@ export function getPrivacyPolicySections(
           type: 'list',
           items: [
             `Kontakt e-mailowy lub telefoniczny zainicjowany przez Ciebie (m.in. poprzez odnośniki mailto i tel na stronie) — art. 6 ust. 1 lit. b RODO (działania przed zawarciem umowy / wykonanie umowy) lub lit. f (uzasadniony interes polegający na odpowiedzi na zapytanie).`,
-            `Umożliwienie rezerwacji wizyty poprzez przekierowanie do zewnętrznego systemu Booksy (${location.bookingUrl}) — art. 6 ust. 1 lit. b RODO; dalsze przetwarzanie odbywa się u Booksy zgodnie z ich regulaminem i polityką prywatności.`,
+            `Umożliwienie rezerwacji wizyty online poprzez nasz system rezerwacji oraz opcjonalnie zewnętrzny system Booksy (${location.bookingUrl}) — art. 6 ust. 1 lit. b RODO (podjęcie działań na żądanie osoby, której dane dotyczą, przed zawarciem umowy oraz wykonanie umowy o świadczenie usług kosmetycznych i trychologicznych).`,
             `Zapewnienie działania i bezpieczeństwa witryny oraz zapamiętanie Twoich wyborów dotyczących cookies (niezbędne pliki i podobne technologie) — art. 6 ust. 1 lit. f RODO (uzasadniony interes: sprawne i bezpieczne działanie serwisu).`,
             `Statystyka ruchu w ujęciu zbiorczym za pomocą cookieless Plausible Analytics (self-hosted) — art. 6 ust. 1 lit. f RODO (uzasadniony interes: zrozumienie, jak korzystacie z witryny, bez profilowania reklamowego).`,
             `Analityka z użyciem Google Analytics — wyłącznie po wyrażeniu zgody w banerze cookies (kategoria „Analityczne”) — art. 6 ust. 1 lit. a RODO.`,
@@ -87,15 +87,17 @@ export function getPrivacyPolicySections(
         {
           type: 'list',
           items: [
+            'Dane podane podczas rezerwacji wizyty online (numer telefonu, imię i nazwisko, ewentualny adres e-mail, kod weryfikacyjny SMS oraz historia rezerwacji).',
+            'Dane sesji klienta w localStorage przeglądarki (klucz ka_customer_token) niezbędne do utrzymania bezpiecznej sesji i zarządzania wizytami.',
             'Dane podane w korespondencji e-mail lub rozmowie telefonicznej (np. imię, treść zapytania, numer telefonu, adres e-mail).',
             'Dane techniczne związane z wizytą na stronie (np. adres IP w logach serwera, typ przeglądarki, przybliżona lokalizacja na poziomie zagregowanym — w zakresie wynikającym z konfiguracji narzędzi).',
             'Identyfikatory cookies i podobnych technologii oraz zdarzenia analityczne/marketingowe — gdy wyrazisz na to zgodę.',
-            'Parametry atrybucji kampanii przechowywane w sessionStorage przeglądarki (np. utm_*, gclid, fbclid, referrer) na potrzeby powiązania działań rezerwacyjnych z kampanią — bez osobnego konta użytkownika na stronie.',
+            'Parametry atrybucji kampanii przechowywane w sessionStorage przeglądarki (np. utm_*, gclid, fbclid, referrer) na potrzeby powiązania działań rezerwacyjnych z kampanią.',
           ],
         },
         {
           type: 'paragraph',
-          text: 'Na stronie nie prowadzimy kont użytkowników, formularza kontaktowego ani newslettera. Nie zbieramy danych wyłącznie przez pola formularza w witrynie.',
+          text: 'Dane w systemie rezerwacji podajesz dobrowolnie w celu umówienia wizyty i otrzymania potwierdzenia SMS.',
         },
       ],
     },

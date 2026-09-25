@@ -312,26 +312,21 @@ for (const [path, title] of [
   })
 }
 
-test('booking actions lead directly to Booksy and the legacy route redirects', async ({
+test('reservation route renders first-party booking page', async ({
   page,
   request,
 }) => {
-  await ready(page, '/')
-  const booksy = page.locator('#hero').getByRole('link', {
-    name: 'Umów wizytę w Booksy (otwiera nową kartę)',
-    exact: true,
-  })
-  await expect(booksy).toBeVisible()
-  await expect(booksy).toHaveAttribute(
-    'href',
-    'https://kacosmetology.booksy.com',
-  )
-  await expect(booksy).toHaveAttribute('target', '_blank')
-  await expect(page.locator('a[href^="/rezerwacja"]')).toHaveCount(0)
+  const response = await request.get('/rezerwacja')
+  expect(response.status()).toBe(200)
 
-  const response = await request.get('/rezerwacja', { maxRedirects: 0 })
-  expect(response.status()).toBe(307)
-  expect(response.headers().location).toBe('https://kacosmetology.booksy.com')
+  await ready(page, '/rezerwacja')
+  await expect(
+    page.getByRole('heading', { level: 1, name: /Umów wizytę w salonie/i }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('tab', { name: /Nowa rezerwacja/i }),
+  ).toBeVisible()
+  await expect(page.getByRole('tab', { name: /Moje wizyty/i })).toBeVisible()
 })
 
 test('legacy eye-styling service URLs redirect permanently', async ({
@@ -365,7 +360,7 @@ test('desktop navigation exposes home sections and keeps its CTA aligned', async
     name: 'Główna nawigacja',
   })
   const cta = navigation.getByRole('link', {
-    name: /Umów wizytę w Booksy/,
+    name: /Umów wizytę/,
   })
   const ctaLabel = cta.getByText('Umów się')
 

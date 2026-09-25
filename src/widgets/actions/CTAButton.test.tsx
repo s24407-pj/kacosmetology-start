@@ -16,7 +16,6 @@ vi.mock('@libs/analytics', () => ({
 
 import type { UIContextType } from '@app-types/types'
 import { useUI } from '@context/UIContext'
-import { primarySalonLocation } from '@data/business'
 import { analytics } from '@libs/analytics'
 import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import CTAButton from './CTAButton'
@@ -66,20 +65,19 @@ describe('CTAButton', () => {
     expect(label.parentElement).toHaveAttribute('aria-hidden', 'true')
   })
 
-  it('tracks clicks with the provided placement', async () => {
+  it('tracks clicks with the provided placement and links to /rezerwacja', async () => {
     useUIMock.mockReturnValue(createContextValue({ scrolled: false }))
     const user = userEvent.setup()
 
     render(<CTAButton placement="footer" />)
 
-    const link = screen.getByRole('link', { name: /Umów wizytę w Booksy/ })
-    expect(link).toHaveAttribute('href', primarySalonLocation.bookingUrl)
-    expect(link).toHaveAttribute('target', '_blank')
+    const link = screen.getByRole('link', { name: /Umów wizytę/ })
+    expect(link).toHaveAttribute('href', '/rezerwacja')
     await clickAnalyticsLink(user, link)
 
     expect(analytics.trackInitiateCheckout).toHaveBeenCalledWith({
       placement: 'footer',
-      destinationUrl: primarySalonLocation.bookingUrl,
+      destinationUrl: '/rezerwacja',
     })
   })
 })

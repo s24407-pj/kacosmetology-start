@@ -68,8 +68,8 @@ describe('NavBar', () => {
       '/#kontakt',
     )
     expect(
-      screen.getByRole('link', { name: /Umów wizytę w Booksy/ }),
-    ).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
+      screen.getByRole('link', { name: /Umów wizytę online/ }),
+    ).toHaveAttribute('href', '/rezerwacja')
   })
 
   it('animates a desktop link underline and keeps it visible for the active item', () => {
