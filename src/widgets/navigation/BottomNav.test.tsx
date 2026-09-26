@@ -11,14 +11,17 @@ vi.mock('@context/UIContext', () => ({ useUI: useUIMock }))
 vi.mock('@tanstack/react-router', () => ({
   useRouterState: ({ select }: { select: (state: unknown) => unknown }) =>
     select({ location: { pathname: '/galeria', hash: '' } }),
+  useHydrated: () => true,
   Link: ({
     to,
     hash,
+    activeOptions: _activeOptions,
     children,
     ...props
   }: AnchorHTMLAttributes<HTMLAnchorElement> & {
     to: string
     hash?: string
+    activeOptions?: { includeHash?: boolean }
     children: ReactNode
   }) => (
     <a href={`${to}${hash ? `#${hash}` : ''}`} {...props}>

@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright'
-import { brand } from '@data/business'
+import { brand, primarySalonLocation } from '@data/business'
 import { getPublicServicePath, services } from '@data/services'
 import {
   routeSocialImages,
@@ -394,7 +394,35 @@ test('desktop navigation exposes home sections and keeps its CTA aligned', async
   expect(centerOffset).toBeLessThanOrEqual(1)
 })
 
-test('navigation retries deferred home hash scrolling from another route', async ({
+test('home server HTML contains reviews, contact facts and real stats', async ({
+  request,
+}) => {
+  const html = await (await request.get('/')).text()
+
+  expect(html).toContain('id="o-mnie"')
+  expect(html).toContain('id="opinie"')
+  expect(html).toContain('id="kontakt"')
+  expect(html).toContain('Godziny otwarcia')
+  expect(html).toContain(primarySalonLocation.address.streetAddress)
+  expect(html).toContain(
+    primarySalonLocation.map.embedUrl.replaceAll('&', '&amp;'),
+  )
+  expect(html).not.toMatch(/>0<\/span>\+/)
+})
+
+for (const [path, sectionId] of [
+  ['/#opinie', 'opinie'],
+  ['/#kontakt', 'kontakt'],
+  ['/galeria#efekty', 'efekty'],
+  ['/galeria#gabinet', 'gabinet'],
+] as const) {
+  test(`direct load of ${path} scrolls to its section`, async ({ page }) => {
+    await ready(page, path)
+    await expect(page.locator(`#${sectionId}`)).toBeInViewport()
+  })
+}
+
+test('navigation scrolls to home hash sections from another route', async ({
   page,
   isMobile,
 }) => {

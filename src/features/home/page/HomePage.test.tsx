@@ -1,18 +1,11 @@
-import '@testing-library/jest-dom/vitest'
-import { act, cleanup, render, screen } from '@testing-library/react'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { renderToString } from 'react-dom/server'
+import { describe, expect, it, vi } from 'vitest'
 
-let currentHash = ''
-
-vi.mock('@tanstack/react-router', () => ({
-  useRouterState: ({ select }: { select: (state: unknown) => unknown }) =>
-    select({ location: { pathname: '/', hash: currentHash } }),
-}))
 vi.mock('../sections/HeroSection', () => ({
-  default: () => <section>Hero</section>,
+  default: () => <section id="hero">Hero</section>,
 }))
 vi.mock('../sections/AboutSection', () => ({
-  default: () => <section>O mnie</section>,
+  default: () => <section id="o-mnie">O mnie</section>,
 }))
 vi.mock('../sections/ProcessSection', () => ({
   default: () => <section>Proces</section>,
@@ -35,97 +28,29 @@ vi.mock('@features/contact/sections/GoogleMap', () => ({
 
 import HomePage from './HomePage'
 
-let idleCallback: IdleRequestCallback | undefined
-
 describe('HomePage', () => {
-  beforeEach(() => {
-    currentHash = ''
-    idleCallback = undefined
-    vi.spyOn(document, 'readyState', 'get').mockReturnValue('complete')
-    vi.stubGlobal(
-      'requestIdleCallback',
-      vi.fn((callback: IdleRequestCallback) => {
-        idleCallback = callback
-        return 1
-      }),
-    )
-    vi.stubGlobal('cancelIdleCallback', vi.fn())
+  it('server-renders every home section in document order', () => {
+    const html = renderToString(<HomePage />)
+
+    const sections = [
+      'Hero',
+      'Kosmetologia i Trychologia',
+      'O mnie',
+      'Proces',
+      'Holistycznie znaczy czule.',
+      'id="opinie"',
+      'id="kontakt"',
+      'Mapa Google',
+    ]
+    const positions = sections.map((text) => html.indexOf(text))
+    expect(positions.every((position) => position >= 0)).toBe(true)
+    expect(positions).toEqual([...positions].sort((a, b) => a - b))
   })
 
-  afterEach(() => {
-    cleanup()
-    Reflect.deleteProperty(Element.prototype, 'scrollIntoView')
-    vi.restoreAllMocks()
-    vi.unstubAllGlobals()
-  })
+  it('server-renders the BeautySalon structured data', () => {
+    const html = renderToString(<HomePage />)
 
-  it('keeps below-fold sections off the initial render path', () => {
-    render(<HomePage />)
-    expect(screen.getByText('Hero')).toBeInTheDocument()
-    expect(screen.getByText('Kosmetologia i Trychologia')).toBeInTheDocument()
-    expect(screen.getByText('Holistycznie znaczy czule.')).toBeInTheDocument()
-    expect(screen.queryByText('Opinie')).not.toBeInTheDocument()
-    expect(screen.queryByText('Kontakt')).not.toBeInTheDocument()
-    expect(screen.queryByText('Mapa Google')).not.toBeInTheDocument()
-    expect(screen.queryByText('ServicesSection')).not.toBeInTheDocument()
-    expect(screen.queryByText('Galeria')).not.toBeInTheDocument()
-  })
-
-  it('mounts below-fold sections when idle work runs', async () => {
-    render(<HomePage />)
-
-    act(() => {
-      idleCallback?.({ didTimeout: false, timeRemaining: () => 10 })
-    })
-
-    expect(await screen.findByText('Opinie')).toBeInTheDocument()
-    expect(screen.getByText('Kontakt')).toBeInTheDocument()
-    expect(screen.getByText('Mapa Google')).toBeInTheDocument()
-  })
-
-  it('mounts a directly requested deferred section and retries scrolling', async () => {
-    currentHash = 'kontakt'
-    const scrollIntoView = vi.fn()
-    Object.defineProperty(Element.prototype, 'scrollIntoView', {
-      configurable: true,
-      value: scrollIntoView,
-    })
-
-    render(<HomePage />)
-
-    expect(await screen.findByText('Kontakt')).toBeInTheDocument()
-    await vi.waitFor(() => {
-      expect(scrollIntoView).toHaveBeenCalledWith({
-        behavior: 'smooth',
-        block: 'start',
-      })
-    })
-  })
-
-  it('uses instant scrolling for a directly requested section with reduced motion', async () => {
-    currentHash = 'kontakt'
-    const scrollIntoView = vi.fn()
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: vi.fn().mockReturnValue({
-        matches: true,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-      }),
-    })
-    Object.defineProperty(Element.prototype, 'scrollIntoView', {
-      configurable: true,
-      value: scrollIntoView,
-    })
-
-    render(<HomePage />)
-
-    expect(await screen.findByText('Kontakt')).toBeInTheDocument()
-    await vi.waitFor(() => {
-      expect(scrollIntoView).toHaveBeenCalledWith({
-        behavior: 'auto',
-        block: 'start',
-      })
-    })
+    expect(html).toContain('<script type="application/ld+json">')
+    expect(html).toContain('"@type":"BeautySalon"')
   })
 })

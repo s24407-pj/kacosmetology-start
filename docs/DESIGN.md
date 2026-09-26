@@ -41,8 +41,11 @@ Canonical ownership matters because most changes cross several rendered views:
   `src/features/legal/content/` and must stay aligned with real consent,
   analytics, and personal-data behavior on the site.
 - `navigation.ts` owns top-level route labels and destinations. TanStack Router
-  owns current-route state; `HomePage` retries scrolling when a lazy home hash
-  target mounts.`src/features/home/page/HomePage.test.tsx`,
+  owns current-route state and hash scrolling; every hash target is in the SSR
+  HTML, so native fragment scrolling and the router's `hashScrollIntoView`
+  need no custom retry. Hash-based active state waits for `useHydrated()`
+  because the server never receives the fragment.
+  `src/widgets/navigation/NavBar.test.tsx`,
   `tests/e2e/route-architecture.spec.ts`.
 
 ## Route architecture
@@ -53,7 +56,7 @@ catalog, price history, or gallery implementation. `/kosmetologia`,
 routes split loaders from components and reject wrong-specialization and
 online-only details. Booking actions link directly to the canonical Booksy
 profile; `/rezerwacja` remains only as an external compatibility redirect.
-`/galeria` owns effects and cabinet images with local lazy recovery.
+`/galeria` owns effects and cabinet images.
 
 ## Public interfaces and data flow
 
@@ -83,12 +86,15 @@ renders the disclosure.
 render-time boundary. Price history and authored configuration are immutable;
 components do not mutate process-wide data during render.
 
-Eager home content renders normally. Below-fold sections mount after load/idle
-or direct hash demand, and each is wrapped in its own
-`DeferredSectionBoundary`. A rejected lazy chunk therefore replaces only that
-section with Polish recovery UI; reload remains user-triggered.
+Pages render every section on the server, including reviews, contact facts,
+and opening hours, because this is local-SEO content. Code splitting stays at
+the route level; section-level `lazy()` would add a chunk waterfall for a few
+kilobytes. Heavy third-party content is deferred natively: the Google Maps
+iframe and below-fold images use `loading="lazy"`. Browser-only preferences
+(`useReducedMotion`) use a server snapshot so the first client render matches
+the SSR HTML, and count-up stats server-render their final values.
 `src/features/home/page/HomePage.test.tsx`,
-`src/features/home/components/DeferredSectionBoundary.test.tsx`.
+`src/hooks/useReducedMotion.test.tsx`, `src/hooks/useCountUp.test.tsx`.
 
 `scheduleDeferredWork` owns deferred font loading after first scroll or a
 4-second fallback. Analytics boots early via `AnalyticsBootstrap` /
@@ -174,9 +180,6 @@ required) before considering the change done.
   as explicit monthly records. Consequence: extending or changing it requires
   synchronized edits and review of repeated copy, although validation protects
   IDs, dates, and catalog references.
-- **Low, newly discovered and untriaged.** The local
-  `useDeferredSections` name hides that it is a one-way mount-policy gate.
-  Consequence: name-only navigation requires reading its body.
 
 The repository contains no registry of out-of-repository consumers. That means
 none can be discovered here, not that none exist. Re-check with the relevant

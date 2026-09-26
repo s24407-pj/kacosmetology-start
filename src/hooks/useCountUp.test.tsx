@@ -21,40 +21,45 @@ function Counter({
   )
 }
 
+function mockMatchMedia(reducedMotion: boolean) {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: vi.fn().mockImplementation((query: string) => ({
+      matches: reducedMotion && query === '(prefers-reduced-motion: reduce)',
+      media: query,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })) as typeof window.matchMedia,
+  })
+}
+
 describe('useCountUp', () => {
   let rafCallback: FrameRequestCallback | null = null
+  let observerCallback: IntersectionObserverCallback | null = null
   let observeMock: ReturnType<typeof vi.fn>
+
+  const intersect = (isIntersecting: boolean) => {
+    act(() => {
+      observerCallback?.(
+        [{ isIntersecting } as IntersectionObserverEntry],
+        {} as IntersectionObserver,
+      )
+    })
+  }
 
   beforeEach(() => {
     rafCallback = null
+    observerCallback = null
     observeMock = vi.fn()
-
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: vi.fn().mockImplementation((query: string) => ({
-        matches: false,
-        media: query,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      })) as typeof window.matchMedia,
-    })
+    mockMatchMedia(false)
 
     vi.stubGlobal(
       'IntersectionObserver',
       vi.fn(function (this: void, callback: IntersectionObserverCallback) {
+        observerCallback = callback
         return {
-          observe: observeMock.mockImplementation((element: Element) => {
-            callback(
-              [
-                {
-                  isIntersecting: true,
-                  target: element,
-                } as IntersectionObserverEntry,
-              ],
-              {} as IntersectionObserver,
-            )
-          }),
+          observe: observeMock,
           disconnect: vi.fn(),
           unobserve: vi.fn(),
         }
@@ -65,6 +70,7 @@ describe('useCountUp', () => {
       rafCallback = callback
       return 1
     })
+    vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {})
     vi.spyOn(performance, 'now').mockReturnValue(0)
   })
 
@@ -74,37 +80,52 @@ describe('useCountUp', () => {
     vi.restoreAllMocks()
   })
 
+  it('server-renders the final value so crawlers and first paint see it', () => {
+    mockMatchMedia(true)
+
+    const html = renderToString(<Counter target={5} decimals={1} />)
+    expect(html).toContain('5.0')
+  })
+
   it('shows the final value immediately when reduced motion is preferred', () => {
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: vi.fn().mockImplementation((query: string) => ({
-        matches: query === '(prefers-reduced-motion: reduce)',
-        media: query,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      })) as typeof window.matchMedia,
-    })
+    mockMatchMedia(true)
 
     render(<Counter target={42} />)
 
     expect(screen.getByTestId('counter')).toHaveTextContent('42')
+    expect(observeMock).not.toHaveBeenCalled()
   })
 
-  it('renders initial formatted zero on server-side render to prevent hydration mismatch', () => {
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: vi.fn().mockImplementation((query: string) => ({
-        matches: query === '(prefers-reduced-motion: reduce)',
-        media: query,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      })) as typeof window.matchMedia,
-    })
+  it('keeps the final value for a counter already visible on mount', async () => {
+    render(<Counter target={42} />)
+    await waitFor(() => expect(observeMock).toHaveBeenCalled())
 
-    const html = renderToString(<Counter target={5} decimals={1} />)
-    expect(html).toContain('0.0')
+    intersect(true)
+
+    expect(screen.getByTestId('counter')).toHaveTextContent('42')
+    expect(rafCallback).toBeNull()
+  })
+
+  it('resets an off-screen counter and animates it when it enters the viewport', async () => {
+    render(<Counter target={100} duration={1000} />)
+    expect(screen.getByTestId('counter')).toHaveTextContent('100')
+    await waitFor(() => expect(observeMock).toHaveBeenCalled())
+
+    intersect(false)
+    expect(screen.getByTestId('counter')).toHaveTextContent('0')
+
+    intersect(true)
+    expect(rafCallback).not.toBeNull()
+
+    act(() => {
+      rafCallback?.(500)
+    })
+    expect(screen.getByTestId('counter')).toHaveTextContent('88')
+
+    act(() => {
+      rafCallback?.(1000)
+    })
+    expect(screen.getByTestId('counter')).toHaveTextContent('100')
   })
 
   it('finishes immediately when reduced motion is enabled during the animation', async () => {
@@ -125,6 +146,12 @@ describe('useCountUp', () => {
 
     render(<Counter target={42} />)
     await waitFor(() => expect(observeMock).toHaveBeenCalled())
+    intersect(false)
+    intersect(true)
+    act(() => {
+      rafCallback?.(100)
+    })
+    expect(screen.getByTestId('counter')).not.toHaveTextContent('42')
 
     act(() => {
       media.matches = true
@@ -132,26 +159,6 @@ describe('useCountUp', () => {
     })
 
     expect(screen.getByTestId('counter')).toHaveTextContent('42')
-  })
-
-  it('animates toward the target when the element enters the viewport', async () => {
-    const { rerender } = render(<Counter target={100} duration={1000} />)
-
-    expect(screen.getByTestId('counter')).toHaveTextContent('0')
-
-    rerender(<Counter target={100} duration={1001} />)
-
-    await waitFor(() => expect(observeMock).toHaveBeenCalled())
-    await waitFor(() => expect(rafCallback).not.toBeNull())
-
-    act(() => {
-      rafCallback?.(500)
-    })
-    expect(screen.getByTestId('counter')).toHaveTextContent('88')
-
-    act(() => {
-      rafCallback?.(1000)
-    })
-    expect(screen.getByTestId('counter')).toHaveTextContent('100')
+    expect(window.cancelAnimationFrame).toHaveBeenCalled()
   })
 })

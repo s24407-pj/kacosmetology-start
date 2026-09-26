@@ -1,20 +1,22 @@
 import { prefersReducedMotion, REDUCED_MOTION_QUERY } from '@libs/reducedMotion'
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 
 export { prefersReducedMotion }
 
+function subscribe(onChange: () => void) {
+  const media = window.matchMedia?.(REDUCED_MOTION_QUERY)
+  if (!media) return () => {}
+
+  media.addEventListener('change', onChange)
+  return () => media.removeEventListener('change', onChange)
+}
+
+const getServerSnapshot = () => false
+
 export function useReducedMotion(): boolean {
-  const [reducedMotion, setReducedMotion] = useState(prefersReducedMotion)
-
-  useEffect(() => {
-    const media = window.matchMedia?.(REDUCED_MOTION_QUERY)
-    if (!media) return
-
-    const onChange = () => setReducedMotion(media.matches)
-    onChange()
-    media.addEventListener('change', onChange)
-    return () => media.removeEventListener('change', onChange)
-  }, [])
-
-  return reducedMotion
+  return useSyncExternalStore(
+    subscribe,
+    prefersReducedMotion,
+    getServerSnapshot,
+  )
 }

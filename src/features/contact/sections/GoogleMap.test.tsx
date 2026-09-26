@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest'
 import { brand, primarySalonLocation } from '@data/business'
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import GoogleMap from './GoogleMap'
 
@@ -28,16 +28,13 @@ describe('GoogleMap', () => {
     expect(sandboxAttr).not.toContain('allow-same-origin')
   })
 
-  it('removes the loading skeleton after the iframe loads', () => {
+  it('keeps a stateless placeholder behind the iframe', () => {
     const { container } = render(<GoogleMap />)
     const iframe = container.querySelector('iframe')
-    const mapCard = iframe?.parentElement
-    const skeleton = mapCard?.querySelector(':scope > div')
+    const skeleton = iframe?.previousElementSibling
 
-    expect(skeleton).toBeInTheDocument()
-
-    fireEvent.load(iframe!)
-
-    expect(mapCard?.querySelector(':scope > div')).not.toBeInTheDocument()
+    expect(skeleton).toHaveAttribute('aria-hidden', 'true')
+    expect(skeleton).toHaveClass('absolute', 'inset-0')
+    expect(iframe).toHaveClass('relative')
   })
 })

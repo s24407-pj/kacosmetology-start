@@ -7,6 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 const setIsMenuOpen = vi.fn()
 let isMenuOpen = false
 let location = { pathname: '/', hash: '' }
+let hydrated = true
 
 vi.mock('@context/UIContext', () => ({
   useUI: () => ({ scrolled: false, isMenuOpen, setIsMenuOpen }),
@@ -19,6 +20,7 @@ vi.mock('@libs/utils', () => ({
 vi.mock('@tanstack/react-router', () => ({
   useRouterState: ({ select }: { select: (state: unknown) => unknown }) =>
     select({ location }),
+  useHydrated: () => hydrated,
   Link: ({
     to,
     hash,
@@ -44,9 +46,22 @@ describe('NavBar', () => {
   beforeEach(() => {
     isMenuOpen = false
     location = { pathname: '/', hash: '' }
+    hydrated = true
     vi.clearAllMocks()
   })
   afterEach(cleanup)
+
+  it('marks the hash section as current only after hydration', () => {
+    location = { pathname: '/', hash: 'kontakt' }
+    hydrated = false
+    const { rerender } = render(<NavBar />)
+    const kontakt = screen.getAllByRole('link', { name: 'Kontakt' })[0]
+    expect(kontakt).not.toHaveAttribute('aria-current')
+
+    hydrated = true
+    rerender(<NavBar />)
+    expect(kontakt).toHaveAttribute('aria-current', 'page')
+  })
 
   it('renders route-oriented desktop navigation', () => {
     render(<NavBar />)
