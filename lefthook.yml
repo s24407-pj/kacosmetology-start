@@ -14,7 +14,7 @@ pre-commit:
     diff-check:
       run: git diff --cached --check
     production-data:
-      glob: "{scripts/check-production-data.mjs,src/data/{services,promotion,servicePriceHistory,specializations,serviceValidation}.ts}"
+      glob: "{scripts/check-production-data.mjs,src/data/{services,promotion,promotionValidation,servicePriceHistory,specializations,serviceValidation}.ts}"
       run: pnpm check:production-data
     public-metadata:
       glob: "{scripts/generate-public-metadata.mjs,src/data/{business,services}.ts,src/libs/publicMetadata.ts,public/{sitemap.xml,robots.txt,llms.txt,site.webmanifest}}"

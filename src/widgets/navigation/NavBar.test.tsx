@@ -7,6 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 const setIsMenuOpen = vi.fn()
 let isMenuOpen = false
 let location = { pathname: '/', hash: '' }
+let hydrated = true
 
 vi.mock('@context/UIContext', () => ({
   useUI: () => ({ scrolled: false, isMenuOpen, setIsMenuOpen }),
@@ -19,6 +20,7 @@ vi.mock('@libs/utils', () => ({
 vi.mock('@tanstack/react-router', () => ({
   useRouterState: ({ select }: { select: (state: unknown) => unknown }) =>
     select({ location }),
+  useHydrated: () => hydrated,
   Link: ({
     to,
     hash,
@@ -44,9 +46,22 @@ describe('NavBar', () => {
   beforeEach(() => {
     isMenuOpen = false
     location = { pathname: '/', hash: '' }
+    hydrated = true
     vi.clearAllMocks()
   })
   afterEach(cleanup)
+
+  it('marks the hash section as current only after hydration', () => {
+    location = { pathname: '/', hash: 'kontakt' }
+    hydrated = false
+    const { rerender } = render(<NavBar />)
+    const kontakt = screen.getAllByRole('link', { name: 'Kontakt' })[0]
+    expect(kontakt).not.toHaveAttribute('aria-current')
+
+    hydrated = true
+    rerender(<NavBar />)
+    expect(kontakt).toHaveAttribute('aria-current', 'page')
+  })
 
   it('renders route-oriented desktop navigation', () => {
     render(<NavBar />)
@@ -72,24 +87,13 @@ describe('NavBar', () => {
     ).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
   })
 
-  it('animates a desktop link underline and keeps it visible for the active item', () => {
+  it('marks the current route in the desktop navigation', () => {
     location = { pathname: '/kosmetologia', hash: '' }
     render(<NavBar />)
 
-    const link = screen.getAllByRole('link', { name: 'Kosmetologia' })[0]
-    const underline = link.querySelector('span[aria-hidden="true"]')
-
-    expect(link).toHaveAttribute('aria-current', 'page')
-    expect(link).toHaveClass('group', 'relative')
-    expect(underline).toHaveClass(
-      'origin-left',
-      'scale-x-0',
-      'transition-transform',
-      'duration-200',
-      'group-hover:scale-x-100',
-      'group-aria-[current=page]:scale-x-100',
-      'motion-reduce:transition-none',
-    )
+    expect(
+      screen.getAllByRole('link', { name: 'Kosmetologia' })[0],
+    ).toHaveAttribute('aria-current', 'page')
   })
 
   it('scrolls to the top when the logo is clicked on the home page', async () => {

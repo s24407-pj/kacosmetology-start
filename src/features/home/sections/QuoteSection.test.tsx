@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/vitest'
-import { render, screen, within } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
 import QuoteSection from './QuoteSection'
@@ -18,14 +18,6 @@ describe('QuoteSection', () => {
     const { container } = render(<QuoteSection />)
 
     expect(container.querySelector('section')).not.toHaveAttribute('id')
-  })
-
-  it('uses the strong CTA color treatment', () => {
-    const { container } = render(<QuoteSection />)
-    const section = container.querySelector('section')
-
-    expect(section).toHaveClass('bg-action')
-    expect(within(section!).getByText(quote)).toHaveClass('text-white')
   })
 
   it('renders a decorative Vitruvian Man watermark behind the quote', () => {

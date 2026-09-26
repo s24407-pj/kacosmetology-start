@@ -269,19 +269,19 @@ describe('ContactSection', () => {
       ['sobota', '09:00 - 14:00'],
       ['niedziela', 'Zamknięte'],
     ]
-    const openingHoursCard = screen
-      .getByText('Godziny otwarcia')
-      .closest('div.p-6')
-    expect(openingHoursCard).toBeInTheDocument()
-
-    const renderedRows = Array.from(
-      openingHoursCard!.querySelectorAll(
-        '.space-y-4 > div.flex.justify-between',
-      ),
-      (row) => Array.from(row.children, (cell) => cell.textContent?.trim()),
-    )
+    const labels = expectedRows.map(([day]) => screen.getByText(day))
+    const renderedRows = labels.map((label) => [
+      label.textContent,
+      label.nextElementSibling?.textContent?.trim(),
+    ])
 
     expect(renderedRows).toEqual(expectedRows)
+    for (const [index, label] of labels.slice(1).entries()) {
+      expect(
+        labels[index].compareDocumentPosition(label) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).not.toBe(0)
+    }
   })
 
   it('shows the current overall open and closed badge copy', () => {

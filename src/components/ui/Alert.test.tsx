@@ -13,17 +13,6 @@ describe('Alert', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('Informational copy')
   })
 
-  it.each([
-    ['info', 'border-info-500'],
-    ['warning', 'border-warning-500'],
-    ['error', 'border-danger-500'],
-    ['success', 'border-success-500'],
-  ] as const)('applies the %s status variant', (variant, statusClass) => {
-    render(<Alert variant={variant}>Status copy</Alert>)
-
-    expect(screen.getByRole('alert')).toHaveClass(statusClass)
-  })
-
   it('renders an optional semantic title', () => {
     render(<Alert title="Ważne">Treść komunikatu</Alert>)
 

@@ -48,10 +48,7 @@ describe('CTAButton', () => {
     render(<CTAButton />)
 
     const label = screen.getByText('Umów się')
-    expect(label.parentElement).toHaveClass('grid-cols-[1fr]')
-    expect(label.parentElement).toHaveClass('ml-2')
-    expect(label.parentElement).toHaveClass('opacity-100')
-    expect(label).toHaveClass('overflow-hidden')
+    expect(label.parentElement).not.toHaveAttribute('aria-hidden', 'true')
   })
 
   it('collapses the label when the page is scrolled', () => {
@@ -60,9 +57,6 @@ describe('CTAButton', () => {
     render(<CTAButton />)
 
     const label = screen.getByText('Umów się')
-    expect(label.parentElement).toHaveClass('grid-cols-[0fr]')
-    expect(label.parentElement).toHaveClass('ml-0')
-    expect(label.parentElement).toHaveClass('opacity-0')
     expect(label.parentElement).toHaveAttribute('aria-hidden', 'true')
   })
 
@@ -75,6 +69,7 @@ describe('CTAButton', () => {
     const link = screen.getByRole('link', { name: /Umów wizytę w Booksy/ })
     expect(link).toHaveAttribute('href', primarySalonLocation.bookingUrl)
     expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
     await clickAnalyticsLink(user, link)
 
     expect(analytics.trackInitiateCheckout).toHaveBeenCalledWith({

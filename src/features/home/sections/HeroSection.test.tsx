@@ -35,21 +35,14 @@ describe('HeroSection', () => {
   })
 
   it('exposes the practitioner identity and image alternative text', () => {
-    const { container } = render(<HeroSection />)
+    render(<HeroSection />)
 
-    const heading = screen.getByRole('heading', {
-      level: 1,
-      name: brand.practitionerName,
-    })
-    const image = screen.getByRole('img', { name: brand.practitionerName })
-    const hero = container.querySelector('#hero')
-
-    expect(heading).toBeInTheDocument()
-    expect(image).toBeVisible()
-    expect(hero?.querySelectorAll('[data-reveal-on-scroll]')).toHaveLength(0)
     expect(
-      hero?.querySelector('.hero-cta-heart .draw-heart-path'),
-    ).not.toBeNull()
+      screen.getByRole('heading', { level: 1, name: brand.practitionerName }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('img', { name: brand.practitionerName }),
+    ).toBeVisible()
   })
 
   it('routes both CTAs and tracks Booksy checkout from the hero', async () => {

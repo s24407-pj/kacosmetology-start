@@ -4,7 +4,7 @@ import { iconActionStyles } from '@components/ui'
 import { useUI } from '@context/UIContext'
 import { MAIN_NAV_ITEMS } from '@data/navigation'
 import { cn, scrollToTop } from '@libs/utils'
-import { Link, useRouterState } from '@tanstack/react-router'
+import { Link, useHydrated, useRouterState } from '@tanstack/react-router'
 import CTAButton from '@widgets/actions/CTAButton'
 import PromotionBanner from '@widgets/actions/PromotionBanner'
 import { Menu, X } from 'lucide-react'
@@ -15,6 +15,7 @@ const desktopItems = MAIN_NAV_ITEMS.filter((item) => item.id !== 'start')
 export default function NavBar() {
   const { scrolled, isMenuOpen, setIsMenuOpen } = useUI()
   const location = useRouterState({ select: (state) => state.location })
+  const hydrated = useHydrated()
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -56,11 +57,15 @@ export default function NavBar() {
     if (location.pathname === '/') scrollToTop()
   }
 
+  // The server never receives the URL hash, so hash-based state waits for
+  // hydration to keep the first client render identical to the SSR HTML.
+  const hash = hydrated ? location.hash : ''
+
   const isActive = (item: (typeof MAIN_NAV_ITEMS)[number]) => {
     if (item.hash) {
-      return location.pathname === '/' && location.hash === item.hash
+      return location.pathname === '/' && hash === item.hash
     }
-    if (item.to === '/') return location.pathname === '/' && !location.hash
+    if (item.to === '/') return location.pathname === '/' && !hash
     return location.pathname.startsWith(item.to)
   }
 

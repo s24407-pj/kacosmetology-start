@@ -1,7 +1,7 @@
 import HairsBulbSVG from '@components/icons/HairsBulbSVG'
 import { useUI } from '@context/UIContext'
 import { BOTTOM_NAV_ITEMS } from '@data/navigation'
-import { Link, useRouterState } from '@tanstack/react-router'
+import { Link, useHydrated, useRouterState } from '@tanstack/react-router'
 import { Eye, Images, Phone, Sparkles } from 'lucide-react'
 
 const icons = {
@@ -15,7 +15,11 @@ const icons = {
 export default function BottomNav() {
   const { isMenuOpen } = useUI()
   const location = useRouterState({ select: (state) => state.location })
+  const hydrated = useHydrated()
   if (isMenuOpen) return null
+
+  // The server never receives the URL hash; see NavBar.
+  const hash = hydrated ? location.hash : ''
 
   return (
     <nav
@@ -26,13 +30,14 @@ export default function BottomNav() {
         {BOTTOM_NAV_ITEMS.map((item) => {
           const Icon = icons[item.id]
           const active = item.hash
-            ? location.pathname === '/' && location.hash === item.hash
+            ? location.pathname === '/' && hash === item.hash
             : location.pathname.startsWith(item.to) && item.to !== '/'
           return (
             <li key={item.id}>
               <Link
                 to={item.to}
                 hash={item.hash}
+                activeOptions={{ includeHash: true }}
                 aria-current={active ? 'page' : undefined}
                 className="flex min-h-14 flex-col items-center justify-center gap-1 rounded-md text-[11px] text-text-secondary transition-[background-color,color] duration-300 ease-out hover:bg-surface-muted hover:text-action focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-action/50 motion-reduce:transition-none aria-[current=page]:text-action"
               >

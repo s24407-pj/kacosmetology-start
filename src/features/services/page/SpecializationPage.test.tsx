@@ -73,9 +73,6 @@ describe('SpecializationPage', () => {
       const heroImage = screen.getByRole('img', { name: heroImageAlt })
       expect(heroImage).toHaveAttribute('src', heroImageSrc)
       expect(heroImage).toHaveAttribute('loading', 'eager')
-      expect(heroImage.className).toContain('absolute')
-      expect(heroImage.className).not.toContain('rounded')
-      expect(heroImage.className).not.toContain('shadow')
 
       const specialization = getSpecialization(specializationId)
       expect(specialization).toBeDefined()

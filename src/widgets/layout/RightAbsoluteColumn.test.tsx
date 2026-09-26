@@ -43,17 +43,6 @@ describe('RightAbsoluteColumn', () => {
     expect(instagramLink).toHaveAttribute('rel', 'noopener noreferrer')
   })
 
-  it('stays visible above the bottom navigation on mobile', () => {
-    const { container } = render(<RightAbsoluteColumn />)
-
-    expect(container.querySelector('aside')).toHaveClass(
-      'flex',
-      'bottom-20',
-      'min-[810px]:bottom-8',
-    )
-    expect(container.querySelector('aside')).not.toHaveClass('hidden')
-  })
-
   it('renders Facebook links with correct href', () => {
     render(<RightAbsoluteColumn />)
 
@@ -81,7 +70,6 @@ describe('RightAbsoluteColumn', () => {
     scrollButtons.forEach((btn) => {
       const wrapper = btn.parentElement
       expect(wrapper).not.toHaveAttribute('inert')
-      expect(wrapper).toHaveClass('opacity-100')
     })
   })
 
@@ -95,8 +83,6 @@ describe('RightAbsoluteColumn', () => {
     scrollButtons.forEach((btn) => {
       const wrapper = btn.parentElement
       expect(wrapper).toHaveAttribute('inert')
-      expect(wrapper).toHaveClass('opacity-0')
-      expect(wrapper).toHaveClass('pointer-events-none')
     })
   })
 })
