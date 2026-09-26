@@ -45,7 +45,8 @@ export const UIProvider = ({ children }: PropsWithChildren) => {
 
     observeAnimatedElements()
 
-    // Re-observe intentionally marked elements from lazy-loaded sections.
+    // Pages mounted by client-side navigation add reveal elements after this
+    // effect runs; without re-observing them they would stay hidden.
     const mutationObserver = new MutationObserver((mutations) => {
       let hasNewNodes = false
       for (const mutation of mutations) {

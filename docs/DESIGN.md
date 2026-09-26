@@ -93,7 +93,7 @@ kilobytes. Heavy third-party content is deferred natively: the Google Maps
 iframe and below-fold images use `loading="lazy"`. Browser-only preferences
 (`useReducedMotion`) use a server snapshot so the first client render matches
 the SSR HTML, and count-up stats server-render their final values.
-`src/features/home/page/HomePage.test.tsx`,
+`tests/e2e/route-architecture.spec.ts`, `tests/e2e/ssr-hydration.spec.ts`,
 `src/hooks/useReducedMotion.test.tsx`, `src/hooks/useCountUp.test.tsx`.
 
 `scheduleDeferredWork` owns deferred font loading after first scroll or a

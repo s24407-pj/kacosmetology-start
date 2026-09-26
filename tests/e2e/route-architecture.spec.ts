@@ -410,6 +410,15 @@ test('home server HTML contains reviews, contact facts and real stats', async ({
   expect(html).not.toMatch(/>0<\/span>\+/)
 })
 
+test('gallery server HTML contains both gallery sections', async ({
+  request,
+}) => {
+  const html = await (await request.get('/galeria')).text()
+
+  expect(html).toContain('id="efekty"')
+  expect(html).toContain('id="gabinet"')
+})
+
 for (const [path, sectionId] of [
   ['/#opinie', 'opinie'],
   ['/#kontakt', 'kontakt'],
@@ -498,6 +507,55 @@ for (const route of revealRoutes) {
   })
 }
 
+test('content revealed after client-side navigation', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, 'Desktop navigation behavior')
+  await page.setViewportSize({ width: 1180, height: 720 })
+  await ready(page, '/')
+  await page
+    .getByRole('navigation', { name: 'Główna nawigacja' })
+    .getByRole('link', { name: 'Kosmetologia', exact: true })
+    .click()
+  await expect(page).toHaveURL('/kosmetologia')
+
+  const reveal = page.locator('[data-reveal-on-scroll]').filter({
+    has: page.getByRole('heading', { level: 1, name: 'Kosmetologia' }),
+  })
+  await expect(reveal).toHaveAttribute('data-revealed')
+  await expect
+    .poll(() => reveal.evaluate((element) => getComputedStyle(element).opacity))
+    .toBe('1')
+})
+
+for (const path of [
+  '/',
+  '/kosmetologia',
+  '/oprawa-oka/regulacja-brwi',
+  '/galeria',
+]) {
+  test(`${path} opens external links safely and books via Booksy`, async ({
+    page,
+  }) => {
+    await ready(page, path)
+    const rels = await page
+      .locator('a[target="_blank"]')
+      .evaluateAll((links) =>
+        links.map((link) => link.getAttribute('rel') ?? ''),
+      )
+    for (const rel of rels) expect(rel).toContain('noopener')
+
+    const bookingHrefs = await page
+      .locator('a[href*="booksy"]')
+      .evaluateAll((links) => links.map((link) => link.getAttribute('href')))
+    expect(bookingHrefs.length).toBeGreaterThan(0)
+    for (const href of bookingHrefs) {
+      expect(href).toBe(primarySalonLocation.bookingUrl)
+    }
+  })
+}
+
 test.describe('reduced motion', () => {
   test.use({ contextOptions: { reducedMotion: 'reduce' } })
 
@@ -551,6 +609,8 @@ for (const path of [
   '/trychologia',
   '/trychologia/zabieg-trychologiczny-dobrany-indywidualnie',
   '/galeria',
+  '/polityka-prywatnosci',
+  '/nieistniejacy-adres',
 ]) {
   test(`${path} has no serious accessibility violations`, async ({ page }) => {
     await ready(page, path)

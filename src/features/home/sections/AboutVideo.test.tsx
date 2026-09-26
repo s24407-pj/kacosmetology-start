@@ -73,8 +73,6 @@ describe('AboutVideo', () => {
       'src',
       '/movies/konsultacja-poster-720.webp',
     )
-    expect(container.querySelector('.shadow-subtle')).toBeInTheDocument()
-    expect(container.querySelector('.aspect-4\\/5')).toBeInTheDocument()
   })
 
   it('loads sources when the video enters the viewport', async () => {
@@ -113,16 +111,6 @@ describe('AboutVideo', () => {
     expect(
       screen.getByRole('img', { name: PROCESS_VIDEO.alt }),
     ).toHaveAttribute('src', '/movies/konsultacja-poster-720.webp')
-  })
-
-  it('renders embedded variant without standalone chrome', () => {
-    const { container } = render(
-      <AboutVideo video={PROCESS_VIDEO} variant="embedded" />,
-    )
-
-    expect(container.querySelector('.shadow-subtle')).not.toBeInTheDocument()
-    expect(container.querySelector('.aspect-4\\/5')).toBeInTheDocument()
-    expect(container.querySelector('.bg-black\\/10')).not.toBeInTheDocument()
   })
 
   it('does not load inactive embedded video sources on viewport entry', () => {

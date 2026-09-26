@@ -20,8 +20,8 @@ describe('Heading', () => {
       </Heading>,
     )
 
-    const heading = screen.getByRole('heading', { name: 'Card title' })
-    expect(heading.tagName).toBe('H3')
-    expect(heading).toHaveClass('extra-class')
+    expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
+      'Card title',
+    )
   })
 })

@@ -38,18 +38,20 @@ vi.mock('@fontsource/crimson-text/latin-ext-400-italic.css', () => {
 import { loadDeferredFonts } from './loadDeferredFonts'
 
 describe('loadDeferredFonts', () => {
-  it('resolves after loading the complete deferred font sequence', async () => {
+  it('resolves after loading every deferred font face', async () => {
     await expect(loadDeferredFonts()).resolves.toBeUndefined()
 
-    expect(loadedFonts).toEqual([
-      'playfair latin 400',
-      'playfair latin-ext 400',
-      'playfair latin 600',
-      'playfair latin-ext 600',
-      'crimson latin 600',
-      'crimson latin-ext 600',
-      'crimson latin 400 italic',
-      'crimson latin-ext 400 italic',
-    ])
+    expect([...loadedFonts].sort()).toEqual(
+      [
+        'playfair latin 400',
+        'playfair latin-ext 400',
+        'playfair latin 600',
+        'playfair latin-ext 600',
+        'crimson latin 600',
+        'crimson latin-ext 600',
+        'crimson latin 400 italic',
+        'crimson latin-ext 400 italic',
+      ].sort(),
+    )
   })
 })

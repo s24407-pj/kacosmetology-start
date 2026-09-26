@@ -55,11 +55,12 @@ describe('ServiceCard', () => {
   it('uses the Booksy fallback when a service has no public detail page', () => {
     renderCard('service-konsultacja-kosmetologiczna-online')
 
-    expect(
-      screen.getByRole('link', {
-        name: 'Zarezerwuj w Booksy (otwiera nową kartę)',
-      }),
-    ).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
+    const booksy = screen.getByRole('link', {
+      name: 'Zarezerwuj w Booksy (otwiera nową kartę)',
+    })
+    expect(booksy).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
+    expect(booksy).toHaveAttribute('target', '_blank')
+    expect(booksy).toHaveAttribute('rel', 'noopener noreferrer')
     expect(
       screen.queryByRole('link', { name: /Poznaj szczegóły/ }),
     ).not.toBeInTheDocument()
@@ -71,23 +72,5 @@ describe('ServiceCard', () => {
         })
         .querySelector('a'),
     ).toBeNull()
-  })
-
-  it('exposes the reveal variant and requested stagger delay', () => {
-    const service = getServiceById('service-oczyszczanie-wodorowe')
-    expect(service).toBeDefined()
-    if (!service) return
-
-    const { container } = render(
-      <ServiceCard service={service} revealDelay={2} />,
-    )
-    expect(container.querySelector('article')).toHaveAttribute(
-      'data-reveal-variant',
-      'scale',
-    )
-    expect(container.querySelector('article')).toHaveAttribute(
-      'data-reveal-delay',
-      '2',
-    )
   })
 })

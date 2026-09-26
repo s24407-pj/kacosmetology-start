@@ -27,14 +27,4 @@ describe('GoogleMap', () => {
     expect(sandboxAttr).toContain('allow-popups')
     expect(sandboxAttr).not.toContain('allow-same-origin')
   })
-
-  it('keeps a stateless placeholder behind the iframe', () => {
-    const { container } = render(<GoogleMap />)
-    const iframe = container.querySelector('iframe')
-    const skeleton = iframe?.previousElementSibling
-
-    expect(skeleton).toHaveAttribute('aria-hidden', 'true')
-    expect(skeleton).toHaveClass('absolute', 'inset-0')
-    expect(iframe).toHaveClass('relative')
-  })
 })

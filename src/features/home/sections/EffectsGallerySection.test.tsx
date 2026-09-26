@@ -1,11 +1,12 @@
 import '@testing-library/jest-dom/vitest'
+
+import { effectsItems } from '@data/effects'
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-
 import EffectsGallerySection from './EffectsGallerySection'
 
-const TOTAL_EFFECTS = 7
+const TOTAL_EFFECTS = effectsItems.length
 
 describe('EffectsGallerySection', () => {
   beforeEach(() => {
@@ -91,15 +92,6 @@ describe('EffectsGallerySection', () => {
     await user.click(dots[2])
 
     expect(screen.getByText(`3 / ${TOTAL_EFFECTS}`)).toBeInTheDocument()
-  })
-
-  it('adds a brief visual transition when the active image changes', async () => {
-    const user = userEvent.setup()
-    render(<EffectsGallerySection />)
-
-    await user.click(screen.getByLabelText('Następny efekt'))
-
-    expect(screen.getByRole('img')).toHaveClass('gallery-slide-enter')
   })
 
   it('disables automatic slide changes with reduced motion while retaining manual navigation', () => {

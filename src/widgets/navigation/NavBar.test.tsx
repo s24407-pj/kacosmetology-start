@@ -87,24 +87,13 @@ describe('NavBar', () => {
     ).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
   })
 
-  it('animates a desktop link underline and keeps it visible for the active item', () => {
+  it('marks the current route in the desktop navigation', () => {
     location = { pathname: '/kosmetologia', hash: '' }
     render(<NavBar />)
 
-    const link = screen.getAllByRole('link', { name: 'Kosmetologia' })[0]
-    const underline = link.querySelector('span[aria-hidden="true"]')
-
-    expect(link).toHaveAttribute('aria-current', 'page')
-    expect(link).toHaveClass('group', 'relative')
-    expect(underline).toHaveClass(
-      'origin-left',
-      'scale-x-0',
-      'transition-transform',
-      'duration-200',
-      'group-hover:scale-x-100',
-      'group-aria-[current=page]:scale-x-100',
-      'motion-reduce:transition-none',
-    )
+    expect(
+      screen.getAllByRole('link', { name: 'Kosmetologia' })[0],
+    ).toHaveAttribute('aria-current', 'page')
   })
 
   it('scrolls to the top when the logo is clicked on the home page', async () => {

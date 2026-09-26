@@ -103,8 +103,8 @@ After editing `src/data/business.ts`, run
   server-rendered with static imports; do not reintroduce section-level
   `lazy()` or deferred mounting. Only the map iframe and below-fold images
   defer, via native `loading="lazy"`. Preserve section IDs; hash scrolling is
-  native + TanStack Router. `src/features/home/page/HomePage.test.tsx`,
-  `tests/e2e/route-architecture.spec.ts`.
+  native + TanStack Router. `tests/e2e/route-architecture.spec.ts`,
+  `tests/e2e/ssr-hydration.spec.ts`.
 - Analytics remains optional and consent-aware. The facade owns adapters,
   attribution, and Prior Consent gating; cookieless Plausible starts on
   `analytics.init()`, while GA/Meta/OpenAI wait for `updateConsent`. Callers use

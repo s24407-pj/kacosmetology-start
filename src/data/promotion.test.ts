@@ -22,11 +22,12 @@ const testConfigs: PromotionConfig[] = [
   },
 ]
 
-describe('getAllActivePromotions date selection', () => {
-  it('selects the correct active promotion by date', () => {
-    const [promotion] = getAllActivePromotions(new Date('2025-10-15'))
-    expect(promotion?.id).toBe('october-2025-oczyszczanie-wodorowe')
-    expect(promotion?.discountPercentage).toBe(20)
+describe('getAllActivePromotions', () => {
+  it('selects only the October production campaign on its covered date', () => {
+    const promotions = getAllActivePromotions(new Date('2025-10-15'))
+    expect(promotions).toHaveLength(1)
+    expect(promotions[0].id).toBe('october-2025-oczyszczanie-wodorowe')
+    expect(promotions[0].discountPercentage).toBe(20)
   })
 
   it('preserves the October campaign service and visible scope copy', () => {
@@ -83,23 +84,6 @@ describe('getAllActivePromotions date selection', () => {
     expect(promotions).toEqual([])
   })
 
-  it('skips a malformed config and returns the next active promotion', () => {
-    const malformedConfig: PromotionConfig = {
-      ...testConfigs[0],
-      id: 'malformed-promo',
-      startDate: 'not-a-date',
-    }
-
-    const [promotion] = getAllActivePromotions(new Date('2025-10-15'), [
-      malformedConfig,
-      ...testConfigs,
-    ])
-
-    expect(promotion?.id).toBe('test-promo')
-  })
-})
-
-describe('getAllActivePromotions', () => {
   it('returns every synthetic campaign active on the same date', () => {
     const secondConfig: PromotionConfig = {
       ...testConfigs[0],
@@ -118,13 +102,6 @@ describe('getAllActivePromotions', () => {
     ])
   })
 
-  it('returns only the October production campaign on its covered date', () => {
-    const promotions = getAllActivePromotions(new Date('2025-10-15'))
-
-    expect(promotions).toHaveLength(1)
-    expect(promotions[0].id).toBe('october-2025-oczyszczanie-wodorowe')
-  })
-
   it('returns all promotions active on a given date', () => {
     // November 2025 has one active promotion
     const promotions = getAllActivePromotions(new Date('2025-11-15'))
@@ -134,20 +111,14 @@ describe('getAllActivePromotions', () => {
     )
   })
 
-  it('returns empty array when no promotion is active', () => {
-    const promotions = getAllActivePromotions(new Date('2025-08-15'))
-    expect(promotions).toHaveLength(0)
-  })
-
-  it('skips a malformed config and returns the valid active promotions', () => {
-    const malformedConfig: PromotionConfig = {
-      ...testConfigs[0],
-      id: 'malformed-promo',
-      endDate: 'not-a-date',
-    }
+  it('skips malformed configs and returns the valid active promotions', () => {
+    const malformedConfigs: PromotionConfig[] = [
+      { ...testConfigs[0], id: 'malformed-start', startDate: 'not-a-date' },
+      { ...testConfigs[0], id: 'malformed-end', endDate: 'not-a-date' },
+    ]
 
     const promotions = getAllActivePromotions(new Date('2025-10-15'), [
-      malformedConfig,
+      ...malformedConfigs,
       ...testConfigs,
     ])
 

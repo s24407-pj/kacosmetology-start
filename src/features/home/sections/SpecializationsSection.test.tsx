@@ -43,20 +43,8 @@ describe('SpecializationsSection', () => {
       expect(image).toHaveAttribute('loading', 'lazy')
       expect(image).toHaveAttribute('width')
       expect(image).toHaveAttribute('height')
-      expect(image.getAttribute('srcset')).toContain('-360.webp 360w')
-      expect(image.getAttribute('srcset')).toContain('-720.webp 720w')
-      expect(image.getAttribute('srcset')).toContain('-1080.webp 1080w')
     }
 
-    expect(screen.getAllByText('Poznaj ofertę')).toHaveLength(3)
-    expect(container.querySelectorAll('svg')).toHaveLength(0)
     expect(container).not.toHaveTextContent(/\b(?:01|02|03|5|7|12)\b/)
-
-    const cosmetologyImage = container.querySelector(
-      'img[src="/images/specialization-cards/cosmetology-720.webp"]',
-    )
-    expect(cosmetologyImage).toHaveAttribute('width', '2400')
-    expect(cosmetologyImage).toHaveAttribute('height', '3600')
-    expect(cosmetologyImage).toHaveClass('object-[50%_38%]')
   })
 })

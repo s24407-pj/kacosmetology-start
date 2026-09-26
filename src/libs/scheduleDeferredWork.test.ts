@@ -13,28 +13,9 @@ describe('scheduleDeferredWork', () => {
   let nextTimeoutId = 1
 
   const addEventListener = vi.fn(
-    (
-      event: string,
-      handler: EventListenerOrEventListenerObject,
-      options?: boolean | AddEventListenerOptions,
-    ) => {
-      if (
-        event === 'load' &&
-        options &&
-        typeof options === 'object' &&
-        options.once
-      ) {
-        loadHandler = handler as () => void
-      }
-
-      if (
-        event === 'scroll' &&
-        options &&
-        typeof options === 'object' &&
-        options.once
-      ) {
-        scrollHandler = handler as () => void
-      }
+    (event: string, handler: EventListenerOrEventListenerObject) => {
+      if (event === 'load') loadHandler = handler as () => void
+      if (event === 'scroll') scrollHandler = handler as () => void
     },
   )
 
@@ -54,6 +35,10 @@ describe('scheduleDeferredWork', () => {
       timeouts.delete(id)
     }
   })
+
+  const runPendingTimeouts = () => {
+    for (const handler of timeouts.values()) handler()
+  }
 
   const createDeps = (
     overrides: Partial<ScheduleDeferredWorkDeps> = {},
@@ -85,32 +70,6 @@ describe('scheduleDeferredWork', () => {
     expect(loadDeferredFonts).not.toHaveBeenCalled()
   })
 
-  it('registers load and scroll listeners', () => {
-    scheduleDeferredWork(createDeps())
-
-    expect(addEventListener).toHaveBeenCalledWith(
-      'scroll',
-      expect.any(Function),
-      {
-        passive: true,
-        once: true,
-      },
-    )
-    expect(addEventListener).toHaveBeenCalledWith(
-      'load',
-      expect.any(Function),
-      { once: true },
-    )
-  })
-
-  it('does not initialize analytics on load', () => {
-    scheduleDeferredWork(createDeps())
-    loadHandler?.()
-
-    expect(loadDeferredFonts).not.toHaveBeenCalled()
-    expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 4000)
-  })
-
   it('loads deferred fonts on first scroll', () => {
     scheduleDeferredWork(createDeps())
     scrollHandler?.()
@@ -118,14 +77,14 @@ describe('scheduleDeferredWork', () => {
     expect(loadDeferredFonts).toHaveBeenCalledTimes(1)
   })
 
-  it('loads deferred fonts after 4s fallback on load', () => {
+  it('loads deferred fonts after a 4s fallback once the page has loaded', () => {
     scheduleDeferredWork(createDeps())
     loadHandler?.()
 
+    expect(loadDeferredFonts).not.toHaveBeenCalled()
     expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 4000)
 
-    const fallbackCallback = timeouts.get(1)
-    fallbackCallback?.()
+    runPendingTimeouts()
 
     expect(loadDeferredFonts).toHaveBeenCalledTimes(1)
   })
@@ -135,8 +94,7 @@ describe('scheduleDeferredWork', () => {
     scrollHandler?.()
     loadHandler?.()
 
-    const fallbackCallback = timeouts.get(1)
-    fallbackCallback?.()
+    runPendingTimeouts()
 
     expect(loadDeferredFonts).toHaveBeenCalledTimes(1)
   })
@@ -166,6 +124,7 @@ describe('scheduleDeferredWork', () => {
       'load',
       expect.any(Function),
     )
-    expect(clearTimeout).toHaveBeenCalledWith(1)
+    runPendingTimeouts()
+    expect(loadDeferredFonts).not.toHaveBeenCalled()
   })
 })

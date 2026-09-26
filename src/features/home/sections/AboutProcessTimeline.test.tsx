@@ -37,7 +37,7 @@ describe('AboutProcessTimeline', () => {
   })
 
   it('renders all four steps in desktop and mobile layouts', () => {
-    const { container } = render(<AboutProcessTimeline />)
+    render(<AboutProcessTimeline />)
     const desktop = screen.getByRole('region', {
       name: ABOUT_SECTION.processHeading,
     })
@@ -45,7 +45,6 @@ describe('AboutProcessTimeline', () => {
     expect(
       within(desktop).getByRole('article', { current: 'step' }),
     ).toBeInTheDocument()
-    expect(container.querySelector('ol')).toBeInTheDocument()
     for (const step of ABOUT_SECTION.processSteps) {
       expect(
         screen.getAllByRole('heading', { name: step.title }).length,

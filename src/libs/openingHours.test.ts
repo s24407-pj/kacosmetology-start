@@ -136,165 +136,28 @@ describe('opening schedule timezone snapshots', () => {
   })
 })
 
-describe('structured opening slot behavior', () => {
-  it('returns true when current time is within the opening hours', () => {
-    expect(
-      isSalonOpenNow(
-        currentStructuredSchedule,
-        new Date('2024-01-08T09:00:00Z'),
-      ),
-    ).toBe(true)
-  })
-
-  it('returns true at the exact start of the opening window (inclusive)', () => {
-    expect(
-      isSalonOpenNow(
-        currentStructuredSchedule,
-        new Date('2024-01-08T08:00:00Z'),
-      ),
-    ).toBe(true)
-  })
-
-  it('returns false at the exact end of the opening window (exclusive)', () => {
-    expect(
-      isSalonOpenNow(
-        currentStructuredSchedule,
-        new Date('2024-01-08T16:00:00Z'),
-      ),
-    ).toBe(false)
-  })
-
-  it('returns false when current time is before opening hours', () => {
-    expect(
-      isSalonOpenNow(
-        currentStructuredSchedule,
-        new Date('2024-01-08T07:59:00Z'),
-      ),
-    ).toBe(false)
-  })
-
-  it('returns false when current time is after closing hours', () => {
-    expect(
-      isSalonOpenNow(
-        currentStructuredSchedule,
-        new Date('2024-01-08T17:00:00Z'),
-      ),
-    ).toBe(false)
-  })
-
-  it('returns false when the day does not match', () => {
-    const mondayOnly = defineOpeningSchedule({
-      ...currentStructuredSchedule,
-      days: {
-        ...currentStructuredSchedule.days,
-        tuesday: { status: 'closed' },
-      },
-    })
-    expect(isSalonOpenNow(mondayOnly, new Date('2024-01-09T09:00:00Z'))).toBe(
-      false,
-    )
-  })
-
-  it('returns false when hours is "Zamknięte"', () => {
-    expect(
-      isSalonOpenNow(
-        currentStructuredSchedule,
-        new Date('2024-01-07T10:00:00Z'),
-      ),
-    ).toBe(false)
-  })
-
-  it('returns false when the hours string has no separator', () => {
-    const schedule = uncheckedSchedule()
-    expect(() =>
-      assertValidOpeningSchedule({
-        ...schedule,
-        days: {
-          ...schedule.days,
-          monday: {
-            status: 'open',
-            slots: [{ opens: '0900', closes: '17:00' }],
-          },
-        },
-      }),
-    ).toThrow('monday slot 0')
-  })
-
-  it('returns false when the time values are not valid numbers', () => {
-    const schedule = uncheckedSchedule()
-    expect(() =>
-      assertValidOpeningSchedule({
-        ...schedule,
-        days: {
-          ...schedule.days,
-          monday: {
-            status: 'open',
-            slots: [{ opens: 'ab:cd', closes: '17:00' }],
-          },
-        },
-      }),
-    ).toThrow('monday slot 0')
-  })
-
-  it('returns false when only one part of the time range is present', () => {
-    const schedule = uncheckedSchedule()
-    const [slot] = schedule.days.monday.slots
-    expect(() =>
-      assertValidOpeningSchedule({
-        ...schedule,
-        days: {
-          ...schedule.days,
-          monday: { status: 'open', slots: [{ opens: slot.opens }] },
-        },
-      }),
-    ).toThrow('closes')
-  })
-
-  it('is case-insensitive for day comparison', () => {
-    expect(WEEKDAYS).toContain('monday')
-    expect(WEEKDAYS).not.toContain('Monday')
-  })
-})
-
 describe('isSalonOpenNow', () => {
+  const schedule = primarySalonLocation.openingSchedule
+  const isOpenAt = (iso: string) => isSalonOpenNow(schedule, new Date(iso))
+
   it('uses an inclusive start and exclusive end for the configured Monday hours', () => {
-    expect(
-      isSalonOpenNow(
-        primarySalonLocation.openingSchedule,
-        new Date('2024-03-04T08:00:00.000Z'),
-      ),
-    ).toBe(true)
-    expect(
-      isSalonOpenNow(
-        primarySalonLocation.openingSchedule,
-        new Date('2024-03-04T16:00:00.000Z'),
-      ),
-    ).toBe(false)
-  })
-
-  it('returns true when the current time falls within an opening slot', () => {
-    // Wednesday 14:30 Warsaw time (2025-10-15T12:30:00Z, CEST = UTC+2)
-    vi.setSystemTime(new Date('2025-10-15T12:30:00Z'))
-
-    expect(isSalonOpenNow(primarySalonLocation.openingSchedule)).toBe(true)
-
-    vi.useRealTimers()
-  })
-
-  it('returns false when the current time is outside all opening slots', () => {
-    // Wednesday 20:00 Warsaw time (2025-10-15T18:00:00Z)
-    vi.setSystemTime(new Date('2025-10-15T18:00:00Z'))
-
-    expect(isSalonOpenNow(primarySalonLocation.openingSchedule)).toBe(false)
-
-    vi.useRealTimers()
+    expect(isOpenAt('2024-01-08T07:59:00Z')).toBe(false)
+    expect(isOpenAt('2024-01-08T08:00:00Z')).toBe(true)
+    expect(isOpenAt('2024-01-08T12:00:00Z')).toBe(true)
+    expect(isOpenAt('2024-01-08T16:00:00Z')).toBe(false)
   })
 
   it('returns false on a closed day', () => {
-    // Sunday 11:00 Warsaw time (2025-10-19T09:00:00Z)
-    vi.setSystemTime(new Date('2025-10-19T09:00:00Z'))
+    expect(isOpenAt('2024-01-07T10:00:00Z')).toBe(false)
+  })
 
-    expect(isSalonOpenNow(primarySalonLocation.openingSchedule)).toBe(false)
+  it('uses the current time when no date is given', () => {
+    // Wednesday 14:30 and 20:00 Warsaw time (CEST = UTC+2)
+    vi.setSystemTime(new Date('2025-10-15T12:30:00Z'))
+    expect(isSalonOpenNow(schedule)).toBe(true)
+
+    vi.setSystemTime(new Date('2025-10-15T18:00:00Z'))
+    expect(isSalonOpenNow(schedule)).toBe(false)
 
     vi.useRealTimers()
   })
@@ -403,7 +266,7 @@ describe('validated weekly opening schedule', () => {
     ).toThrow('monday')
   })
 
-  it.each(['9:00', '24:00', '09:60', 'not-a-time'])(
+  it.each(['9:00', '0900', '24:00', '09:60', 'not-a-time'])(
     'rejects non-canonical clock text %s',
     (opens) => {
       expect(() =>
@@ -420,6 +283,19 @@ describe('validated weekly opening schedule', () => {
       ).toThrow('monday slot 0')
     },
   )
+
+  it('rejects a slot without a closing time', () => {
+    const schedule = uncheckedSchedule()
+    expect(() =>
+      assertValidOpeningSchedule({
+        ...schedule,
+        days: {
+          ...schedule.days,
+          monday: { status: 'open', slots: [{ opens: '09:00' }] },
+        },
+      }),
+    ).toThrow('closes')
+  })
 
   it.each([
     ['17:00', '17:00'],

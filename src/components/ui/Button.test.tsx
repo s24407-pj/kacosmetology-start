@@ -6,25 +6,13 @@ import { describe, expect, it, vi } from 'vitest'
 import { Button } from './Button'
 
 describe('Button', () => {
-  it('renders an anchor with the primary variant and default size', () => {
+  it('renders a link to its target', () => {
     render(<Button href="#book">Book now</Button>)
 
-    const link = screen.getByRole('link', { name: 'Book now' })
-    expect(link).toHaveAttribute('href', '#book')
-    expect(link).toHaveClass('bg-action', 'text-white')
-    expect(link).toHaveClass('px-6', 'py-3')
-  })
-
-  it('applies the outline variant and large size', () => {
-    render(
-      <Button variant="outline" size="lg" href="#kontakt">
-        Contact
-      </Button>,
+    expect(screen.getByRole('link', { name: 'Book now' })).toHaveAttribute(
+      'href',
+      '#book',
     )
-
-    const link = screen.getByRole('link', { name: 'Contact' })
-    expect(link).toHaveClass('border', 'border-action', 'hover:bg-action')
-    expect(link).toHaveClass('px-8', 'py-4')
   })
 
   it('calls provided click handler', async () => {

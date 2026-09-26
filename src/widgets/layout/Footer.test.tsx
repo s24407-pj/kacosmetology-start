@@ -86,6 +86,7 @@ describe('Footer', () => {
     const instagramLink = screen.getByRole('link', { name: 'Instagram' })
     expect(instagramLink).toHaveAttribute('href', brand.socialMedia.instagram)
     expect(instagramLink).toHaveAttribute('target', '_blank')
+    expect(instagramLink).toHaveAttribute('rel', 'noopener noreferrer')
 
     await clickAnalyticsLink(user, instagramLink)
     expect(analytics.trackLead).toHaveBeenCalledWith({
@@ -105,6 +106,7 @@ describe('Footer', () => {
     const facebookLink = screen.getByRole('link', { name: 'Facebook' })
     expect(facebookLink).toHaveAttribute('href', brand.socialMedia.facebook)
     expect(facebookLink).toHaveAttribute('target', '_blank')
+    expect(facebookLink).toHaveAttribute('rel', 'noopener noreferrer')
 
     await clickAnalyticsLink(user, facebookLink)
     expect(analytics.trackLead).toHaveBeenCalledWith({

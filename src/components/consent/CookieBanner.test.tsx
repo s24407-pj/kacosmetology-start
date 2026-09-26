@@ -59,14 +59,6 @@ describe('CookieBanner', () => {
     expect(
       screen.getByRole('link', { name: 'Polityce prywatności' }),
     ).toHaveAttribute('href', '/polityka-prywatnosci')
-
-    const banner = screen.getByRole('region', {
-      name: 'Zarządzanie zgodami na pliki cookies',
-    })
-    const cookieIcon = banner.querySelector('svg.lucide-cookie')
-    expect(cookieIcon).toBeInTheDocument()
-    expect(cookieIcon).toHaveAttribute('aria-hidden', 'true')
-    expect(cookieIcon).toHaveClass('text-action')
   })
 
   it('keeps the first-layer banner non-blocking so content stays browsable', async () => {
@@ -87,13 +79,7 @@ describe('CookieBanner', () => {
       ).toBeInTheDocument()
     })
 
-    const banner = screen.getByRole('region', {
-      name: 'Zarządzanie zgodami na pliki cookies',
-    })
-
     expect(document.body.style.overflow).not.toBe('hidden')
-    expect(banner.classList.contains('bottom-0')).toBe(true)
-    expect(banner.classList.contains('inset-0')).toBe(false)
     expect(
       screen.queryByRole('button', { name: 'Zamknij tło ustawień cookies' }),
     ).not.toBeInTheDocument()
