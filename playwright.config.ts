@@ -16,9 +16,11 @@ for (const [key, value] of Object.entries(viteEnv)) {
 const PORT = 4173
 const HOST = '127.0.0.1'
 const isCI = Boolean(process.env.CI)
+// `exec` keeps the server in Playwright's process group so teardown kills it;
+// `pnpm start` would move it to its own group and leave it running.
 const webServerCommand = isCI
-  ? `HOST=${HOST} PORT=${PORT} pnpm start`
-  : `pnpm build && HOST=${HOST} PORT=${PORT} pnpm start`
+  ? 'exec node .output/server/index.mjs'
+  : 'pnpm build && exec node .output/server/index.mjs'
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -40,6 +42,8 @@ export default defineConfig({
     command: webServerCommand,
     url: `http://${HOST}:${PORT}`,
     env: {
+      HOST,
+      PORT: String(PORT),
       PLAYWRIGHT_TEST_MODE: '1',
     },
     reuseExistingServer: false,
