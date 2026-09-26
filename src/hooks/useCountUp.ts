@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { prefersReducedMotion, useReducedMotion } from './useReducedMotion'
+import { useReducedMotion } from './useReducedMotion'
 
 export function useCountUp(
   target: number,
@@ -9,11 +9,8 @@ export function useCountUp(
   const ref = useRef<HTMLElement | null>(null)
   const finalValue = target.toFixed(decimals)
   const reducedMotion = useReducedMotion()
-  const [value, setValue] = useState(() =>
-    prefersReducedMotion()
-      ? finalValue
-      : `0${decimals > 0 ? `.${'0'.repeat(decimals)}` : ''}`,
-  )
+  const initialValue = `0${decimals > 0 ? `.${'0'.repeat(decimals)}` : ''}`
+  const [value, setValue] = useState(initialValue)
   const started = useRef(false)
 
   useEffect(() => {

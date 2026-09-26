@@ -1,16 +1,19 @@
 import '@testing-library/jest-dom/vitest'
 import { act, cleanup, render, screen, waitFor } from '@testing-library/react'
+import { renderToString } from 'react-dom/server'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useCountUp } from './useCountUp'
 
 function Counter({
   target,
   duration = 1500,
+  decimals = 0,
 }: {
   target: number
   duration?: number
+  decimals?: number
 }) {
-  const [ref, value] = useCountUp(target, duration)
+  const [ref, value] = useCountUp(target, duration, decimals)
   return (
     <span ref={ref} data-testid="counter">
       {value}
@@ -86,6 +89,22 @@ describe('useCountUp', () => {
     render(<Counter target={42} />)
 
     expect(screen.getByTestId('counter')).toHaveTextContent('42')
+  })
+
+  it('renders initial formatted zero on server-side render to prevent hydration mismatch', () => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockImplementation((query: string) => ({
+        matches: query === '(prefers-reduced-motion: reduce)',
+        media: query,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })) as typeof window.matchMedia,
+    })
+
+    const html = renderToString(<Counter target={5} decimals={1} />)
+    expect(html).toContain('0.0')
   })
 
   it('finishes immediately when reduced motion is enabled during the animation', async () => {
