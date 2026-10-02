@@ -28,7 +28,7 @@ jobs:
           ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup toolchain with mise
-        uses: jdx/mise-action@v4.3.0
+        uses: jdx/mise-action@v5
         with:
           cache: true
 
