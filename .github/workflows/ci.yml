@@ -17,18 +17,48 @@ jobs:
   quality:
     name: Quality
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
+        with:
+          # PR: check out the head branch so migrate commits can be pushed back.
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup toolchain with mise
-        uses: jdx/mise-action@v4.3.0
+        uses: jdx/mise-action@v5
         with:
           cache: true
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Sync Biome config with installed version
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_REF: ${{ github.head_ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          pnpm exec biome migrate --write
+          if git diff --quiet biome.json; then
+            echo "biome.json already in sync with installed Biome"
+            exit 0
+          fi
+
+          if [ "$EVENT_NAME" = "pull_request" ] && [ "$HEAD_REPO" = "$REPOSITORY" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add biome.json
+            git commit -m "chore: sync biome.json with installed Biome"
+            git push origin "HEAD:$HEAD_REF"
+            exit 0
+          fi
+
+          echo "biome.json is out of sync with installed Biome. Run: pnpm exec biome migrate --write"
+          git diff --exit-code biome.json
 
       - name: Run Biome checks
         run: pnpm exec biome ci
