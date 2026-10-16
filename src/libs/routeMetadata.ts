@@ -51,11 +51,13 @@ export function createRouteHead({
   title,
   description,
   socialImage,
+  robots,
 }: {
   path: string
   title: string
   description: string
   socialImage: SocialImageDescriptor
+  robots?: string
 }) {
   const canonical = new URL(path, brand.siteUrl).href
   const completeTitle = `${title} | ${brand.name}`
@@ -64,6 +66,7 @@ export function createRouteHead({
     meta: [
       { title: completeTitle },
       { name: 'description', content: description },
+      ...(robots ? [{ name: 'robots', content: robots }] : []),
       { property: 'og:title', content: completeTitle },
       { property: 'og:description', content: description },
       { property: 'og:url', content: canonical },

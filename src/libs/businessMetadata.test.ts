@@ -1,7 +1,7 @@
 import { brand, primarySalonLocation } from '@data/business'
 import { toSchemaOrgOpeningHoursSpecifications } from '@libs/openingHours'
 import { describe, expect, it } from 'vitest'
-import { toBeautySalonJsonLd } from './businessMetadata'
+import { toBeautySalonJsonLd, toWebPageJsonLd } from './businessMetadata'
 
 describe('toBeautySalonJsonLd', () => {
   it('projects the complete current BeautySalon representation', () => {
@@ -16,8 +16,10 @@ describe('toBeautySalonJsonLd', () => {
       '@type': 'BeautySalon',
       '@id': 'https://kacosmetology.pl/#beautysalon',
       name: brand.name,
+      description:
+        'Gabinet kosmetologiczny i trychologiczny w Starogardzie Gdańskim prowadzony przez mgr Katarzynę Suwalską. Indywidualne terapie skóry, zabiegi trychologiczne i oprawa oka.',
       logo: 'https://kacosmetology.pl/images/logo.webp',
-      image: 'https://kacosmetology.pl/images/gallery/witryna.webp',
+      image: 'https://kacosmetology.pl/images/hero.webp',
       url: brand.siteUrl,
       telephone: primarySalonLocation.phone,
       email: brand.email,
@@ -76,5 +78,32 @@ describe('toBeautySalonJsonLd', () => {
     expect(jsonLd.address.addressLocality).toBe('Inna miejscowość')
     expect(jsonLd.priceRange).toBe('route-owned')
     expect(jsonLd.sameAs).not.toContain(brand.socialMedia.facebook)
+  })
+})
+
+describe('toWebPageJsonLd', () => {
+  it('projects WebPage metadata with primaryImageOfPage', () => {
+    expect(
+      toWebPageJsonLd({
+        brand,
+        title:
+          'Kosmetolog i trycholog w Starogardzie Gdańskim | Ka.Cosmetology',
+        description: 'Opis strony głównej.',
+        path: '/',
+        primaryImagePath: '/images/hero.webp',
+      }),
+    ).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      '@id': 'https://kacosmetology.pl/#webpage',
+      url: 'https://kacosmetology.pl/',
+      name: 'Kosmetolog i trycholog w Starogardzie Gdańskim | Ka.Cosmetology',
+      description: 'Opis strony głównej.',
+      primaryImageOfPage: {
+        '@type': 'ImageObject',
+        '@id': 'https://kacosmetology.pl/#primaryimage',
+        url: 'https://kacosmetology.pl/images/hero.webp',
+      },
+    })
   })
 })

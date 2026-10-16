@@ -5,23 +5,31 @@ import type {
 } from '@app-types/types'
 import { toSchemaOrgOpeningHoursSpecifications } from './openingHours'
 
+const DEFAULT_BEAUTY_SALON_DESCRIPTION =
+  'Gabinet kosmetologiczny i trychologiczny w Starogardzie Gdańskim prowadzony przez mgr Katarzynę Suwalską. Indywidualne terapie skóry, zabiegi trychologiczne i oprawa oka.'
+
 type BeautySalonJsonLdInput = {
   brand: BrandProfile
   location: SalonLocation
   priceRange: string
+  description?: string
+  imagePath?: string
 }
 
 export const toBeautySalonJsonLd = ({
   brand,
   location,
   priceRange,
+  description = DEFAULT_BEAUTY_SALON_DESCRIPTION,
+  imagePath = '/images/hero.webp',
 }: BeautySalonJsonLdInput) => ({
   '@context': 'https://schema.org',
   '@type': 'BeautySalon',
   '@id': new URL('#beautysalon', brand.siteUrl).href,
   name: brand.name,
+  description,
   logo: new URL(brand.logo.imagePath, brand.siteUrl).href,
-  image: new URL('/images/gallery/witryna.webp', brand.siteUrl).href,
+  image: new URL(imagePath, brand.siteUrl).href,
   url: new URL('/', brand.siteUrl).href,
   telephone: location.phone,
   email: brand.email,
@@ -89,4 +97,34 @@ export const toBreadcrumbListJsonLd = ({
     name: item.name,
     item: new URL(item.path, brand.siteUrl).href,
   })),
+})
+
+export const toWebPageJsonLd = ({
+  brand,
+  title,
+  description,
+  path = '/',
+  primaryImagePath = '/images/hero.webp',
+}: {
+  brand: BrandProfile
+  title: string
+  description: string
+  path?: string
+  primaryImagePath?: string
+}) => ({
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': new URL(`${path}#webpage`, brand.siteUrl).href,
+  url: new URL(path, brand.siteUrl).href,
+  name: title,
+  description,
+  ...(primaryImagePath
+    ? {
+        primaryImageOfPage: {
+          '@type': 'ImageObject',
+          '@id': new URL(`${path}#primaryimage`, brand.siteUrl).href,
+          url: new URL(primaryImagePath, brand.siteUrl).href,
+        },
+      }
+    : {}),
 })

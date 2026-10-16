@@ -50,6 +50,21 @@ describe('createRouteHead', () => {
       { property: 'og:image:height', content: '630' },
     ])
   })
+
+  it('includes a robots meta tag when requested', () => {
+    const head = createRouteHead({
+      path: '/polityka-prywatnosci',
+      title: 'Polityka prywatności',
+      description: 'Opis.',
+      socialImage: routeSocialImages.home,
+      robots: 'noindex, follow',
+    })
+
+    expect(head.meta).toContainEqual({
+      name: 'robots',
+      content: 'noindex, follow',
+    })
+  })
 })
 
 describe('routeSocialImages', () => {

@@ -49,4 +49,21 @@ test.describe('crawler-facing outputs', () => {
       if (path.split('/').length === 3) expect(types, path).toContain('Service')
     }
   })
+
+  test('privacy policy stays accessible but is excluded from indexing', async ({
+    page,
+    request,
+  }) => {
+    const response = await page.goto('/polityka-prywatnosci')
+
+    expect(response?.status()).toBe(200)
+
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+      'content',
+      'noindex, follow',
+    )
+
+    const paths = await sitemapPaths(request)
+    expect(paths).not.toContain('/polityka-prywatnosci')
+  })
 })
