@@ -5,13 +5,13 @@ import {
   surfaceCardStyles,
 } from '@components/ui'
 import { brand, primarySalonLocation } from '@data/business'
+import { HOMEPAGE_PRIMARY_IMAGE_PATH } from '@data/home'
 import {
   IMAGE_SIZES,
   MOBILE_WIDTHS,
   webpFallbackSrc,
   webpSrcSet,
 } from '@libs/responsiveImage'
-import { HOMEPAGE_PRIMARY_IMAGE_PATH } from '@libs/routeMetadata'
 import { scrollToId } from '@libs/utils'
 import BooksyLink from '@widgets/actions/BooksyLink'
 import { ChevronDown, MapPin } from 'lucide-react'

@@ -9,12 +9,15 @@ import { getPublishedServices } from '@data/services'
 import { getLowestPriceInLastDays } from './priceHistory'
 
 export function derivePublishedServicePriceRange(
-  services: readonly PublicService[] = getPublishedServices(),
+  services: readonly Pick<
+    PublicService,
+    'price' | 'isPublished'
+  >[] = getPublishedServices(),
   currency = 'PLN',
-): string {
+): string | undefined {
   const publishedServices = services.filter((service) => service.isPublished)
   if (publishedServices.length === 0) {
-    return ''
+    return undefined
   }
   const prices = publishedServices.map((service) => service.price)
   const min = Math.min(...prices)

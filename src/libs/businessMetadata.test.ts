@@ -1,4 +1,5 @@
 import { brand, primarySalonLocation } from '@data/business'
+import { HOMEPAGE_PRIMARY_IMAGE_PATH } from '@data/home'
 import { toSchemaOrgOpeningHoursSpecifications } from '@libs/openingHours'
 import { describe, expect, it } from 'vitest'
 import { toBeautySalonJsonLd, toWebPageJsonLd } from './businessMetadata'
@@ -10,6 +11,7 @@ describe('toBeautySalonJsonLd', () => {
         brand,
         location: primarySalonLocation,
         priceRange: '30-550 PLN',
+        imagePath: HOMEPAGE_PRIMARY_IMAGE_PATH,
       }),
     ).toEqual({
       '@context': 'https://schema.org',
@@ -81,6 +83,18 @@ describe('toBeautySalonJsonLd', () => {
   })
 })
 
+describe('toBeautySalonJsonLd without a price range', () => {
+  it('omits priceRange when no services are published', () => {
+    const jsonLd = toBeautySalonJsonLd({
+      brand,
+      location: primarySalonLocation,
+      priceRange: undefined,
+    })
+
+    expect(jsonLd).not.toHaveProperty('priceRange')
+  })
+})
+
 describe('toWebPageJsonLd', () => {
   it('projects WebPage metadata with primaryImageOfPage and about relationship', () => {
     expect(
@@ -89,6 +103,7 @@ describe('toWebPageJsonLd', () => {
         title:
           'Kosmetolog i trycholog w Starogardzie Gdańskim | Ka.Cosmetology',
         description: 'Opis strony głównej.',
+        primaryImagePath: '/images/hero.webp',
       }),
     ).toEqual({
       '@context': 'https://schema.org',
@@ -122,6 +137,17 @@ describe('toWebPageJsonLd', () => {
     expect(jsonLd.about).toEqual({
       '@id': 'https://kacosmetology.pl/#beautysalon',
     })
+    expect(jsonLd).not.toHaveProperty('primaryImageOfPage')
+  })
+
+  it('does not assume the homepage image for a generic page', () => {
+    const jsonLd = toWebPageJsonLd({
+      brand,
+      title: 'Podstrona',
+      description: 'Opis podstrony',
+      path: '/podstrona',
+    })
+
     expect(jsonLd).not.toHaveProperty('primaryImageOfPage')
   })
 })

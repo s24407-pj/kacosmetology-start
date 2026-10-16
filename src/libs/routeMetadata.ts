@@ -1,4 +1,5 @@
 import { brand } from '@data/business'
+import { HOMEPAGE_PRIMARY_IMAGE_PATH } from '@data/home'
 
 export interface SocialImageDescriptor {
   path: `/images/social/${string}.webp`
@@ -48,8 +49,6 @@ export const routeSocialImages = {
 
 export const formatRouteTitle = (title: string): string =>
   `${title} | ${brand.name}`
-
-export const HOMEPAGE_PRIMARY_IMAGE_PATH = '/images/hero.webp' as const
 
 export const homeRouteMetadata = {
   path: '/',

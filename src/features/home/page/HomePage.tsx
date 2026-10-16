@@ -23,6 +23,7 @@ const webPageStructuredData = toWebPageJsonLd({
   title: homeRouteMetadata.completeTitle,
   description: homeRouteMetadata.description,
   path: homeRouteMetadata.path,
+  primaryImagePath: homeRouteMetadata.primaryImagePath,
 })
 
 export default function HomePage() {

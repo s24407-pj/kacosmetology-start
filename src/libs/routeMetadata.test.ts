@@ -1,9 +1,9 @@
 import { brand } from '@data/business'
+import { HOMEPAGE_PRIMARY_IMAGE_PATH } from '@data/home'
 import { describe, expect, it } from 'vitest'
 import {
   createRouteHead,
   formatRouteTitle,
-  HOMEPAGE_PRIMARY_IMAGE_PATH,
   homeRouteMetadata,
   routeSocialImages,
 } from './routeMetadata'

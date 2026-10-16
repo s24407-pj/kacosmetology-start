@@ -3,13 +3,13 @@ import type {
   PublicService,
   SalonLocation,
 } from '@app-types/types'
+import { HOMEPAGE_PRIMARY_IMAGE_PATH } from '@data/home'
 import { toSchemaOrgOpeningHoursSpecifications } from './openingHours'
-import { HOMEPAGE_PRIMARY_IMAGE_PATH } from './routeMetadata'
 
 type BeautySalonJsonLdInput = {
   brand: BrandProfile
   location: SalonLocation
-  priceRange: string
+  priceRange: string | undefined
   description?: string
   imagePath?: string
 }
@@ -31,7 +31,7 @@ export const toBeautySalonJsonLd = ({
   url: new URL('/', brand.siteUrl).href,
   telephone: location.phone,
   email: brand.email,
-  priceRange,
+  ...(priceRange ? { priceRange } : {}),
   address: {
     '@type': 'PostalAddress',
     streetAddress: location.address.streetAddress,
@@ -102,7 +102,7 @@ export const toWebPageJsonLd = ({
   title,
   description,
   path = '/',
-  primaryImagePath = HOMEPAGE_PRIMARY_IMAGE_PATH,
+  primaryImagePath,
 }: {
   brand: BrandProfile
   title: string
