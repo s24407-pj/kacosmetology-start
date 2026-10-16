@@ -10,6 +10,7 @@ export const Route = createFileRoute('/polityka-prywatnosci')({
       description:
         'Informacje o ochronie danych osobowych i plikach cookies w Ka.Cosmetology.',
       socialImage: routeSocialImages.home,
+      robots: 'noindex, follow',
     }),
   component: PrivacyPolicyPage,
 })

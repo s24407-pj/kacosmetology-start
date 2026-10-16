@@ -45,8 +45,65 @@ test.describe('crawler-facing outputs', () => {
       expect(html.match(/<h1[\s>]/g) ?? [], path).toHaveLength(1)
 
       const types = jsonLdTypes(html)
-      if (path === '/') expect(types, path).toContain('BeautySalon')
+      if (path === '/') {
+        expect(types, path).toContain('BeautySalon')
+        expect(types, path).toContain('WebPage')
+      }
       if (path.split('/').length === 3) expect(types, path).toContain('Service')
     }
+  })
+
+  test('privacy policy stays accessible but is excluded from indexing', async ({
+    page,
+    request,
+  }) => {
+    const response = await page.goto('/polityka-prywatnosci')
+
+    expect(response?.status()).toBe(200)
+
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+      'content',
+      'noindex, follow',
+    )
+
+    const paths = await sitemapPaths(request)
+    expect(paths).not.toContain('/polityka-prywatnosci')
+  })
+
+  test('home page structured data includes BeautySalon and WebPage with canonical metadata', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    const title = await page.title()
+
+    const { webPage, beautySalon } = await page
+      .locator('script[type="application/ld+json"]')
+      .evaluateAll((scripts) => {
+        let webPageNode: Record<string, unknown> | null = null
+        let beautySalonNode: Record<string, unknown> | null = null
+        for (const script of scripts) {
+          const data = JSON.parse(script.textContent || '{}')
+          if (data['@type'] === 'WebPage') webPageNode = data
+          if (data['@type'] === 'BeautySalon') beautySalonNode = data
+        }
+        return { webPage: webPageNode, beautySalon: beautySalonNode }
+      })
+
+    expect(webPage).not.toBeNull()
+    expect(webPage?.name).toBe(title)
+    expect(webPage?.about).toEqual({
+      '@id': 'https://kacosmetology.pl/#beautysalon',
+    })
+    expect(webPage?.primaryImageOfPage).toEqual({
+      '@type': 'ImageObject',
+      '@id': 'https://kacosmetology.pl/#primaryimage',
+      url: 'https://kacosmetology.pl/images/hero.webp',
+    })
+
+    expect(beautySalon).not.toBeNull()
+    expect(beautySalon?.image).toBe('https://kacosmetology.pl/images/hero.webp')
+    expect(beautySalon?.priceRange).toBe('30-550 PLN')
+    expect(typeof beautySalon?.description).toBe('string')
+    expect(beautySalon?.description).toBeTruthy()
   })
 })

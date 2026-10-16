@@ -1,6 +1,9 @@
 import { services } from '@data/services'
 import { describe, expect, it } from 'vitest'
-import { getServicePricing } from './servicePricing'
+import {
+  derivePublishedServicePriceRange,
+  getServicePricing,
+} from './servicePricing'
 
 describe('getServicePricing', () => {
   it('uses the standard price outside a promotion', () => {
@@ -23,5 +26,32 @@ describe('getServicePricing', () => {
     expect(pricing.currentPrice).toBeLessThan(pricing.standardPrice)
     expect(pricing.activePromotion).not.toBeNull()
     expect(pricing.lowestPriceInLast30Days).toBeDefined()
+  })
+})
+
+describe('derivePublishedServicePriceRange', () => {
+  it('derives the Schema.org price range from all published services', () => {
+    expect(derivePublishedServicePriceRange()).toBe('30-550 PLN')
+  })
+
+  it('determines the minimum and maximum price and ignores unpublished services', () => {
+    const sample = [
+      { price: 15, isPublished: false },
+      { price: 60, isPublished: true },
+      { price: 220, isPublished: true },
+      { price: 900, isPublished: false },
+    ]
+
+    expect(derivePublishedServicePriceRange(sample)).toBe('60-220 PLN')
+  })
+
+  it('formats a single price when min equals max', () => {
+    const single = [{ price: 150, isPublished: true }]
+
+    expect(derivePublishedServicePriceRange(single)).toBe('150 PLN')
+  })
+
+  it('defensively handles empty service collections', () => {
+    expect(derivePublishedServicePriceRange([])).toBeUndefined()
   })
 })

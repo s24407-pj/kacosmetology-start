@@ -6,7 +6,7 @@ export const ABOUT_SECTION: AboutSection = {
   processHeading: 'Jak wygląda współpraca',
   image: {
     src: '/images/proces/o-mnie.webp',
-    alt: 'Kosmetolog z książką i modelem skóry w gabinecie Ka.Cosmetology',
+    alt: 'Katarzyna Suwalska – kosmetolog i trycholog w gabinecie Ka.Cosmetology.',
     aspect: '4/5',
   },
   processSteps: [

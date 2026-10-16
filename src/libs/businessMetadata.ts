@@ -3,29 +3,35 @@ import type {
   PublicService,
   SalonLocation,
 } from '@app-types/types'
+import { HOMEPAGE_PRIMARY_IMAGE_PATH } from '@data/home'
 import { toSchemaOrgOpeningHoursSpecifications } from './openingHours'
 
 type BeautySalonJsonLdInput = {
   brand: BrandProfile
   location: SalonLocation
-  priceRange: string
+  priceRange: string | undefined
+  description?: string
+  imagePath?: string
 }
 
 export const toBeautySalonJsonLd = ({
   brand,
   location,
   priceRange,
+  description = brand.description,
+  imagePath = HOMEPAGE_PRIMARY_IMAGE_PATH,
 }: BeautySalonJsonLdInput) => ({
   '@context': 'https://schema.org',
   '@type': 'BeautySalon',
   '@id': new URL('#beautysalon', brand.siteUrl).href,
   name: brand.name,
+  description,
   logo: new URL(brand.logo.imagePath, brand.siteUrl).href,
-  image: new URL('/images/gallery/witryna.webp', brand.siteUrl).href,
+  image: new URL(imagePath, brand.siteUrl).href,
   url: new URL('/', brand.siteUrl).href,
   telephone: location.phone,
   email: brand.email,
-  priceRange,
+  ...(priceRange ? { priceRange } : {}),
   address: {
     '@type': 'PostalAddress',
     streetAddress: location.address.streetAddress,
@@ -89,4 +95,37 @@ export const toBreadcrumbListJsonLd = ({
     name: item.name,
     item: new URL(item.path, brand.siteUrl).href,
   })),
+})
+
+export const toWebPageJsonLd = ({
+  brand,
+  title,
+  description,
+  path = '/',
+  primaryImagePath,
+}: {
+  brand: BrandProfile
+  title: string
+  description: string
+  path?: string
+  primaryImagePath?: string
+}) => ({
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': new URL(`${path}#webpage`, brand.siteUrl).href,
+  url: new URL(path, brand.siteUrl).href,
+  name: title,
+  description,
+  about: {
+    '@id': new URL('#beautysalon', brand.siteUrl).href,
+  },
+  ...(primaryImagePath
+    ? {
+        primaryImageOfPage: {
+          '@type': 'ImageObject',
+          '@id': new URL(`${path}#primaryimage`, brand.siteUrl).href,
+          url: new URL(primaryImagePath, brand.siteUrl).href,
+        },
+      }
+    : {}),
 })

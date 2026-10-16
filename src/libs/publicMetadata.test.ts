@@ -91,7 +91,6 @@ describe('public metadata renderers', () => {
       '/oprawa-oka',
       '/trychologia',
       '/galeria',
-      '/polityka-prywatnosci',
     ]
     const serviceRoutes = services
       .filter((service) => service.isPublished && service.hasDetailPage)
@@ -104,6 +103,7 @@ describe('public metadata renderers', () => {
       new Set([...fixedRoutes, ...serviceRoutes]),
     )
     expect(getSitemapPaths()).not.toContain('/rezerwacja')
+    expect(getSitemapPaths()).not.toContain('/polityka-prywatnosci')
   })
 
   it('publishes only canonical locations without unsupported crawl hints', () => {

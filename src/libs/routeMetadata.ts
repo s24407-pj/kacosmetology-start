@@ -1,4 +1,5 @@
 import { brand } from '@data/business'
+import { HOMEPAGE_PRIMARY_IMAGE_PATH } from '@data/home'
 
 export interface SocialImageDescriptor {
   path: `/images/social/${string}.webp`
@@ -46,24 +47,42 @@ export const routeSocialImages = {
   },
 } as const satisfies Record<string, SocialImageDescriptor>
 
+export const formatRouteTitle = (title: string): string =>
+  `${title} | ${brand.name}`
+
+export const homeRouteMetadata = {
+  path: '/',
+  title: 'Kosmetolog i trycholog w Starogardzie Gdańskim',
+  completeTitle: formatRouteTitle(
+    'Kosmetolog i trycholog w Starogardzie Gdańskim',
+  ),
+  description:
+    'Indywidualna kosmetologia i trychologia w Ka.Cosmetology. Poznaj specjalizacje i umów wizytę.',
+  socialImage: routeSocialImages.home,
+  primaryImagePath: HOMEPAGE_PRIMARY_IMAGE_PATH,
+} as const
+
 export function createRouteHead({
   path,
   title,
   description,
   socialImage,
+  robots,
 }: {
   path: string
   title: string
   description: string
   socialImage: SocialImageDescriptor
+  robots?: string
 }) {
   const canonical = new URL(path, brand.siteUrl).href
-  const completeTitle = `${title} | ${brand.name}`
+  const completeTitle = formatRouteTitle(title)
   const socialImageUrl = new URL(socialImage.path, brand.siteUrl).href
   return {
     meta: [
       { title: completeTitle },
       { name: 'description', content: description },
+      ...(robots ? [{ name: 'robots', content: robots }] : []),
       { property: 'og:title', content: completeTitle },
       { property: 'og:description', content: description },
       { property: 'og:url', content: canonical },

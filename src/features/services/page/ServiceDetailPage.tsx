@@ -13,6 +13,7 @@ import {
 import { brand } from '@data/business'
 import { getPublicServicePath, getRelatedServices } from '@data/services'
 import { toBreadcrumbListJsonLd, toServiceJsonLd } from '@libs/businessMetadata'
+import { JsonLd } from '@libs/JsonLd'
 import { Link } from '@tanstack/react-router'
 import BooksyLink from '@widgets/actions/BooksyLink'
 import { Clock } from 'lucide-react'
@@ -64,11 +65,7 @@ export function ServiceDetailPage({ service }: { service: PublicService }) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is serialized from validated, repository-controlled service data.
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <JsonLd data={structuredData} />
       <PageHero
         breadcrumbs={
           <Breadcrumbs

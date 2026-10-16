@@ -5,6 +5,7 @@ import {
   surfaceCardStyles,
 } from '@components/ui'
 import { brand, primarySalonLocation } from '@data/business'
+import { HOMEPAGE_PRIMARY_IMAGE_PATH } from '@data/home'
 import {
   IMAGE_SIZES,
   MOBILE_WIDTHS,
@@ -91,8 +92,11 @@ export default function HeroSection() {
             >
               <div className="aspect-4/5 bg-surface-strong">
                 <img
-                  src={webpFallbackSrc('/images/hero.webp')}
-                  srcSet={webpSrcSet('/images/hero.webp', MOBILE_WIDTHS)}
+                  src={webpFallbackSrc(HOMEPAGE_PRIMARY_IMAGE_PATH)}
+                  srcSet={webpSrcSet(
+                    HOMEPAGE_PRIMARY_IMAGE_PATH,
+                    MOBILE_WIDTHS,
+                  )}
                   sizes={IMAGE_SIZES.hero}
                   alt={brand.practitionerName}
                   className="h-full w-full origin-top object-cover object-[50%_48%] scale-[1.05]"
