@@ -82,15 +82,13 @@ describe('toBeautySalonJsonLd', () => {
 })
 
 describe('toWebPageJsonLd', () => {
-  it('projects WebPage metadata with primaryImageOfPage', () => {
+  it('projects WebPage metadata with primaryImageOfPage and about relationship', () => {
     expect(
       toWebPageJsonLd({
         brand,
         title:
           'Kosmetolog i trycholog w Starogardzie Gdańskim | Ka.Cosmetology',
         description: 'Opis strony głównej.',
-        path: '/',
-        primaryImagePath: '/images/hero.webp',
       }),
     ).toEqual({
       '@context': 'https://schema.org',
@@ -99,11 +97,31 @@ describe('toWebPageJsonLd', () => {
       url: 'https://kacosmetology.pl/',
       name: 'Kosmetolog i trycholog w Starogardzie Gdańskim | Ka.Cosmetology',
       description: 'Opis strony głównej.',
+      about: {
+        '@id': 'https://kacosmetology.pl/#beautysalon',
+      },
       primaryImageOfPage: {
         '@type': 'ImageObject',
         '@id': 'https://kacosmetology.pl/#primaryimage',
         url: 'https://kacosmetology.pl/images/hero.webp',
       },
     })
+  })
+
+  it('allows custom path and omitting primary image', () => {
+    const jsonLd = toWebPageJsonLd({
+      brand,
+      title: 'Podstrona',
+      description: 'Opis podstrony',
+      path: '/podstrona',
+      primaryImagePath: '',
+    })
+
+    expect(jsonLd['@id']).toBe('https://kacosmetology.pl/podstrona#webpage')
+    expect(jsonLd.url).toBe('https://kacosmetology.pl/podstrona')
+    expect(jsonLd.about).toEqual({
+      '@id': 'https://kacosmetology.pl/#beautysalon',
+    })
+    expect(jsonLd).not.toHaveProperty('primaryImageOfPage')
   })
 })

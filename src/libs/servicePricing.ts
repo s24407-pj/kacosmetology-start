@@ -1,11 +1,26 @@
-import type { Service } from '@app-types/types'
+import type { PublicService, Service } from '@app-types/types'
 import {
   type ActivePromotion,
   getAllActivePromotions,
   resolveServicePromotion,
 } from '@data/promotion'
 import { getServicePriceHistory } from '@data/servicePriceHistory'
+import { getPublishedServices } from '@data/services'
 import { getLowestPriceInLastDays } from './priceHistory'
+
+export function derivePublishedServicePriceRange(
+  services: readonly PublicService[] = getPublishedServices(),
+  currency = 'PLN',
+): string {
+  const publishedServices = services.filter((service) => service.isPublished)
+  if (publishedServices.length === 0) {
+    return ''
+  }
+  const prices = publishedServices.map((service) => service.price)
+  const min = Math.min(...prices)
+  const max = Math.max(...prices)
+  return min === max ? `${min} ${currency}` : `${min}-${max} ${currency}`
+}
 
 export interface ServicePricingPresentation {
   standardPrice: number

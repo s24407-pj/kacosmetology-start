@@ -66,6 +66,7 @@ export interface BrandProfile {
   name: string
   practitionerName: string
   practitionerNameGenitive: string
+  description: string
   siteUrl: HttpsUrl
   email: string
   socialMedia: {

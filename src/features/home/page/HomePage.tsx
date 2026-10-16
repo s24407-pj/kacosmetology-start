@@ -2,7 +2,9 @@ import { brand, primarySalonLocation } from '@data/business'
 import ContactSection from '@features/contact/sections/ContactSection'
 import GoogleMap from '@features/contact/sections/GoogleMap'
 import { toBeautySalonJsonLd, toWebPageJsonLd } from '@libs/businessMetadata'
+import { JsonLd } from '@libs/JsonLd'
 import { homeRouteMetadata } from '@libs/routeMetadata'
+import { derivePublishedServicePriceRange } from '@libs/servicePricing'
 import AboutSection from '../sections/AboutSection'
 import HeroSection from '../sections/HeroSection'
 import OpinionsSection from '../sections/OpinionsSection'
@@ -13,7 +15,7 @@ import SpecializationsSection from '../sections/SpecializationsSection'
 const salonStructuredData = toBeautySalonJsonLd({
   brand,
   location: primarySalonLocation,
-  priceRange: '30-550 PLN',
+  priceRange: derivePublishedServicePriceRange(),
 })
 
 const webPageStructuredData = toWebPageJsonLd({
@@ -21,26 +23,13 @@ const webPageStructuredData = toWebPageJsonLd({
   title: homeRouteMetadata.completeTitle,
   description: homeRouteMetadata.description,
   path: homeRouteMetadata.path,
-  primaryImagePath: '/images/hero.webp',
 })
 
 export default function HomePage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is serialized from canonical, repository-controlled data.
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(salonStructuredData),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is serialized from canonical, repository-controlled data.
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(webPageStructuredData),
-        }}
-      />
+      <JsonLd data={salonStructuredData} />
+      <JsonLd data={webPageStructuredData} />
       <HeroSection />
       <SpecializationsSection />
       <AboutSection />

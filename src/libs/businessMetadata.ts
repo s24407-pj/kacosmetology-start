@@ -4,9 +4,7 @@ import type {
   SalonLocation,
 } from '@app-types/types'
 import { toSchemaOrgOpeningHoursSpecifications } from './openingHours'
-
-const DEFAULT_BEAUTY_SALON_DESCRIPTION =
-  'Gabinet kosmetologiczny i trychologiczny w Starogardzie Gdańskim prowadzony przez mgr Katarzynę Suwalską. Indywidualne terapie skóry, zabiegi trychologiczne i oprawa oka.'
+import { HOMEPAGE_PRIMARY_IMAGE_PATH } from './routeMetadata'
 
 type BeautySalonJsonLdInput = {
   brand: BrandProfile
@@ -20,8 +18,8 @@ export const toBeautySalonJsonLd = ({
   brand,
   location,
   priceRange,
-  description = DEFAULT_BEAUTY_SALON_DESCRIPTION,
-  imagePath = '/images/hero.webp',
+  description = brand.description,
+  imagePath = HOMEPAGE_PRIMARY_IMAGE_PATH,
 }: BeautySalonJsonLdInput) => ({
   '@context': 'https://schema.org',
   '@type': 'BeautySalon',
@@ -104,7 +102,7 @@ export const toWebPageJsonLd = ({
   title,
   description,
   path = '/',
-  primaryImagePath = '/images/hero.webp',
+  primaryImagePath = HOMEPAGE_PRIMARY_IMAGE_PATH,
 }: {
   brand: BrandProfile
   title: string
@@ -118,6 +116,9 @@ export const toWebPageJsonLd = ({
   url: new URL(path, brand.siteUrl).href,
   name: title,
   description,
+  about: {
+    '@id': new URL('#beautysalon', brand.siteUrl).href,
+  },
   ...(primaryImagePath
     ? {
         primaryImageOfPage: {

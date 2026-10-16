@@ -49,6 +49,8 @@ export const routeSocialImages = {
 export const formatRouteTitle = (title: string): string =>
   `${title} | ${brand.name}`
 
+export const HOMEPAGE_PRIMARY_IMAGE_PATH = '/images/hero.webp' as const
+
 export const homeRouteMetadata = {
   path: '/',
   title: 'Kosmetolog i trycholog w Starogardzie Gdańskim',
@@ -58,6 +60,7 @@ export const homeRouteMetadata = {
   description:
     'Indywidualna kosmetologia i trychologia w Ka.Cosmetology. Poznaj specjalizacje i umów wizytę.',
   socialImage: routeSocialImages.home,
+  primaryImagePath: HOMEPAGE_PRIMARY_IMAGE_PATH,
 } as const
 
 export function createRouteHead({

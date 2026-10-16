@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   createRouteHead,
   formatRouteTitle,
+  HOMEPAGE_PRIMARY_IMAGE_PATH,
   homeRouteMetadata,
   routeSocialImages,
 } from './routeMetadata'
@@ -93,7 +94,8 @@ describe('formatRouteTitle', () => {
 })
 
 describe('homeRouteMetadata', () => {
-  it('provides the canonical home title, completeTitle, description, and socialImage', () => {
+  it('provides the canonical home title, completeTitle, description, socialImage, and primaryImagePath', () => {
+    expect(HOMEPAGE_PRIMARY_IMAGE_PATH).toBe('/images/hero.webp')
     expect(homeRouteMetadata).toEqual({
       path: '/',
       title: 'Kosmetolog i trycholog w Starogardzie Gdańskim',
@@ -101,6 +103,7 @@ describe('homeRouteMetadata', () => {
       description:
         'Indywidualna kosmetologia i trychologia w Ka.Cosmetology. Poznaj specjalizacje i umów wizytę.',
       socialImage: routeSocialImages.home,
+      primaryImagePath: '/images/hero.webp',
     })
   })
 })

@@ -10,6 +10,8 @@ export const businessProfile = {
     name: 'Ka.Cosmetology',
     practitionerName: 'Katarzyna Suwalska',
     practitionerNameGenitive: 'Katarzyny Suwalskiej',
+    description:
+      'Gabinet kosmetologiczny i trychologiczny w Starogardzie Gdańskim prowadzony przez mgr Katarzynę Suwalską. Indywidualne terapie skóry, zabiegi trychologiczne i oprawa oka.',
     siteUrl: 'https://kacosmetology.pl/',
     email: 'gabinet@kacosmetology.pl',
     socialMedia: {

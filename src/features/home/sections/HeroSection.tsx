@@ -11,6 +11,7 @@ import {
   webpFallbackSrc,
   webpSrcSet,
 } from '@libs/responsiveImage'
+import { HOMEPAGE_PRIMARY_IMAGE_PATH } from '@libs/routeMetadata'
 import { scrollToId } from '@libs/utils'
 import BooksyLink from '@widgets/actions/BooksyLink'
 import { ChevronDown, MapPin } from 'lucide-react'
@@ -91,8 +92,11 @@ export default function HeroSection() {
             >
               <div className="aspect-4/5 bg-surface-strong">
                 <img
-                  src={webpFallbackSrc('/images/hero.webp')}
-                  srcSet={webpSrcSet('/images/hero.webp', MOBILE_WIDTHS)}
+                  src={webpFallbackSrc(HOMEPAGE_PRIMARY_IMAGE_PATH)}
+                  srcSet={webpSrcSet(
+                    HOMEPAGE_PRIMARY_IMAGE_PATH,
+                    MOBILE_WIDTHS,
+                  )}
                   sizes={IMAGE_SIZES.hero}
                   alt={brand.practitionerName}
                   className="h-full w-full origin-top object-cover object-[50%_48%] scale-[1.05]"
