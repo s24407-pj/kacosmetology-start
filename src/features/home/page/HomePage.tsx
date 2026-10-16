@@ -2,6 +2,7 @@ import { brand, primarySalonLocation } from '@data/business'
 import ContactSection from '@features/contact/sections/ContactSection'
 import GoogleMap from '@features/contact/sections/GoogleMap'
 import { toBeautySalonJsonLd, toWebPageJsonLd } from '@libs/businessMetadata'
+import { homeRouteMetadata } from '@libs/routeMetadata'
 import AboutSection from '../sections/AboutSection'
 import HeroSection from '../sections/HeroSection'
 import OpinionsSection from '../sections/OpinionsSection'
@@ -17,10 +18,9 @@ const salonStructuredData = toBeautySalonJsonLd({
 
 const webPageStructuredData = toWebPageJsonLd({
   brand,
-  title: 'Kosmetolog i trycholog w Starogardzie Gdańskim',
-  description:
-    'Indywidualna kosmetologia i trychologia w Ka.Cosmetology. Poznaj specjalizacje i umów wizytę.',
-  path: '/',
+  title: homeRouteMetadata.completeTitle,
+  description: homeRouteMetadata.description,
+  path: homeRouteMetadata.path,
   primaryImagePath: '/images/hero.webp',
 })
 

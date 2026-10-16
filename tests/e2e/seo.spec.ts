@@ -66,4 +66,24 @@ test.describe('crawler-facing outputs', () => {
     const paths = await sitemapPaths(request)
     expect(paths).not.toContain('/polityka-prywatnosci')
   })
+
+  test('home page WebPage structured data name matches document title', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    const title = await page.title()
+
+    const webPage = await page
+      .locator('script[type="application/ld+json"]')
+      .evaluateAll((scripts) => {
+        for (const script of scripts) {
+          const data = JSON.parse(script.textContent || '{}')
+          if (data['@type'] === 'WebPage') return data
+        }
+        return null
+      })
+
+    expect(webPage).not.toBeNull()
+    expect(webPage?.name).toBe(title)
+  })
 })

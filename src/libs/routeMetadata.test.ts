@@ -1,6 +1,11 @@
 import { brand } from '@data/business'
 import { describe, expect, it } from 'vitest'
-import { createRouteHead, routeSocialImages } from './routeMetadata'
+import {
+  createRouteHead,
+  formatRouteTitle,
+  homeRouteMetadata,
+  routeSocialImages,
+} from './routeMetadata'
 
 describe('createRouteHead', () => {
   it('resolves route paths against the canonical site URL', () => {
@@ -75,6 +80,27 @@ describe('routeSocialImages', () => {
       type: 'image/webp',
       width: 1200,
       height: 630,
+    })
+  })
+})
+
+describe('formatRouteTitle', () => {
+  it('appends the brand name suffix to the route title', () => {
+    expect(formatRouteTitle('Kosmetologia')).toBe(
+      `Kosmetologia | ${brand.name}`,
+    )
+  })
+})
+
+describe('homeRouteMetadata', () => {
+  it('provides the canonical home title, completeTitle, description, and socialImage', () => {
+    expect(homeRouteMetadata).toEqual({
+      path: '/',
+      title: 'Kosmetolog i trycholog w Starogardzie Gdańskim',
+      completeTitle: `Kosmetolog i trycholog w Starogardzie Gdańskim | ${brand.name}`,
+      description:
+        'Indywidualna kosmetologia i trychologia w Ka.Cosmetology. Poznaj specjalizacje i umów wizytę.',
+      socialImage: routeSocialImages.home,
     })
   })
 })

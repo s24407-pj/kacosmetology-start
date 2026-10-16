@@ -46,6 +46,20 @@ export const routeSocialImages = {
   },
 } as const satisfies Record<string, SocialImageDescriptor>
 
+export const formatRouteTitle = (title: string): string =>
+  `${title} | ${brand.name}`
+
+export const homeRouteMetadata = {
+  path: '/',
+  title: 'Kosmetolog i trycholog w Starogardzie Gdańskim',
+  completeTitle: formatRouteTitle(
+    'Kosmetolog i trycholog w Starogardzie Gdańskim',
+  ),
+  description:
+    'Indywidualna kosmetologia i trychologia w Ka.Cosmetology. Poznaj specjalizacje i umów wizytę.',
+  socialImage: routeSocialImages.home,
+} as const
+
 export function createRouteHead({
   path,
   title,
@@ -60,7 +74,7 @@ export function createRouteHead({
   robots?: string
 }) {
   const canonical = new URL(path, brand.siteUrl).href
-  const completeTitle = `${title} | ${brand.name}`
+  const completeTitle = formatRouteTitle(title)
   const socialImageUrl = new URL(socialImage.path, brand.siteUrl).href
   return {
     meta: [
