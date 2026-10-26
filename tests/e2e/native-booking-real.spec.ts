@@ -103,7 +103,7 @@ test('real browser OTP, lost committed result, cancellation replay and returning
     .click()
   await expect(page.getByLabel('Kod SMS', { exact: true })).toBeVisible()
   const code = execFileSync(
-    'podman',
+    process.env.SCHEDULER_E2E_CONTAINER_ENGINE ?? 'podman',
     ['exec', redisContainer, 'redis-cli', 'GET', `otp:${company}:${phone}`],
     { encoding: 'utf8' },
   ).trim()

@@ -17,6 +17,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
+    "test:integration": "playwright test --config playwright.integration.config.ts",
     "format": "biome format",
     "lint": "biome lint",
     "check": "biome check && pnpm check:production-data && pnpm check:public-metadata",

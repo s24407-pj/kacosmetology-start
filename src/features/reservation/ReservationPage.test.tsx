@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/vitest'
 import type {
   BookingBody,
+  Employee,
   Profile,
   Reservation,
   Session,
@@ -58,6 +59,8 @@ const reservation: Reservation = {
   status: 'BOOKED',
   archived: false,
 }
+let employees: Employee[]
+let onAvailability: (path: string) => Response | Promise<Response>
 let identity: Session | null
 let profile: Profile
 let onBook: (init: RequestInit) => Response | Promise<Response>
@@ -66,6 +69,16 @@ let quoteExpires: string
 const ok = (value: unknown) => Response.json(value)
 
 beforeEach(() => {
+  employees = [{ id: employee, firstName: 'Anna', lastName: 'Salon' }]
+  onAvailability = () =>
+    ok([
+      {
+        time: '14:00:00',
+        price: 123,
+        originalPrice: 123,
+        personalConflict: false,
+      },
+    ])
   identity = { ...session }
   profile = {
     id: customer,
@@ -100,17 +113,8 @@ beforeEach(() => {
           },
           { id: other, companyId: other, name: 'Obca', active: true },
         ])
-      if (path.startsWith('/api/employees/public/'))
-        return ok([{ id: employee, firstName: 'Anna', lastName: 'Salon' }])
-      if (path.startsWith('/api/availability'))
-        return ok([
-          {
-            time: '14:00:00',
-            price: 123,
-            originalPrice: 123,
-            personalConflict: false,
-          },
-        ])
+      if (path.startsWith('/api/employees/public/')) return ok(employees)
+      if (path.startsWith('/api/availability')) return onAvailability(path)
       if (path === '/api/auth/request-code') return ok({ message: 'ok' })
       if (path === '/api/auth/verify-code') {
         identity = { ...session }
@@ -177,6 +181,50 @@ async function enterNames(user: ReturnType<typeof userEvent.setup>) {
 }
 
 describe('native booking', () => {
+  it.each([404, 500])(
+    'keeps available slots when another specialist returns %i and clears the warning after recovery',
+    async (status) => {
+      employees.push({ id: other, firstName: 'Jan', lastName: 'Salon' })
+      const available = onAvailability
+      onAvailability = (path) =>
+        path.includes(`employeeId=${other}`)
+          ? Response.json({ code: 'UNAVAILABLE' }, { status })
+          : available(path)
+      const user = await mount()
+      await chooseTime(user)
+      expect(
+        screen.getByText(/Nie udało się pobrać terminów części/),
+      ).toBeVisible()
+      expect(screen.getByLabelText('Godzina')).toHaveValue('14:00:00')
+      await acceptQuote(user)
+      expect(
+        screen.getByLabelText(
+          'Akceptuję powyższą cenę, czas trwania i termin.',
+        ),
+      ).toBeChecked()
+      onAvailability = available
+      await user.selectOptions(screen.getByLabelText('Specjalista'), other)
+      await chooseTime(user)
+      expect(
+        screen.queryByText(/Nie udało się pobrać terminów części/),
+      ).not.toBeInTheDocument()
+    },
+  )
+  it('reports complete availability failure without claiming the day has no slots', async () => {
+    onAvailability = () => Response.json({}, { status: 500 })
+    await mount()
+    expect(
+      await screen.findByText(
+        'Nie udało się pobrać dostępnych terminów. Spróbuj ponownie później.',
+      ),
+    ).toBeVisible()
+    expect(
+      screen.queryByText(/Brak dostępnych terminów/),
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('option', { name: '14:00' }),
+    ).not.toBeInTheDocument()
+  })
   it('preselects only configured API services and books first visit with confirmed OTP and server terms', async () => {
     identity = null
     const user = await mount()

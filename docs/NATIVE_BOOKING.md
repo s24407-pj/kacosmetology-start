@@ -104,11 +104,31 @@ See backend identity documentation for a read-only phone-key audit and manually
 reviewed remediation; do not guess legacy prefixes or merge customer identities.
 
 Run `pnpm api:generate`, check/typecheck/build, unit coverage and browser suites.
-Mock E2E tests cover UI/recovery boundaries. Optional native real E2E requires the
-matching isolated seeded API, test-only SMS infrastructure, company/service IDs
-and explicit isolated PostgreSQL/Redis container names; see the real test's env
-requirements. Never point this fixture-writing test at a live salon database.
-The whole site validation command is `pnpm run validate`.
+Mock E2E tests cover UI/recovery boundaries. Every push to main and every pull
+request also runs the separate `Booking integration smoke` CI job. It builds the
+Scheduler commit in `.github/scheduler-api-revision`, starts Spring with dev-only
+mock SMS and disposable PostgreSQL/Redis services, and inserts the synthetic
+calendar in `scripts/ci/booking-fixture.sql`. No production credentials are used.
+The Chromium smoke exercises OTP → quote → booking, a lost committed response,
+cancellation and exact-key/body replay, then a returning booking. Missing fixture
+configuration or backend startup failure fails the job rather than skipping it.
+Keep the backend revision pin aligned with intentional contract upgrades. Configure
+`Booking integration smoke` as a required check in GitHub branch protection;
+repository workflow files cannot enforce that setting themselves.
+
+`pnpm run validate` / `pnpm validate:ci` run the general site suite. The separate
+integration command is `pnpm test:integration`; CI supplies `SCHEDULER_API_ORIGIN`,
+`VITE_SCHEDULER_COMPANY_ID`, `VITE_SCHEDULER_SERVICE_MAP`,
+`SCHEDULER_E2E_EMPLOYEE_ID`, `SCHEDULER_E2E_REDIS_CONTAINER` and
+`SCHEDULER_E2E_CONTAINER_ENGINE=docker`. The dedicated config enables the real
+scenario automatically and runs one Chromium worker. For local isolated fixtures,
+the existing full-suite opt-in `SCHEDULER_E2E_REAL=1` remains available; the default
+container CLI is Podman. Never point fixture-writing tests at a live salon database.
+
+Availability requests settle independently for each eligible specialist. Successful
+responses remain selectable when another request fails; a separate message explains
+incomplete data. A total fetch failure is distinct from an empty successful day.
+
 
 
 ## Verification completed on 2026-10-26

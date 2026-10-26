@@ -60,6 +60,7 @@ export default function ReservationPage({
   const [session, setSession] = useState<Session | null>(null)
   const [sessionLoading, setSessionLoading] = useState(true)
   const [slotsLoading, setSlotsLoading] = useState(false)
+  const [availabilityWarning, setAvailabilityWarning] = useState('')
   const [profile, setProfile] = useState<Profile | null>(null)
   const [phone, setPhone] = useState('+48')
   const [phoneConfirmed, setPhoneConfirmed] = useState(false)
@@ -193,6 +194,7 @@ export default function ReservationPage({
 
   useEffect(() => {
     const generation = ++slotGeneration.current
+    setAvailabilityWarning('')
     setSlots([])
     setTime('')
     setQuote(null)
@@ -205,7 +207,7 @@ export default function ReservationPage({
     const eligible = employee
       ? employees.filter((item) => item.id === employee)
       : employees
-    Promise.all(
+    Promise.allSettled(
       eligible.map((item) =>
         client.request<Slot[]>(
           `/api/availability?employeeId=${encodeURIComponent(item.id)}&serviceId=${encodeURIComponent(service)}&date=${date}`,
@@ -214,8 +216,16 @@ export default function ReservationPage({
     )
       .then((all) => {
         if (generation !== slotGeneration.current) return
+        const successful = all.filter((result) => result.status === 'fulfilled')
+        if (successful.length < all.length) {
+          setAvailabilityWarning(
+            successful.length
+              ? 'Nie udało się pobrać terminów części specjalistów. Pokazujemy terminy pozostałych. Spróbuj ponownie później, aby sprawdzić pełną dostępność.'
+              : 'Nie udało się pobrać dostępnych terminów. Spróbuj ponownie później.',
+          )
+        }
         const merged = new Map<string, Slot>()
-        for (const slot of all.flat()) {
+        for (const slot of successful.flatMap((result) => result.value)) {
           const previous = merged.get(slot.time)
           merged.set(slot.time, {
             ...slot,
@@ -624,12 +634,19 @@ export default function ReservationPage({
                 {slotsLoading && (
                   <p role="status">Pobieramy dostępne terminy…</p>
                 )}
-                {service && date && !slotsLoading && !slots.length && (
-                  <p role="status">
-                    Brak dostępnych terminów dla wybranego dnia. Wybierz inny
-                    dzień.
-                  </p>
+                {availabilityWarning && (
+                  <p role="status">{availabilityWarning}</p>
                 )}
+                {service &&
+                  date &&
+                  !slotsLoading &&
+                  !slots.length &&
+                  !availabilityWarning && (
+                    <p role="status">
+                      Brak dostępnych terminów dla wybranego dnia. Wybierz inny
+                      dzień.
+                    </p>
+                  )}
                 <p>
                   Wybór godziny nie blokuje terminu. Dostępność zostanie
                   sprawdzona przy zapisie.
