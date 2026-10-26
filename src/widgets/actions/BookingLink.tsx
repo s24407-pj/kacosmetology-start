@@ -1,17 +1,17 @@
 import type { ServiceArea, ServiceId } from '@app-types/types'
 import { actionLinkStyles } from '@components/ui'
-import { primarySalonLocation } from '@data/business'
 import { getServiceById } from '@data/services'
 import { analytics } from '@libs/analytics'
+import { bookingHref } from '@libs/booking/policy'
 import { cn } from '@libs/utils'
-import { ExternalLink } from 'lucide-react'
+import { Calendar } from 'lucide-react'
 import type { ReactNode } from 'react'
 
-export default function BooksyLink({
+export default function BookingLink({
   placement,
   area,
   serviceId,
-  children = 'Umów wizytę w Booksy',
+  children = 'Umów wizytę',
   className,
   showExternalIcon = true,
 }: {
@@ -26,18 +26,12 @@ export default function BooksyLink({
 
   return (
     <a
-      href={primarySalonLocation.bookingUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={
-        typeof children === 'string'
-          ? `${children} (otwiera nową kartę)`
-          : 'Umów wizytę w Booksy (otwiera nową kartę)'
-      }
+      href={bookingHref(serviceId)}
+      aria-label={typeof children === 'string' ? children : 'Umów wizytę'}
       onClick={() =>
         analytics.trackInitiateCheckout({
           placement,
-          destinationUrl: primarySalonLocation.bookingUrl,
+          destinationUrl: bookingHref(serviceId),
           ...(area ? { serviceCategory: area } : {}),
           ...(serviceName ? { serviceName } : {}),
         })
@@ -46,7 +40,7 @@ export default function BooksyLink({
     >
       {children}
       {showExternalIcon ? (
-        <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
+        <Calendar className="h-4 w-4 shrink-0" aria-hidden="true" />
       ) : null}
     </a>
   )

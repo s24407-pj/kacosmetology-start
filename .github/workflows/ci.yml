@@ -16,7 +16,8 @@ permissions:
 jobs:
   quality:
     name: Quality
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     permissions:
       contents: write
 
@@ -73,10 +74,14 @@ jobs:
         run: pnpm audit --audit-level high
 
       - name: Install Playwright browsers and system deps
-        run: pnpm exec playwright install --with-deps chromium webkit
+        timeout-minutes: 8
+        run: |
+          sudo bash scripts/ci/configure-apt.sh
+          pnpm exec playwright install --with-deps chromium webkit
 
       - name: Run Playwright tests
         id: playwright
+        timeout-minutes: 15
         run: pnpm test:e2e
 
       - name: Upload Playwright artifacts
@@ -89,3 +94,117 @@ jobs:
             playwright-report/
           if-no-files-found: error
           retention-days: 14
+
+  booking-integration:
+    name: Booking integration smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: booking_integration
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: integration
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres -d booking_integration"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+      redis:
+        image: redis:8-alpine
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://127.0.0.1:5432/booking_integration
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: integration
+      SPRING_DATA_REDIS_HOST: 127.0.0.1
+      SPRING_DATA_REDIS_PORT: '6379'
+      SCHEDULER_JOBS_ENABLED: 'false'
+      CORS_ORIGINS: http://127.0.0.1:4173
+      SCHEDULER_API_ORIGIN: http://127.0.0.1:8080
+      VITE_SCHEDULER_COMPANY_ID: 00000000-0000-4000-8000-000000000001
+      VITE_SCHEDULER_SERVICE_MAP: '{"service-regulacja-brwi":"00000000-0000-4000-8000-000000000002"}'
+      SCHEDULER_E2E_EMPLOYEE_ID: 00000000-0000-4000-8000-000000000004
+      SCHEDULER_E2E_CONTAINER_ENGINE: docker
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Read compatible Scheduler revision
+        id: backend
+        shell: bash
+        run: |
+          revision="$(cat .github/scheduler-api-revision)"
+          [[ "$revision" =~ ^[0-9a-f]{40}$ ]]
+          echo "revision=$revision" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout Scheduler
+        uses: actions/checkout@v7
+        with:
+          repository: s24407-pj/scheduler
+          ref: ${{ steps.backend.outputs.revision }}
+          path: scheduler-api
+          persist-credentials: false
+
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Setup toolchain with mise
+        uses: jdx/mise-action@v5
+        with:
+          cache: true
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        timeout-minutes: 8
+        run: |
+          sudo bash scripts/ci/configure-apt.sh
+          pnpm exec playwright install --with-deps chromium
+
+      - name: Build Scheduler
+        working-directory: scheduler-api
+        run: ./gradlew bootJar --no-daemon --console=plain
+
+      - name: Start isolated Scheduler
+        run: bash scripts/ci/start-scheduler.sh scheduler-api/build/libs/scheduler-*.jar
+
+      - name: Seed isolated calendar
+        env:
+          POSTGRES_CONTAINER: ${{ job.services.postgres.id }}
+        run: docker exec -i "$POSTGRES_CONTAINER" psql -X -U postgres -d booking_integration < scripts/ci/booking-fixture.sql
+
+      - name: Run OTP, quote, booking and exact replay against Spring
+        env:
+          SCHEDULER_E2E_REDIS_CONTAINER: ${{ job.services.redis.id }}
+        run: pnpm test:integration
+
+      - name: Upload integration diagnostics
+        if: ${{ !cancelled() && failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: booking-integration-artifacts
+          path: |
+            test-results/
+            playwright-report/
+            ${{ runner.temp }}/scheduler-api.log
+          retention-days: 14
+
+      - name: Stop Scheduler
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f "$RUNNER_TEMP/scheduler-api.pid" ]]; then
+            kill "$(cat "$RUNNER_TEMP/scheduler-api.pid")" || true
+          fi

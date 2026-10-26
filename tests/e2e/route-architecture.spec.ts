@@ -235,11 +235,11 @@ test('landing and detail routes preserve specialization boundaries', async ({
     page.getByRole('img', { name: /naturalna oprawa oka/i }),
   ).toBeVisible()
   await expect(
-    page.getByRole('link', {
-      name: 'Umów wizytę (otwiera nową kartę)',
+    page.locator('#main-content').getByRole('link', {
+      name: 'Umów wizytę',
       exact: true,
     }),
-  ).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
+  ).toHaveAttribute('href', '/rezerwacja')
   const eyebrowRegulationCard = page.locator('article').filter({
     has: page.getByRole('heading', {
       level: 3,
@@ -295,26 +295,24 @@ for (const [path, title] of [
   })
 }
 
-test('booking actions lead directly to Booksy and the legacy route redirects', async ({
+test('booking actions open the native reservation route', async ({
   page,
   request,
 }) => {
   await ready(page, '/')
-  const booksy = page.locator('#hero').getByRole('link', {
-    name: 'Umów wizytę w Booksy (otwiera nową kartę)',
-    exact: true,
-  })
-  await expect(booksy).toBeVisible()
-  await expect(booksy).toHaveAttribute(
-    'href',
-    'https://kacosmetology.booksy.com',
-  )
-  await expect(booksy).toHaveAttribute('target', '_blank')
-  await expect(page.locator('a[href^="/rezerwacja"]')).toHaveCount(0)
-
+  const booking = page
+    .locator('#hero')
+    .getByRole('link', { name: 'Umów wizytę', exact: true })
+  await expect(booking).toHaveAttribute('href', '/rezerwacja')
+  await expect(booking).not.toHaveAttribute('target', '_blank')
+  await booking.click()
+  await expect(page).toHaveURL(/\/rezerwacja$/)
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Rezerwacja wizyty' }),
+  ).toBeVisible()
   const response = await request.get('/rezerwacja', { maxRedirects: 0 })
-  expect(response.status()).toBe(307)
-  expect(response.headers().location).toBe('https://kacosmetology.booksy.com')
+  expect(response.status()).toBe(200)
+  expect(response.headers().location).toBeUndefined()
 })
 
 test('legacy eye-styling service URLs redirect permanently', async ({
@@ -348,7 +346,7 @@ test('desktop navigation exposes home sections and keeps its CTA aligned', async
     name: 'Główna nawigacja',
   })
   const cta = navigation.getByRole('link', {
-    name: /Umów wizytę w Booksy/,
+    name: /Umów wizytę/,
   })
   const ctaLabel = cta.getByText('Umów się')
 
@@ -535,7 +533,7 @@ for (const path of [
   '/oprawa-oka/regulacja-brwi',
   '/galeria',
 ]) {
-  test(`${path} opens external links safely and books via Booksy`, async ({
+  test(`${path} opens external links safely and offers native booking`, async ({
     page,
   }) => {
     await ready(page, path)
@@ -547,11 +545,11 @@ for (const path of [
     for (const rel of rels) expect(rel).toContain('noopener')
 
     const bookingHrefs = await page
-      .locator('a[href*="booksy"]')
+      .locator('a[href^="/rezerwacja"]')
       .evaluateAll((links) => links.map((link) => link.getAttribute('href')))
     expect(bookingHrefs.length).toBeGreaterThan(0)
     for (const href of bookingHrefs) {
-      expect(href).toBe(primarySalonLocation.bookingUrl)
+      expect(href).toMatch(/^\/rezerwacja(?:\?service=service-[a-z0-9-]+)?$/)
     }
   })
 }

@@ -5,7 +5,7 @@ patterns; do not commit unless the user or an active workflow authorizes it.
 
 ## Commands
 
-Requires Node 24 and pnpm 11. With mise activated, run `mise install`
+Requires Node 24 and pnpm 12. With mise activated, run `mise install`
 to use the versions pinned in `mise.toml`.
 
 ```bash

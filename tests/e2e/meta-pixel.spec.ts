@@ -141,13 +141,13 @@ test.describe('Meta Pixel', () => {
       (request) => isMetaPixelEvent(request, 'InitiateCheckout'),
       { timeout: 20_000 },
     )
-    const booksyLink = page.locator('a[href*="booksy.com"]').first()
+    const booksyLink = page.locator('a[href="/rezerwacja"]').first()
     await expect(booksyLink).toBeVisible()
     await preventNavigationOnce(booksyLink)
     await booksyLink.click()
     await initiateCheckout
 
-    // No in-app Purchase caller (Booksy checkout is external); exercise Meta track path.
+    // Native booking emits no Purchase automatically; exercise the consent-aware Meta adapter path.
     const purchasePixel = page.waitForRequest(
       (request) => isMetaPixelEvent(request, 'Purchase'),
       { timeout: 20_000 },

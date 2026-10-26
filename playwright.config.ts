@@ -13,14 +13,21 @@ for (const [key, value] of Object.entries(viteEnv)) {
   }
 }
 
+// Test-build defaults only: browser route mocks supply the corresponding catalog.
+// Explicit environment values opt into a matching real Scheduler dev fixture.
+process.env.VITE_SCHEDULER_COMPANY_ID ??= '00000000-0000-4000-8000-000000000001'
+process.env.VITE_SCHEDULER_SERVICE_MAP ??= JSON.stringify({
+  'service-regulacja-brwi': '00000000-0000-4000-8000-000000000002',
+})
+
 const PORT = 4173
 const HOST = '127.0.0.1'
 const isCI = Boolean(process.env.CI)
 // `exec` keeps the server in Playwright's process group so teardown kills it;
 // `pnpm start` would move it to its own group and leave it running.
-const webServerCommand = isCI
-  ? 'exec node .output/server/index.mjs'
-  : 'pnpm build && exec node .output/server/index.mjs'
+// Rebuild with the test catalog configuration even when CI checked a general
+// production build earlier. Test-only fixture values never become app defaults.
+const webServerCommand = 'pnpm build && exec node .output/server/index.mjs'
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -45,6 +52,8 @@ export default defineConfig({
       HOST,
       PORT: String(PORT),
       PLAYWRIGHT_TEST_MODE: '1',
+      VITE_SCHEDULER_COMPANY_ID: process.env.VITE_SCHEDULER_COMPANY_ID,
+      VITE_SCHEDULER_SERVICE_MAP: process.env.VITE_SCHEDULER_SERVICE_MAP,
     },
     reuseExistingServer: false,
     stderr: 'pipe',

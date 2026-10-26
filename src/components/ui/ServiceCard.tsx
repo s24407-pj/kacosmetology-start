@@ -1,6 +1,6 @@
 import type { PublicService } from '@app-types/types'
 import { Link } from '@tanstack/react-router'
-import BooksyLink from '@widgets/actions/BooksyLink'
+import BookingLink from '@widgets/actions/BookingLink'
 import { ArrowRight, Clock } from 'lucide-react'
 import { Heading } from './Heading'
 import { ServicePrice } from './ServicePrice'
@@ -62,7 +62,7 @@ export function ServiceCard({
           Poznaj szczegóły <ArrowRight className="h-4 w-4" />
         </Link>
       ) : (
-        <BooksyLink
+        <BookingLink
           placement="service-card"
           area={service.area}
           serviceId={service.id}
@@ -71,8 +71,8 @@ export function ServiceCard({
             className: 'mt-5 w-fit',
           })}
         >
-          Zarezerwuj w Booksy
-        </BooksyLink>
+          Zarezerwuj wizytę
+        </BookingLink>
       )}
     </article>
   )

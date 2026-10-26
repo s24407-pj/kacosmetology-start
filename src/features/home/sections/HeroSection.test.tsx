@@ -19,7 +19,7 @@ vi.mock('@libs/utils', async () => {
   }
 })
 
-import { brand, primarySalonLocation } from '@data/business'
+import { brand } from '@data/business'
 import { analytics } from '@libs/analytics'
 import { scrollToId } from '@libs/utils'
 import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
@@ -45,7 +45,7 @@ describe('HeroSection', () => {
     ).toBeVisible()
   })
 
-  it('routes both CTAs and tracks Booksy checkout from the hero', async () => {
+  it('routes both CTAs and tracks native booking entry from the hero', async () => {
     const user = userEvent.setup()
     render(<HeroSection />)
 
@@ -54,13 +54,13 @@ describe('HeroSection', () => {
       name: /poznaj moje podejście/i,
     })
 
-    expect(booksyLink).toHaveAttribute('href', primarySalonLocation.bookingUrl)
-    expect(booksyLink).toHaveAttribute('target', '_blank')
+    expect(booksyLink).toHaveAttribute('href', '/rezerwacja')
+    expect(booksyLink).not.toHaveAttribute('target')
 
     await clickAnalyticsLink(user, booksyLink)
     expect(analytics.trackInitiateCheckout).toHaveBeenCalledWith({
       placement: 'hero',
-      destinationUrl: primarySalonLocation.bookingUrl,
+      destinationUrl: '/rezerwacja',
     })
 
     await user.click(approachButton)

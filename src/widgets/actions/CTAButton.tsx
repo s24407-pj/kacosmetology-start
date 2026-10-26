@@ -1,7 +1,7 @@
 import { actionLinkStyles } from '@components/ui'
 import { useUI } from '@context/UIContext'
-import { primarySalonLocation } from '@data/business'
 import { analytics } from '@libs/analytics'
+import { bookingHref } from '@libs/booking/policy'
 import { cn } from '@libs/utils'
 import { Calendar } from 'lucide-react'
 
@@ -15,14 +15,12 @@ export default function CTAButton({ placement = 'navbar' }: CTAButtonProps) {
   return (
     <div className="flex items-center justify-center">
       <a
-        href={primarySalonLocation.bookingUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Umów wizytę w Booksy (otwiera nową kartę)"
+        href={bookingHref()}
+        aria-label="Umów wizytę"
         onClick={() =>
           analytics.trackInitiateCheckout({
             placement,
-            destinationUrl: primarySalonLocation.bookingUrl,
+            destinationUrl: bookingHref(),
           })
         }
         className={cn(

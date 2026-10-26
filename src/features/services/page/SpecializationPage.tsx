@@ -8,7 +8,7 @@ import {
 } from '@components/ui'
 import { getServicesByArea } from '@data/services'
 import { getSpecialization } from '@data/specializations'
-import BooksyLink from '@widgets/actions/BooksyLink'
+import BookingLink from '@widgets/actions/BookingLink'
 import { SpecializationEditorialSection } from '../sections/SpecializationEditorialSection'
 import { SpecializationHero } from '../sections/SpecializationHero'
 
@@ -84,12 +84,12 @@ export function SpecializationPage({
         description={copy.intro}
         image={copy.image}
         actions={
-          <BooksyLink
+          <BookingLink
             placement="specialization-hero"
             area={specialization.area}
           >
             {copy.heroAction}
-          </BooksyLink>
+          </BookingLink>
         }
       />
       <SpecializationEditorialSection specializationId={specializationId} />
@@ -157,13 +157,13 @@ export function SpecializationPage({
           >
             {copy.process}
           </Text>
-          <BooksyLink
+          <BookingLink
             placement="specialization-closing"
             area={specialization.area}
             className="mt-7"
           >
-            Przejdź do Booksy
-          </BooksyLink>
+            Przejdź do rezerwacji
+          </BookingLink>
         </div>
       </Section>
     </>

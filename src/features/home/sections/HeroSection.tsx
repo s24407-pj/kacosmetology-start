@@ -13,7 +13,7 @@ import {
   webpSrcSet,
 } from '@libs/responsiveImage'
 import { scrollToId } from '@libs/utils'
-import BooksyLink from '@widgets/actions/BooksyLink'
+import BookingLink from '@widgets/actions/BookingLink'
 import { ChevronDown, MapPin } from 'lucide-react'
 import type { MouseEvent } from 'react'
 
@@ -60,7 +60,7 @@ export default function HeroSection() {
             </p>
 
             <div className="flex flex-col gap-3 sm:flex-row">
-              <BooksyLink
+              <BookingLink
                 placement="hero"
                 showExternalIcon={false}
                 className="gap-1.5"
@@ -69,7 +69,7 @@ export default function HeroSection() {
                   <DrawnHeartIcon className="h-5 w-5" strokeWidth={5} />
                 </span>
                 Umów wizytę
-              </BooksyLink>
+              </BookingLink>
 
               <button
                 type="button"

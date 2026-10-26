@@ -16,7 +16,6 @@ vi.mock('@libs/analytics', () => ({
 
 import type { UIContextType } from '@app-types/types'
 import { useUI } from '@context/UIContext'
-import { primarySalonLocation } from '@data/business'
 import { analytics } from '@libs/analytics'
 import { clickAnalyticsLink } from '@/test/clickAnalyticsLink'
 import CTAButton from './CTAButton'
@@ -66,15 +65,15 @@ describe('CTAButton', () => {
 
     render(<CTAButton placement="footer" />)
 
-    const link = screen.getByRole('link', { name: /Umów wizytę w Booksy/ })
-    expect(link).toHaveAttribute('href', primarySalonLocation.bookingUrl)
-    expect(link).toHaveAttribute('target', '_blank')
-    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+    const link = screen.getByRole('link', { name: /Umów wizytę/ })
+    expect(link).toHaveAttribute('href', '/rezerwacja')
+    expect(link).not.toHaveAttribute('target')
+    expect(link).not.toHaveAttribute('rel')
     await clickAnalyticsLink(user, link)
 
     expect(analytics.trackInitiateCheckout).toHaveBeenCalledWith({
       placement: 'footer',
-      destinationUrl: primarySalonLocation.bookingUrl,
+      destinationUrl: '/rezerwacja',
     })
   })
 })

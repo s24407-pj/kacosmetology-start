@@ -131,7 +131,7 @@ describe('Footer', () => {
     ).toBeInTheDocument()
     expect(
       screen.getByRole('link', { name: /Przejdź do rezerwacji/ }),
-    ).toHaveAttribute('href', primarySalonLocation.bookingUrl)
+    ).toHaveAttribute('href', '/rezerwacja')
   })
 
   it('displays copyright information and consent controls', () => {

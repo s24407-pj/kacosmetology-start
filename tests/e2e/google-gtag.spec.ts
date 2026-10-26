@@ -139,8 +139,8 @@ test.describe('Google Tag (Consent Mode v2)', () => {
       )
       .toBe('consent-mode-ready')
 
-    // Exercise begin_checkout on Booksy CTA
-    const booksyLink = page.locator('a[href*="booksy.com"]').first()
+    // Exercise begin_checkout on the native booking CTA
+    const booksyLink = page.locator('a[href="/rezerwacja"]').first()
     await expect(booksyLink).toBeVisible()
     await preventNavigationOnce(booksyLink)
     await booksyLink.click()

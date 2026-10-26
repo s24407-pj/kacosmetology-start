@@ -12,7 +12,7 @@ import { brand, primarySalonLocation } from '@data/business'
 import { analytics } from '@libs/analytics'
 import { createContactLinks, getContactHref } from '@libs/contactLinks'
 import { getOpeningHoursView } from '@libs/openingHours'
-import BooksyLink from '@widgets/actions/BooksyLink'
+import BookingLink from '@widgets/actions/BookingLink'
 import { Clock, Heart, Mail, MapPin, Phone } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -108,13 +108,13 @@ export default function ContactSection() {
           </div>
 
           <div className="text-center">
-            <BooksyLink
+            <BookingLink
               placement={CONTACT_SECTION_PLACEMENT}
               showExternalIcon={false}
             >
               <Heart className="h-5 w-5" aria-hidden="true" />
-              Umów wizytę przez Booksy
-            </BooksyLink>
+              Umów wizytę online
+            </BookingLink>
           </div>
         </div>
 
