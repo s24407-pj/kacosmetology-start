@@ -193,7 +193,9 @@ contracts.
 `src/libs/booking` owns generated contracts, transport, exact-attempt recovery,
 explicit international phone formatting and Warsaw display policy. Marketing
 service IDs remain distinct from Scheduler UUIDs. `server/routes/api/[...path].ts`
-is a request-local transport relay, with no shared login or customer database.
+is a request-local development/integration transport relay, with no shared login
+or customer database. Production requires routing `/api` through the trusted
+edge directly to Spring; see [BOOKING_EDGE.md](./BOOKING_EDGE.md) for deployment requirements.
 Spring owns sessions, authorization, profile establishment and all booking rules.
 
 Read [NATIVE_BOOKING.md](./NATIVE_BOOKING.md) before changing the relay,

@@ -10,7 +10,7 @@ duration, identity and reservation status come from Spring.
 | --- | --- | --- |
 | `VITE_SCHEDULER_COMPANY_ID` | Build | Salon UUID from Scheduler; empty disables booking and displays contact. |
 | `VITE_SCHEDULER_SERVICE_MAP` | Build | JSON object mapping marketing `ServiceId` values to active Scheduler offering UUIDs. |
-| `SCHEDULER_API_ORIGIN` | Runtime | Fixed backend origin, e.g. `http://scheduler:8080`, for the Nitro relay. No path, query, fragment or user credentials. |
+| `SCHEDULER_API_ORIGIN` | Runtime | Fixed backend origin, e.g. `http://scheduler:8080`, for the development/integration Nitro relay. Does not configure production edge routing. No path, query, fragment or user credentials. |
 | `SCHEDULER_OPENAPI_PATH` | Generation | Optional path to matching backend OpenAPI JSON; defaults to the sibling scheduler checkout's generated file. |
 
 Example shape (replace the UUID with an actual offering in the configured salon):
@@ -27,15 +27,19 @@ Changing `VITE_*` values requires a rebuild. The upstream origin stays server-on
 
 ## Sessions and relay
 
-Prefer a same-origin edge `/api` route to Spring, following the deployment's
-existing trusted-proxy configuration. The included Nitro `/api/**` relay is an
-alternative for deployments without that route. It forwards each browser's
-cookies, CSRF/context/idempotency headers, body, response status and separate
+Production `/api` traffic must go from Cloudflare through Traefik directly to
+Spring under the website's origin. Follow [the edge deployment runbook](./BOOKING_EDGE.md)
+for routing, trusted client IPs, verification and rollback. This is a deployment
+requirement, not a claim that the production route has already been configured.
+
+The included Nitro `/api/**` relay remains for development and integration tests.
+It forwards each browser's cookies, CSRF/context/idempotency headers, body,
+response status and separate
 Set-Cookie headers only within that request. It holds no global token/cookie jar,
 never follows upstream redirects and sets `Cache-Control: no-store`.
 
-The backend's `CORS_ORIGINS` must include the public website origin when using
-the Nitro relay, which preserves the browser Origin header. Keep the allowed
+The backend's `CORS_ORIGINS` must include the public website origin for both
+transport paths, which preserve the browser Origin header. Keep the allowed
 origin explicit and credentialed; do not wildcard it. The Vite Nitro plugin opts
 into scanning `./server`, so the relay is included in production builds.
 
