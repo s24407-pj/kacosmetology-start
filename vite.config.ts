@@ -8,5 +8,10 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
   },
-  plugins: [nitro(), tailwindcss(), tanstackStart(), viteReact()],
+  plugins: [
+    nitro({ serverDir: './server' }),
+    tailwindcss(),
+    tanstackStart(),
+    viteReact(),
+  ],
 })

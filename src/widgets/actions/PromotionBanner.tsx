@@ -1,6 +1,5 @@
 import { actionLinkStyles, iconActionStyles } from '@components/ui'
 import { useRenderTime } from '@context/RenderTimeProvider'
-import { primarySalonLocation } from '@data/business'
 import {
   formatPromotionDeadline,
   getAllActivePromotions,
@@ -8,6 +7,7 @@ import {
 } from '@data/promotion'
 import { useReducedMotion } from '@hooks/useReducedMotion'
 import { analytics } from '@libs/analytics'
+import { bookingHref } from '@libs/booking/policy'
 import { Percent, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
@@ -121,14 +121,12 @@ export default function PromotionBanner() {
               </span>
               <PromotionBannerMessage message={bannerMessage} />
               <a
-                href={primarySalonLocation.bookingUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${BANNER_CTA_LABEL} w Booksy (otwiera nową kartę)`}
+                href={bookingHref()}
+                aria-label={`${BANNER_CTA_LABEL}`}
                 onClick={() =>
                   analytics.trackInitiateCheckout({
                     placement: 'promotion-banner',
-                    destinationUrl: primarySalonLocation.bookingUrl,
+                    destinationUrl: bookingHref(),
                   })
                 }
                 className={actionLinkStyles({

@@ -30,7 +30,8 @@
     "generate-favicons": "node scripts/generate-favicons.mjs",
     "generate-public-metadata": "node scripts/generate-public-metadata.mjs",
     "check:public-metadata": "node scripts/generate-public-metadata.mjs --check",
-    "check:production-data": "node scripts/check-production-data.mjs"
+    "check:production-data": "node scripts/check-production-data.mjs",
+    "api:generate": "node scripts/generate-booking-api.mjs"
   },
   "dependencies": {
     "@fontsource/crimson-text": "^5.3.0",

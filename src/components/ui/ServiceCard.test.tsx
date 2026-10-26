@@ -52,15 +52,18 @@ describe('ServiceCard', () => {
     },
   )
 
-  it('uses the Booksy fallback when a service has no public detail page', () => {
+  it('links to native booking when a service has no public detail page', () => {
     renderCard('service-konsultacja-kosmetologiczna-online')
 
     const booksy = screen.getByRole('link', {
-      name: 'Zarezerwuj w Booksy (otwiera nową kartę)',
+      name: 'Zarezerwuj wizytę',
     })
-    expect(booksy).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
-    expect(booksy).toHaveAttribute('target', '_blank')
-    expect(booksy).toHaveAttribute('rel', 'noopener noreferrer')
+    expect(booksy).toHaveAttribute(
+      'href',
+      '/rezerwacja?service=service-konsultacja-kosmetologiczna-online',
+    )
+    expect(booksy).not.toHaveAttribute('target')
+    expect(booksy).not.toHaveAttribute('rel')
     expect(
       screen.queryByRole('link', { name: /Poznaj szczegóły/ }),
     ).not.toBeInTheDocument()

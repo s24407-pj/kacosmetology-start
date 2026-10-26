@@ -15,7 +15,7 @@ import { getPublicServicePath, getRelatedServices } from '@data/services'
 import { toBreadcrumbListJsonLd, toServiceJsonLd } from '@libs/businessMetadata'
 import { JsonLd } from '@libs/JsonLd'
 import { Link } from '@tanstack/react-router'
-import BooksyLink from '@widgets/actions/BooksyLink'
+import BookingLink from '@widgets/actions/BookingLink'
 import { Clock } from 'lucide-react'
 
 function DetailList({ title, items }: { title: string; items?: string[] }) {
@@ -89,13 +89,13 @@ export function ServiceDetailPage({ service }: { service: PublicService }) {
           </>
         }
         actions={
-          <BooksyLink
+          <BookingLink
             placement="service-detail"
             area={service.area}
             serviceId={service.id}
           >
-            Zarezerwuj w Booksy
-          </BooksyLink>
+            Zarezerwuj wizytę
+          </BookingLink>
         }
       />
       <Section background="white">

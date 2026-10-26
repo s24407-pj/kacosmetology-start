@@ -174,9 +174,10 @@ describe('ContactSection', () => {
         ),
       ),
     ).toBeInTheDocument()
-    expect(
-      screen.getByRole('link', { name: /umów wizytę w booksy/i }),
-    ).toHaveAttribute('href', primarySalonLocation.bookingUrl)
+    expect(screen.getByRole('link', { name: /umów wizytę/i })).toHaveAttribute(
+      'href',
+      '/rezerwacja',
+    )
   })
 
   it('explains how to order a voucher', () => {
@@ -225,23 +226,20 @@ describe('ContactSection', () => {
     })
   })
 
-  it('renders external Booksy CTA with tracking', async () => {
+  it('renders native booking CTA with tracking', async () => {
     const user = userEvent.setup()
     render(<ContactSection />)
 
     const booksyButton = screen.getByRole('link', {
-      name: /umów wizytę w booksy/i,
+      name: /umów wizytę/i,
     })
-    expect(booksyButton).toHaveAttribute(
-      'href',
-      primarySalonLocation.bookingUrl,
-    )
-    expect(booksyButton).toHaveAttribute('target', '_blank')
+    expect(booksyButton).toHaveAttribute('href', '/rezerwacja')
+    expect(booksyButton).not.toHaveAttribute('target')
 
     await clickAnalyticsLink(user, booksyButton)
     expect(analytics.trackInitiateCheckout).toHaveBeenCalledWith({
       placement: 'contact-section',
-      destinationUrl: primarySalonLocation.bookingUrl,
+      destinationUrl: '/rezerwacja',
     })
   })
 

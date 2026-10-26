@@ -1,11 +1,11 @@
 # Design
 
-KA Cosmetology is a server-rendered, route-oriented brochure site. TanStack Start
-loads the brand home, specialization, service-detail, reservation, and gallery
+KA Cosmetology is a server-rendered marketing and native booking website.
+TanStack Start loads the brand home, specialization, service-detail, reservation, and gallery
 routes; Nitro renders them and React hydrates the same tree. The application
-has no general business API/data-service layer: authored business data is
-compiled from TypeScript in `src/data/`. The narrow render-time server function
-lives in `src/routes/__root.tsx`.
+keeps authored marketing data in `src/data/` and uses the separate Spring
+Scheduler API for booking identity, availability, commercial terms and
+persistence. The narrow render-time server function lives in `src/routes/__root.tsx`.
 
 ## Boundaries and dependency direction
 
@@ -54,8 +54,9 @@ Canonical ownership matters because most changes cross several rendered views:
 catalog, price history, or gallery implementation. `/kosmetologia`,
 `/oprawa-oka`, and `/trychologia` filter one canonical catalog. Their `$slug`
 routes split loaders from components and reject wrong-specialization and
-online-only details. Booking actions link directly to the canonical Booksy
-profile; `/rezerwacja` remains only as an external compatibility redirect.
+online-only details. Booking actions open `/rezerwacja`, with an explicit
+marketing-service query mapped to Scheduler UUIDs by operator configuration.
+Unmapped links offer the authoritative booking catalog without guessing IDs.
 `/galeria` owns effects and cabinet images.
 
 ## Public interfaces and data flow
@@ -134,11 +135,10 @@ compatible with applicable EU and Polish law (GDPR/RODO, cookie/ePrivacy).
   are returned before service-level resolution. Different services can receive
   different winners; stacking is forbidden and tie-breaks are deterministic.
    `src/data/promotion.test.ts`.
-- Looks wrong at first glance; intentional because Booksy cannot return purchase
-  conversions to first-party pixels. `trackInitiateCheckout` attaches session
-  attribution (`utm_*`, `gclid`, `fbclid`) as the last controllable attribution
-  point before leaving the site.
-  `src/libs/analytics/attribution.test.ts`.
+- Booking entry links retain the existing consent-aware `trackInitiateCheckout`
+  event. Reservation success/replay emits no purchase event, preventing duplicate
+  conversions from retrying an uncertain write. New booking analytics require a
+  separate reviewed tracking change. `src/libs/analytics/attribution.test.ts`.
 - The E2E client-ready document attribute is a test synchronization contract,
   set after React effects install interactive behavior. It is not product state.
   `src/app/providers/RenderTimeProvider.test.tsx`,
@@ -185,3 +185,16 @@ The repository contains no registry of out-of-repository consumers. That means
 none can be discovered here, not that none exist. Re-check with the relevant
 owner before changing exported, DOM, analytics, generated-file, or deployment
 contracts.
+
+
+## Native reservation boundary
+
+`src/features/reservation/ReservationPage.tsx` owns the customer journey.
+`src/libs/booking` owns generated contracts, transport, exact-attempt recovery,
+explicit international phone formatting and Warsaw display policy. Marketing
+service IDs remain distinct from Scheduler UUIDs. `server/routes/api/[...path].ts`
+is a request-local transport relay, with no shared login or customer database.
+Spring owns sessions, authorization, profile establishment and all booking rules.
+
+Read [NATIVE_BOOKING.md](./NATIVE_BOOKING.md) before changing the relay,
+configuration, storage, account boundary or uncertain-result handling.

@@ -18,7 +18,6 @@ vi.mock('@libs/analytics', () => ({
   },
 }))
 
-import { primarySalonLocation } from '@data/business'
 import type { ActivePromotion } from '@data/promotion'
 import {
   formatPromotionDeadline,
@@ -99,10 +98,10 @@ describe('PromotionBanner', () => {
     ).toBeInTheDocument()
 
     const ctaLink = view.getByRole('link', {
-      name: 'Zarezerwuj termin w Booksy (otwiera nową kartę)',
+      name: 'Zarezerwuj termin',
     })
-    expect(ctaLink).toHaveAttribute('href', primarySalonLocation.bookingUrl)
-    expect(ctaLink).toHaveAttribute('target', '_blank')
+    expect(ctaLink).toHaveAttribute('href', '/rezerwacja')
+    expect(ctaLink).not.toHaveAttribute('target')
     expect(ctaLink).toHaveTextContent('Zarezerwuj')
     expect(ctaLink).toHaveTextContent('Zarezerwuj termin')
   })
@@ -119,13 +118,13 @@ describe('PromotionBanner', () => {
     await clickAnalyticsLink(
       user,
       view.getByRole('link', {
-        name: 'Zarezerwuj termin w Booksy (otwiera nową kartę)',
+        name: 'Zarezerwuj termin',
       }),
     )
 
     expect(trackInitiateCheckoutMock).toHaveBeenCalledWith({
       placement: 'promotion-banner',
-      destinationUrl: primarySalonLocation.bookingUrl,
+      destinationUrl: '/rezerwacja',
     })
   })
 
@@ -176,7 +175,7 @@ describe('PromotionBanner', () => {
 
     const user = userEvent.setup()
     const ctaLinks = view.getAllByRole('link', {
-      name: 'Zarezerwuj termin w Booksy (otwiera nową kartę)',
+      name: 'Zarezerwuj termin',
     })
     expect(ctaLinks).toHaveLength(2)
     await clickAnalyticsLink(user, ctaLinks[0])
@@ -184,11 +183,11 @@ describe('PromotionBanner', () => {
 
     expect(trackInitiateCheckoutMock).toHaveBeenNthCalledWith(1, {
       placement: 'promotion-banner',
-      destinationUrl: primarySalonLocation.bookingUrl,
+      destinationUrl: '/rezerwacja',
     })
     expect(trackInitiateCheckoutMock).toHaveBeenNthCalledWith(2, {
       placement: 'promotion-banner',
-      destinationUrl: primarySalonLocation.bookingUrl,
+      destinationUrl: '/rezerwacja',
     })
   })
 

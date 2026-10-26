@@ -82,9 +82,10 @@ describe('NavBar', () => {
       'href',
       '/#kontakt',
     )
-    expect(
-      screen.getByRole('link', { name: /Umów wizytę w Booksy/ }),
-    ).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
+    expect(screen.getByRole('link', { name: /Umów wizytę/ })).toHaveAttribute(
+      'href',
+      '/rezerwacja',
+    )
   })
 
   it('marks the current route in the desktop navigation', () => {

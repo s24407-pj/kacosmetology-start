@@ -17,7 +17,7 @@ const formatAddress = (profile: BusinessProfile) => {
 }
 
 /** Data wejścia w życie bieżącej wersji dokumentu (publiczna treść). */
-export const PRIVACY_POLICY_EFFECTIVE_DATE = '15 września 2026 r.'
+export const PRIVACY_POLICY_EFFECTIVE_DATE = '25 października 2026 r.'
 
 export function getPrivacyPolicySections(
   profile: BusinessProfile,
@@ -67,7 +67,7 @@ export function getPrivacyPolicySections(
           type: 'list',
           items: [
             `Kontakt e-mailowy lub telefoniczny zainicjowany przez Ciebie (m.in. poprzez odnośniki mailto i tel na stronie) — art. 6 ust. 1 lit. b RODO (działania przed zawarciem umowy / wykonanie umowy) lub lit. f (uzasadniony interes polegający na odpowiedzi na zapytanie).`,
-            `Umożliwienie rezerwacji wizyty poprzez przekierowanie do zewnętrznego systemu Booksy (${location.bookingUrl}) — art. 6 ust. 1 lit. b RODO; dalsze przetwarzanie odbywa się u Booksy zgodnie z ich regulaminem i polityką prywatności.`,
+            'Obsługa rezerwacji na stronie: wybór usługi i terminu, potwierdzenie telefonu kodem SMS oraz utworzenie kartoteki salonu przy pierwszej udanej rezerwacji — art. 6 ust. 1 lit. b RODO (działania przed zawarciem umowy / wykonanie umowy).',
             `Zapewnienie działania i bezpieczeństwa witryny oraz zapamiętanie Twoich wyborów dotyczących cookies (niezbędne pliki i podobne technologie) — art. 6 ust. 1 lit. f RODO (uzasadniony interes: sprawne i bezpieczne działanie serwisu).`,
             `Statystyka ruchu w ujęciu zbiorczym za pomocą cookieless Plausible Analytics (self-hosted) — art. 6 ust. 1 lit. f RODO (uzasadniony interes: zrozumienie, jak korzystacie z witryny, bez profilowania reklamowego).`,
             `Analityka z użyciem Google Analytics — wyłącznie po wyrażeniu zgody w banerze cookies (kategoria „Analityczne”) — art. 6 ust. 1 lit. a RODO.`,
@@ -90,12 +90,12 @@ export function getPrivacyPolicySections(
             'Dane podane w korespondencji e-mail lub rozmowie telefonicznej (np. imię, treść zapytania, numer telefonu, adres e-mail).',
             'Dane techniczne związane z wizytą na stronie (np. adres IP w logach serwera, typ przeglądarki, przybliżona lokalizacja na poziomie zagregowanym — w zakresie wynikającym z konfiguracji narzędzi).',
             'Identyfikatory cookies i podobnych technologii oraz zdarzenia analityczne/marketingowe — gdy wyrazisz na to zgodę.',
-            'Parametry atrybucji kampanii przechowywane w sessionStorage przeglądarki (np. utm_*, gclid, fbclid, referrer) na potrzeby powiązania działań rezerwacyjnych z kampanią — bez osobnego konta użytkownika na stronie.',
+            'Parametry atrybucji kampanii przechowywane w sessionStorage przeglądarki (np. utm_*, gclid, fbclid, referrer) na potrzeby powiązania działań rezerwacyjnych z kampanią — zgodnie z ustawieniami zgód.',
           ],
         },
         {
           type: 'paragraph',
-          text: 'Na stronie nie prowadzimy kont użytkowników, formularza kontaktowego ani newslettera. Nie zbieramy danych wyłącznie przez pola formularza w witrynie.',
+          text: 'Formularz rezerwacji zbiera numer telefonu, a przy pierwszej wizycie imię i nazwisko oraz opcjonalny e-mail. Przetwarzamy również wybraną usługę, termin i wynik rezerwacji. Logowanie klienta odbywa się kodem SMS i jest ograniczone do danego salonu. Nie prowadzimy newslettera ani formularza kontaktowego.',
         },
       ],
     },
@@ -110,7 +110,7 @@ export function getPrivacyPolicySections(
         {
           type: 'list',
           items: [
-            'Niezbędne — zawsze aktywne. Obejmują m.in. zapis Twojej decyzji o zgodach w localStorage przeglądarki (klucz kacosmetology.consent), wymagany do działania mechanizmu zgód.',
+            'Niezbędne — zawsze aktywne. Obejmują zapis decyzji o zgodach w localStorage (kacosmetology.consent), cookies sesji logowania i ochrony CSRF oraz dane odzyskiwania wysłanej rezerwacji w sessionStorage (klucze kacosmetology.booking.attempt i kacosmetology.booking.unresolved z zakresem salonu i konta). Dane odzyskiwania obejmują identyfikator zgłoszenia, zakres konta i salonu oraz dokładną treść wysłanej rezerwacji, w tym podane dane pierwszej wizyty. Służą sprawdzeniu wyniku po przerwaniu połączenia.',
             'Analityczne — Google Analytics. Skrypt Google tag ładuje się po zgodzie „Analityczne” lub „Marketingowe”; pomiar analityczny działa po zgodzie „Analityczne”.',
             'Marketingowe — Google Ads (ten sam Google tag co Analytics), Meta Pixel oraz OpenAI Pixel. Funkcje reklamowe Google oraz pixele Meta/OpenAI działają po zgodzie „Marketingowe”.',
           ],
@@ -136,13 +136,13 @@ export function getPrivacyPolicySections(
         {
           type: 'list',
           items: [
-            'dostawcy hostingu i infrastruktury serwerowej witryny,',
+            'dostawcy hostingu, infrastruktury serwerowej i dostarczania kodów SMS niezbędnych do logowania,',
             'Plausible Analytics (self-hosted) — statystyka ruchu,',
             'Google (Google Analytics) — po zgodzie na cookies analityczne,',
             'Google (Google Ads) — po zgodzie na cookies marketingowe,',
             'Meta Platforms — po zgodzie na cookies marketingowe,',
             'OpenAI — po zgodzie na cookies marketingowe,',
-            `Booksy — gdy korzystasz z rezerwacji online (${location.bookingUrl}); Booksy jest niezależnym administratorem lub podmiotem przetwarzającym w zakresie własnej usługi.`,
+            `Booksy — jeżeli niezależnie korzystasz z zewnętrznego profilu salonu (${location.bookingUrl}); Booksy jest niezależnym administratorem lub podmiotem przetwarzającym w zakresie własnej usługi.`,
           ],
         },
         {
@@ -160,6 +160,8 @@ export function getPrivacyPolicySections(
           items: [
             'Decyzja o cookies — do czasu zmiany lub cofnięcia zgody albo wyczyszczenia danych lokalnych przeglądarki; przy zmianie wersji Polityki zgód wcześniejsza decyzja może zostać unieważniona.',
             'Parametry atrybucji w sessionStorage — do zamknięcia sesji przeglądarki lub wyczyszczenia pamięci sesji.',
+            'Treść zgłoszenia rezerwacji w sessionStorage — do potwierdzenia wyniku, wylogowania lub 30 minut od utworzenia próby. Usunięcie po upływie tego czasu następuje podczas działania lub ponownego otwarcia strony rezerwacji. Po usunięciu może pozostać identyfikator nierozstrzygniętego zgłoszenia i zakres konta do końca sesji karty; pozwala ostrzec przed przypadkowym utworzeniem drugiej wizyty. Nie przechowujemy tam kodów SMS ani cookies logowania.',
+            'Dane kartoteki i rezerwacji w systemie salonu — przez czas obsługi wizyt oraz okres wynikający z obowiązków prawnych i dochodzenia roszczeń. Wylogowanie lub zamknięcie karty nie usuwa zapisanej rezerwacji ani kartoteki.',
             'Korespondencja e-mail / zapisy rozmów — przez czas potrzebny do obsługi sprawy, a następnie przez okres wynikający z przedawnienia roszczeń lub obowiązków prawnych.',
             'Dane w Booksy — zgodnie z polityką i umową Booksy.',
             'Dane w narzędziach analitycznych i marketingowych — zgodnie z konfiguracją tych narzędzi oraz okresem obowiązywania Twojej zgody.',

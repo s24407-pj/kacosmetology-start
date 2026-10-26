@@ -9,7 +9,7 @@ import { brand, primarySalonLocation } from '@data/business'
 import { analytics } from '@libs/analytics'
 import { createContactLinks, getContactHref } from '@libs/contactLinks'
 import { Link } from '@tanstack/react-router'
-import BooksyLink from '@widgets/actions/BooksyLink'
+import BookingLink from '@widgets/actions/BookingLink'
 import { Mail, Phone } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -100,15 +100,15 @@ export default function Footer() {
               Umów wizytę
             </Heading>
             <p className="mb-4 font-body text-sm text-white/70">
-              Zarezerwuj dogodny termin online przez Booksy.
+              Zarezerwuj dogodny termin online.
             </p>
-            <BooksyLink
+            <BookingLink
               placement={FOOTER_PLACEMENT}
               showExternalIcon={false}
               className="min-h-11 px-6 py-3 text-sm"
             >
               Przejdź do rezerwacji
-            </BooksyLink>
+            </BookingLink>
           </div>
         </div>
 

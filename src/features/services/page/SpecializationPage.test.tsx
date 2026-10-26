@@ -33,7 +33,7 @@ describe('SpecializationPage', () => {
       'cosmetology',
       'Kosmetologia',
       'Świadoma opieka nad skórą',
-      'Umów konsultację (otwiera nową kartę)',
+      'Umów konsultację',
       'Zabieg pielęgnacyjny twarzy z aplikacją maski w gabinecie',
       '/images/specializations/cosmetology-720.webp',
       true,
@@ -42,7 +42,7 @@ describe('SpecializationPage', () => {
       'eye-styling',
       'Oprawa oka',
       'Naturalnie podkreślone spojrzenie',
-      'Umów wizytę (otwiera nową kartę)',
+      'Umów wizytę',
       'Naturalna oprawa oka z widoczną brwią i rzęsami',
       '/images/specializations/eye-styling-720.webp',
       false,
@@ -51,7 +51,7 @@ describe('SpecializationPage', () => {
       'trichology',
       'Trycholog w Starogardzie Gdańskim',
       'Indywidualna opieka nad skórą głowy',
-      'Umów konsultację (otwiera nową kartę)',
+      'Umów konsultację',
       'Mycie i masaż skóry głowy podczas zabiegu w salonie',
       '/images/specializations/trichology-720.webp',
       true,
@@ -67,7 +67,7 @@ describe('SpecializationPage', () => {
       expect(screen.getByText(eyebrow)).toBeVisible()
       expect(screen.getByRole('link', { name: heroAction })).toHaveAttribute(
         'href',
-        'https://kacosmetology.booksy.com',
+        '/rezerwacja',
       )
 
       const heroImage = screen.getByRole('img', { name: heroImageAlt })
@@ -125,9 +125,9 @@ describe('SpecializationPage', () => {
       }
       expect(
         screen.getByRole('link', {
-          name: 'Przejdź do Booksy (otwiera nową kartę)',
+          name: 'Przejdź do rezerwacji',
         }),
-      ).toHaveAttribute('href', 'https://kacosmetology.booksy.com')
+      ).toHaveAttribute('href', '/rezerwacja')
     },
   )
 })
