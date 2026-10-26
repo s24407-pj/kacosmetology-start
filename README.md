@@ -42,6 +42,21 @@ The development server is available at `http://localhost:3000`.
 | `pnpm run validate` | Run the complete local validation suite |
 | `pnpm validate:ci` | Run the GitHub Actions pipeline locally |
 
+## CI browser installation
+
+Both CI jobs use Ubuntu 24.04. Before installing Playwright system dependencies,
+`scripts/ci/configure-apt.sh` switches the runner's Ubuntu Azure mirror to the
+official HTTPS archive and bounds APT retries and network timeouts. This avoids
+the slow mirror downloads observed in both this repository and Scheduler
+Dashboard. Repository suites, components, signing keys and third-party sources
+are preserved.
+
+Browser installation has an eight-minute step budget, separate from browser
+tests. A stalled installation fails at setup instead of consuming the entire
+test budget. Quality has a 30-minute job limit and its Playwright step has a
+15-minute limit; the integration job retains its 25-minute limit. Test coverage,
+projects, retries and flaky-test rejection are unchanged.
+
 ## Dokploy
 
 Configure the application as a Node service:
