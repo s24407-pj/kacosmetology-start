@@ -64,7 +64,7 @@ The route loader resolves one `RenderTimeSnapshot`; `RenderTimeProvider` gives
 SSR and hydrated consumers the same reference instant, then switches live mode
 to the browser clock after hydration. A fixed query value is accepted only in
 Playwright mode. Promotion and opening-hours consumers receive this shared time.
- `src/libs/renderTime.test.ts`,
+`src/libs/renderTime.test.ts`,
 `src/app/providers/RenderTimeProvider.test.tsx`.
 
 `businessProfile` flows through typed selectors into contact UI,
@@ -133,7 +133,7 @@ compatible with applicable EU and Polish law (GDPR/RODO, cookie/ePrivacy).
 - Looks wrong at first glance; intentional because multiple active promotions
   are returned before service-level resolution. Different services can receive
   different winners; stacking is forbidden and tie-breaks are deterministic.
-   `src/data/promotion.test.ts`.
+  `src/data/promotion.test.ts`.
 - Looks wrong at first glance; intentional because Booksy cannot return purchase
   conversions to first-party pixels. `trackInitiateCheckout` attaches session
   attribution (`utm_*`, `gclid`, `fbclid`) as the last controllable attribution
