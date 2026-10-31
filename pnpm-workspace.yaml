@@ -3,5 +3,3 @@ allowBuilds:
   lightningcss: true
   sharp: true
   lefthook: true
-minimumReleaseAgeExclude:
-  - lucide-react@1.66.0
