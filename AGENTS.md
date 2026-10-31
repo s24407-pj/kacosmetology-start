@@ -5,7 +5,7 @@ patterns; do not commit unless the user or an active workflow authorizes it.
 
 ## Commands
 
-Requires Node 24 and pnpm 11. With mise activated, run `mise install`
+Requires Node 26 and pnpm 12. With mise activated, run `mise install`
 to use the versions pinned in `mise.toml`.
 
 ```bash
@@ -55,28 +55,28 @@ See [DESIGN.md](./docs/DESIGN.md) for boundaries, rationale, and change traces.
 
 ## Canonical homes
 
-| Change | Canonical location |
-| --- | --- |
-| Service identity, names, prices | `src/data/services.ts` |
-| Immutable historical prices | `src/data/servicePriceHistory.ts` |
-| Promotion records and precedence | `src/data/promotion.ts` |
-| Promotion integrity rules | `src/data/promotionValidation.ts` |
-| Brand, locations, opening schedule, legal entity | `src/data/business.ts` |
-| Opening-hours calculation/projections | `src/libs/openingHours.ts` |
-| Nav labels and section IDs | `src/data/navigation.ts` |
-| SEO head and JSON-LD composition | `src/routes/__root.tsx` |
-| Public metadata rendering | `src/libs/publicMetadata.ts` |
-| Analytics facade (Prior Consent) | `src/libs/analytics/` |
-| Cookie consent persistence + provider | `src/libs/consent/` |
-| Cookie banner / preferences UI | `src/components/consent/` |
-| Privacy policy copy (RODO / cookies) | `src/features/legal/content/` |
-| Deferred font startup scheduling | `src/libs/scheduleDeferredWork.ts` |
-| New domain section | `src/features/<domain>/sections/` |
-| Service public URL and specialization | `src/data/services.ts` |
-| Route metadata composition | `src/libs/routeMetadata.ts` |
-| Reusable UI primitive | `src/components/ui/` |
-| Build/test/tool configuration | repository-root `*.config.*`, `package.json` |
-| Local Node/pnpm toolchain pins | `mise.toml` |
+| Change                                           | Canonical location                           |
+| ------------------------------------------------ | -------------------------------------------- |
+| Service identity, names, prices                  | `src/data/services.ts`                       |
+| Immutable historical prices                      | `src/data/servicePriceHistory.ts`            |
+| Promotion records and precedence                 | `src/data/promotion.ts`                      |
+| Promotion integrity rules                        | `src/data/promotionValidation.ts`            |
+| Brand, locations, opening schedule, legal entity | `src/data/business.ts`                       |
+| Opening-hours calculation/projections            | `src/libs/openingHours.ts`                   |
+| Nav labels and section IDs                       | `src/data/navigation.ts`                     |
+| SEO head and JSON-LD composition                 | `src/routes/__root.tsx`                      |
+| Public metadata rendering                        | `src/libs/publicMetadata.ts`                 |
+| Analytics facade (Prior Consent)                 | `src/libs/analytics/`                        |
+| Cookie consent persistence + provider            | `src/libs/consent/`                          |
+| Cookie banner / preferences UI                   | `src/components/consent/`                    |
+| Privacy policy copy (RODO / cookies)             | `src/features/legal/content/`                |
+| Deferred font startup scheduling                 | `src/libs/scheduleDeferredWork.ts`           |
+| New domain section                               | `src/features/<domain>/sections/`            |
+| Service public URL and specialization            | `src/data/services.ts`                       |
+| Route metadata composition                       | `src/libs/routeMetadata.ts`                  |
+| Reusable UI primitive                            | `src/components/ui/`                         |
+| Build/test/tool configuration                    | repository-root `*.config.*`, `package.json` |
+| Local Node/pnpm toolchain pins                   | `mise.toml`                                  |
 
 After editing `src/data/business.ts`, run
 `pnpm generate-public-metadata`; `check` and `build` reject stale committed
